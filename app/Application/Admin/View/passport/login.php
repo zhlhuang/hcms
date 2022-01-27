@@ -1,0 +1,173 @@
+{__NOLAYOUT__}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>登录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+
+    <link rel="stylesheet" href="/assets/element-ui@2.15.6/index.css?version={$version}">
+
+    <script src="/assets/js/jquery.min.js?version={$version}"></script>
+    <script src="/assets/js/vue.js?version={$version}"></script>
+    <script src="/assets/js/vue-common.js?version={$version}"></script>
+    <script src="/assets/js/vue-list.js?version={$version}"></script>
+    <script src="/assets/element-ui@2.15.6/index.js?version={$version}"></script>
+</head>
+
+<body>
+<div id="app" v-cloak class="login-con">
+    <div class="login-dev loading">
+        <el-card>
+            <div>
+                <div style="margin-bottom: 20px;display: flex;justify-content: space-between;align-items: center">
+                    <div>
+                        <h1 style="line-height: 0px;color: #409EFF;">Hcms</h1>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="login-header-label-active" style="margin-right: 10px;">登录</span>
+                    </div>
+                </div>
+                <el-form :model="form">
+                    <el-form-item prop="username" label="用户名"
+                                  :rules="[{ required: true, message: '请输入登录用户名', trigger: 'blur' }]">
+                        <el-input placeholder="请输入登录用户名" type="text" v-model="form.username"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="password" label="密码"
+                                  :rules="[{ required: true, message: '请输入登录密码', trigger: 'blur' }]">
+                        <el-input placeholder="请输入登录密码" type="password" v-model="form.password"
+                        ></el-input>
+                    </el-form-item>
+                    <el-form-item prop="password" label="验证码"
+                                  :rules="[{ required: true, message: '请输入验证码', trigger: 'blur' }]">
+                        <el-input placeholder="请输入验证码" type="text" v-model="form.valid_code"
+                        >
+                            <template slot="append">
+                                <el-image v-if="time>0" @click="changeValidEvent" style="width: 80px;height: 30px;"
+                                          :src="`/admin/passport/code?time=`+time"></el-image>
+                            </template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button @click="doLogin" style="width: 100%" type="primary">登录
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-card>
+    </div>
+    <div class="footer">
+        <p>建议分辨率1366*768以上，推荐使用</p>
+        <p style="margin-top: 10px;">Firefox浏览器
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAMAAADX9CSSAAAC1lBMVEUAAADbaCrlZyTkZyXhaCcUb7QTcLHcWirhZiXgYyXeYSjoUR7lZSTgZyjiZyb3rDlEfZlSToDrYSAVeaq9Zz/4sUblah9ujI3YbS7fZifpZyDcaywNabXVZC3kWSjHhkXpZiEAb84UcbNcUITznkril0HDZDcSdbHrdyjoYyEmfa1ocoHkZSgVcrIQXMHpbSvaaCieiVv7ShT4VxMObbX30hXwbhj3YRDrUx8Gb7zkZyXlZyQWeL7kZib/pwABfdwPdsEWecAZd7sScrkUcrMQVpvnZyPtZx//ngEAetYCfNADc8wMd8YZfcIWdbsSY6gNUJffXCziYCnjaibmaSTpZiLnbR72aBf/ZhD/lwL/mwH/rQAAeNwAbtcVgMYOcLoBYboSbLQnebIUcLAUaK4udq0AR6cOS5F/cHGKYF3/vzzIUjnVXDDbXinhYyfqayLnYB7yZRn7gw76iwv2iAn+iQb/dwL/qQD/oQD/fgAAcf8AgO4AZ+cAcuEAc9oAZtUAVdQEeM5ypswLb8oAa8gchscRfMUEdMUSfMMKZL0Yc7YCWbYEXLUyhLMARawKVaQ+caIASaBJhp86gZw5cZwoYZxQcpYSVJYTU5IuXJBPeo89Z44ORotceIg4VoRlgYNOb4MeVID0wXppjHlsknd9XXNydnF2jG+Qim+ZkG6OcWyTimqueWqDjGh9W2Cpkl+/k1yfXlzEkVumhlhwc1WeZFSSX1Pepk71sk3XoU39dkv2skrQnkq1aEehhUb6s0XqqUX4u0P6tUOrlkOneD7/vzqtTzmtPTnBmDjAhzj/uTe3jjP/jzHSUjH4rzDmnTDJky//vS7bYy7+ri3RayzYVizdTyrWcin/vijrXyL/tyH9ryDafB/hcR7/phvifRvwdhnvfBfamRb7ZBT0fhP7dRP+oxLvkBD/XA3/qwr0lwr4kAr/ZAj8kAb/dQT+kwH/sgD/awCdTn+aAAAAOnRSTlMA/PLi28KujUQuIQv38vLu49jLyMbFwr26s7GurZybl5SQj4qIg39+fHxxa1hHRkRDQj46LyIbEQ4EFNJt1wAAAdVJREFUKM9igAETdTZWVjYlXUsGZKAnnBzv7AIEiQJaMDFucwbF5PhYhyRHGycbnynrxQ0h4kZCMjGenmsvJPnYONp0tUzds0keLK5RsDVj1cno5bU2No5+rv0zNx/coAoSl82NePOi8pW3vZeNk6Ovc/eKizu2mwLFRcKtrQKLS44fy3Ro8/Pz9XI+cOqQCgODgbW1lVVgyetdZ9a0d7imJ7bWr7xxTpSBQQoobB0YZreoycvByT8gwLlz2dHb/AwWzFZWVkFhkXanaxx8U1L809Nm7dz98jwDN4uVVV5+6d25k31s4vznuLqmLcjaX76PgcMNqPxhwTWnKm/A6mJiE2ZM75udddnuCIM+o7WVbVhu+PMlvYsPn5jUEzBx9S2PiqcMDBKhVkCLcwori8o+ls23T1h475mHxxUGBvZgKyvbkLyr2WezlzY3xjVsiXwbHSnIwMAZbA3UEBK+d4Jntb2997z77yvs7igD/StmBQJu7owZqanTNj4ujYp+lGkMFDeztQKDwgj30Ih3UeV2HtfZwQGqE2wNlrJ2v/nkQ1RRcb4cNGY4eEKswVpsrR6451zShkcjlzTQAjegjtCgdds0kSOYU4GFl4mJj1lSjYsBHwAAabOjBx6T3fgAAAAASUVORK5CYII=">
+            、Chrome浏览器
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAMAAADX9CSSAAAB+FBMVEUAAAD/zUASn1kxq3D/5pnramPR5c3/zD7sqKj/zD7//vXe9fLeUkX/xygouVjfVkr/1WH/z0jfWExKtoLfW049sHguqm7/1Fw1rXP/0EzkQDbgWU7fZVn/12g4r3bfWk3/12UtrG7/2Gr/3XxMqJLidGreXU32+vZcvY7hYVb////ocmrgb2SR07FKtYHpcmpux5biW0rgZln///80uHOFzKpsxJgn/xz///8epGPdTkH/zUFMi/X/zkTXLh4Ak0bdRzr/yCxOjfUhb/MRn1oOnVj/zDv/xB40fPQpdPMaomDdTD7/yTHZNif6/v+FsPlFhvUtdvP///HuoZr/1V4Km1MAlkzeUkXdT0IAkEHbRDf/yjXWJxft7//f7f/K4P6ewPrp/fl0pvj9//c/g/X/9NLto6TtoqJVu4slp2gbpF4WoV3/1Ff/0lL/zT/eSTzaSTrZOiz/xSP/wxj9+//29f/Q3P/C3P+72f+x0P9+q/hpnvdhmPb/9PL/8PIUZ/L/++zM7eT//uPq++L62ti548685cz/772f2bz3wrv/8LqO07b1t6zyrah9yqRwyJ/zp5zql5b/45RkwJPvm5JHtH//3XzofnUlm2//2GsWlWbkcWYeomUUnVwKnFT/zkoAj0DXTj4AiTXbQTP/xijTMiD/vgnSEgHMnKjwAAAAOHRSTlMA8vK/MigH+ff38vLy8u3s6+fg3NbTz8/Ly8K/uLa0saemnpuXlpOPh35sbGJfWVdHRkU/OC8rAxeA9tEAAAGOSURBVCjPfdDVcuMwFIDhU9guMzMz7xaO7LhOHCcOMzVNmZmZmZmZ29es1Hg6ueo3o5tf0pmRQPXv0/PbN+69/noJYv1+UKPVaq1svYjZ+XgQ5lTWcM0PUD3b40Lcudra79H8+Ugb4kJWe7oqEvnL8n9ciQSDdfaNxVmv11tSXFI8d4X1+3nddWF7cAxjfANI2Z/BqROuC1vzO5zZWCRU+ny+OwBfRH8e2icxV2826U05uHasowBeyWIpDnpy9C5JI7klR7/NyPNxAE8MlowhxHazpKHcLVhlO+sP/SRQhpjv1jDmNqyM9gQDIRmjdDw77zJlFwiZZ/0t7X5DQaOkd2kKe5w4rlTzwlWAn9sWemEBszpN5kKnA3d0PF99GSBpUybEIk4jZjU3Ic43CLxw+BIAPmyVE1IhLg17PAPYq6PTjbZE2tNurRMqECDiBC6z48obYJJXZcLsljmKFPqo+scQ9afcYGGj+rCqXjAqT5NAlfpIlgn9jhHFqMt8DzF+JcTHX78Wd/Puu0S40Ck9l3Z2hJNTEAAAAABJRU5ErkJggg==">
+            、360极速浏览器
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAMAAADX9CSSAAACuFBMVEUAAAA35obRPPhCk/pAkPpClvr9PxX/+QXHN/dBjPv7LBH/+wf/8Af/4wX/6gTNOve+MvU25IUw2m8044Ax33j8MhL6Iw76Gw36CAn/9QcypPvZOvjBNPaqKfE2n/sy9XP//xr//QNBhf/+GwT8DgI9ev9jdPj//wAx3Xb8OxT8ORT8NRP/7Qf/8gY7mvs29XP4AABFmvrROPg15ob/HwDJyAf+Tx7//weopwdGm/r/+gv+RxK42f+yM/+pMv+WLf+4MPS8L/SbHfSzL/OxLPOPGPOwLfL/7u81oNGS2NARk7975JTYHGv9Vkj7oC77jy36iRBX0QgDxAA8ivRsMO/v7pNClfo2qcs2wbAAyUz8Qhr9Qhb8GRE8fv8XZP8AxFyo4wvU5gBVefcb0XT++BeS4yD/4CDBP/8z4X0z6XMR0WLsHTT6DxH//Qf/5wfw2QBDdP865Yo37n0w13cZ0HAq5mQa2Vv9AAD/3wAqjP7SPfgByXP8Ixn+lg8+tcDoL/c/lvpQjfn9SRtFmPr+SRn/KwD+Tx895orNMr3A7CDY1gj9Rxv//wxA7Xo0pfvVPvnLTP/XUfk+54vURfjAQPczrPsAzmr/PgAs4Xb/5BD8RRxJmvo39nNMmvo+5orKOv9Giv9TmOb//xj//xhD64wxyXPkNHVF7o0454f9QxrZWflRnftjYwb+USA75ollZAbTQvhMnfpLnPr/MytGmvrKOv/+VijWTfhHm/qzWfhTmPf9hBn//wfTO/hAmPo35ob+RBX///8+kvvBN//TPvnQM/gz5oT9QBP8LxHiwf+pNf/QNvpeefjULfbIMPXu1vO/JPO3HvGOMO+nH++OBu+gFuz//tmxJ9C3AIQy4n814H8z7n013XoM0nMAxi38Uxr7DRj8PhT5JxL8Mw//7gX/8AT/9gP//wCjAZVMAAAAvHRSTlMA+P739/f39/739/f39/f+/fj49/f39/f39/Ye/v79/f39/Pv7+vr49/f39/f39vb28ezf1sCzsZqDYyv+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v39/fz8+/v7+/v6+vr6+vn5+fj49/f39/f39/f39vb29vb29vb19PLx7+7s5+bm4uDe1NPSxsXEw8PCwb22sa2sq6enpqOjnpualZSNioB/dmBZWFZWUVBIRkVBOTIrIRgXFhQREA8ODi6Rj+UAAAG0SURBVCjPYoCALZZTGaT7q4wmrmJAAjssDff17axn2nvk6NHJ0nDhjYb79snNnnKWn4lp7969TBugwpsa9rGyyjUKnOPgAMsYQXU0A4VZpc5ccBSQAcucPrIdJLz6UBgzM7OU2kUXZwcBmcOH0yfM3woSn3uIGSSedFlW1s3ulG3HMqjxCw4xs7Cw6HFeuupkf90n28Skdbo1SHyX0iEWkETIFdcbKirKyo9OPI4CSsxZsrBAiZOTs1Lt5HnfcnFxMS5RrYfdDAyF8r11waqqsXE2Bw+6GxiIiXFpax5vYmAw3n9bXjAi3MPL8yBgB68FSEhwcWmzHWhhYGg/xshYpK+fWVrmHZqm4CchLqrFdryNgWESUJxRUFhEIysov4JXwT9HVJPtgBkDw4r9QHFhEaHiyEA+Xl6+lPsxbNEH1jKALGAUzNAQKrmXyMOXx6te+wCkHAjW7d8PVJ4cn8DOo6PD92zmrBMHtoE9PO/mrTt3q1PV2SV1eXiemO+uWQkNieUzpi3tVMxlZ5eU1H1qzrAZKcYWP9/DDQTsinusGJCBVc8eCFjEgAbWWJh2mVqsZyAAAMDNjWDzaDnEAAAAAElFTkSuQmCC">
+            、IE11及以上浏览器
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABcAAAAXCAMAAADX9CSSAAACylBMVEUAAAAmb7UKSJkKRaENRpL/6oZxye10yu4AWMEqdLcba7EPYqoNa7cIU5sLTZv+tDIRXK8KSpYKSJT/vCMES5L035T+sxYFQ4b9uyOEemJsxe1pxukbg7wJbbtizPlnwOtXuevt7Xdbuef/5i550O7/wwB2zNSy48wiuv9DqeiipWj/4CZfw+sypeJOh6f/4Uf/zzNXuOkfic0Rke88m9w7ks3/4Cj9yCcIZrEFW6j/+HD8uTEZb7g4iMo3j9H/uAwvfcAmdrkohsk2i8r8qSEpg8kIZK1Nq+4EV6AAU8b/+HPypkUBdeD9tBEIU5oefL0AXcn/5FEzfLT/tQYAScEFU5wejPP//4MIVJ0qfc8FUJj9/5n/phr/yRshX6ElY6X/siUZf9wEUJcGUZn82FUAKbdOcn3++qf8zkAcXq7985H+/qn/9WkcZ7H/pSVNdpN6cmD/6Fj1rkEAPLDdvoT+/7apy5v8/5+Vv6794oU8r+6T//9Vx/5j0Pk/svM4rfE4qu0cluH//VyQ/f97+P+J9/9s8v9k1f9LxP9HxP9ezftr1fo7uPlZxvcqqfIupu0boOshn+gzqOcTkuYdmOEXlOEelN0LitsSfsz/wRr/1gj/ywD/xgD/vwCX//+N+f+P9P+B8/948f937P9j7P925f9i5P9U5P+A4f9y3/9C3f9o2/9S0/9f0v9H0f8pyf8yvv8Qnv8Ah/9IzP4utf1HvfxEvPyH7PtSvfhLuvdGtfYzr/ZWw/Vmy/Q8u/NJt/I2rPFLuvCD5e4Zne65/eczp+YDjeUim+O0++B7z+AAcuB41t0akd3P/tzB+9wBgtwMgNEIe8/g/80JeMsKcsL5/7zB4qGhs5L//4nn74Di2oD//3rYx1//+U/Co0v8z0XgwEX3w0Twwz/+wyz/9yr/2Cf/yCf/3SP2syL9siD/vRj/zhX/vAD/rwCeMKwqAAAAenRSTlMAgB0VJwX+/Lx5eHhxZVBQTT0xKSIWDwkJA/7+/v79/Pv6+fj39/X19PHv7evm5ePj397c2tjY1tXT0czHxsXEw8PBv7i3trS0sK2trKuqopGRj4uJhYSCf3V0cXFpZ2FfWFdWVlRUT0hBQD88Ozk3NDAwLCsnJx0YEFK6UDEAAAGLSURBVCjPYiAWFKZkoAsxV+QEmilrG1gXIQkK+BuqK75+rFXAIBHrLQFX6rRu3tUncx+c1vApZmBIKIEKC+q2Hbkxa+a1lmW1m6ekMgiLQoRZJi251DT7/va25gXdvfuO8cFMMVp19u7sR+6JmZzSrbUHJ8hIQoR5N5xrmnMnEsQU0lm65+j0AIi48YmmubfCIOzc7q6qqbLiYLba7TkPWwSYmUCARaG9qvGKIEi47OasF4cWqbCzA8bGJiWvJNdbN+UyL0g8/Onbk8tXzK+urm5uXbi4vaZnwsUooHC51Zvr61fuDeJkBAMuLm7uCBYGBtbo5/c29nTVCqEFlqiXqt6mSftXm0C4cbYOjjZ+QEapvn3+qcaqHWtdmYG8+Jo1nVsmhwJZ2c+CGUIuHK/aWaNp52y6a1tD/2QPkMb0V/wMDBzTJzbUbe3o6Kxr6D9sCTYwayY/kPQ8P7HvQH19/e6+qRYQz7KavxQWE5NM45hxZtq0xhlu8MCs9HWJyWNlYBBJ5uFJEiEU/QDvfogQghLqnQAAAABJRU5ErkJggg==">
+        </p>
+        <div class="version">
+            <small>当前系统版本号：v{$version}</small>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(function () {
+        new Vue({
+            el: "#app",
+            data: {
+                time: 0,
+                form: {
+                    username: "",
+                    password: ""
+                }
+            },
+            mounted() {
+                this.time = new Date().getTime()
+                window.addEventListener("keydown", this.handleKeyDown, true); //开启监听键盘按下事件
+            },
+            methods: {
+                changeValidEvent() {
+                    this.time = new Date().getTime()
+                },
+                handleKeyDown(e) {
+                    let key = null;
+                    if (window.event === undefined) {
+                        key = e.keyCode;
+                    } else {
+                        key = window.event.keyCode;
+                    }
+                    if (key === 13) {
+                        //触发的事件
+                        this.doLogin();
+                    }
+                },
+                doLogin() {
+                    console.log('doLogin')
+                    this.httpPost(`/admin/passport/login`, {time: this.time, ...this.form}).then(res => {
+                        if (res.status) {
+                            this.$message.success(res.msg)
+                            setTimeout(() => {
+                                location.href = '/admin/index/index'
+                            }, 1000)
+                        } else {
+                            this.$message.error(res.msg)
+                        }
+                    }).catch(err => {
+                    })
+                }
+            }
+        })
+    })
+</script>
+<style>
+    .version {
+        margin-top: 20px;
+    }
+
+    .footer {
+        width: 100%;
+        z-index: -1;
+        font-size: 12px;
+        color: #909399;
+        line-height: 1.2;
+        text-align: center;
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+
+    .login-dev {
+        display: inline-block;
+        width: 460px;
+        margin-top: 5%;
+    }
+
+    .login-con {
+        min-height: 100%;
+        position: fixed;
+        width: 100%;
+        text-align: center;
+        top: 0;
+        left: 0;
+        background: #f6f7ff;
+        background: url(/assets/img/login/login-bg.png) repeat;
+    }
+
+    /* vue相关  */
+    [v-cloak] {
+        display: none;
+    }
+
+    * {
+        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    }
+</style>
+</html>

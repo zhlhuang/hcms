@@ -4,18 +4,16 @@ use Hyperf\Database\Schema\Schema;
 use Hyperf\Database\Schema\Blueprint;
 use Hyperf\Database\Migrations\Migration;
 
-class CreateUserTable extends Migration
+class CreateDemoTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::dropIfExists('taskhall_user');
-        Schema::create('taskhall_user', function (Blueprint $table) {
-            $table->bigIncrements('user_id');
+        Schema::create('demo', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -24,6 +22,6 @@ class CreateUserTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('taskhall_user');
+        Schema::dropIfExists('demo');
     }
 }

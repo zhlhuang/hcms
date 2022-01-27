@@ -6,10 +6,13 @@
  * Time: 18:09.
  */
 
+declare(strict_types=1);
+
 namespace App\Aspect;
 
-use App\Admin\Lib\Render;
 use App\Annotation\View;
+use App\Application\Admin\Lib\Render;
+use App\Application\Admin\Lib\RenderParam;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
@@ -37,18 +40,28 @@ class ViewAspect extends AbstractAspect
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
         $res = $proceedingJoinPoint->process();
+
+        //获取template名称，默认是控制的方法名称
+        $template = $proceedingJoinPoint->getReflectMethod()->name;
+        if ($res instanceof RenderParam) {
+            $template = $res->template ?: $template; //拿出指定的模板
+            $data = $res->getData();
+        } else {
+            $data = $res;
+        }
+
         $class = $proceedingJoinPoint->getReflectMethod()->class;
         //解析调用Controller的命名空间。
-        list($module_name, $controller) = (explode('\\Controller\\', str_replace(['App\\'], '', $class)));
+        list($module_name, $controller) = (explode('\\Controller\\', str_replace(['App\\Application\\'], '', $class)));
         $controller = strtolower(str_replace("Controller", '', $controller)); //控制器名称
         $module_name = ucfirst($module_name); //模块名称
 
         // 根据模块和Controller名称，解析出template 目录
-        $view_path = BASE_PATH . "/app/{$module_name}/View/{$controller}/";
-        $render = new Render($this->container, $this->config);
-        //获取template名称，默认是控制的方法名称
-        $template = $proceedingJoinPoint->getReflectMethod()->name;
+        $view_path = BASE_PATH . "/app/Application/{$module_name}/View/{$controller}/";
 
-        return $render->render($template, $res, $view_path);
+
+        $render = new Render($this->container, $this->config);
+
+        return $render->render($template, $data, $view_path);
     }
 }

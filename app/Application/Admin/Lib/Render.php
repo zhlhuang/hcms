@@ -6,7 +6,9 @@
  * Time: 20:24.
  */
 
-namespace App\Admin\Lib;
+declare(strict_types=1);
+
+namespace App\Application\Admin\Lib;
 
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\HttpMessage\Stream\SwooleStream;

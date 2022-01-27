@@ -45,17 +45,19 @@ class Hcms extends HyperfCommand
         $install_name = $this->input->getOption('install');
         if ($install_name !== '') {
             $module_name = ucfirst($install_name);
+            $module_dir = "app/Application/{$module_name}/";
             //不存在该模块
-            if (!is_dir("app/{$module_name}/")) {
+            if (!is_dir($module_dir)) {
                 $this->output->error("module {$module_name} is not exist");
 
                 return;
             }
             //执行数据库部署
             try {
-                $this->output->info("migrate " . "app/{$module_name}/Install/Migration");
+                $path = $module_dir . "Install/Migration";
+                $this->output->info("migrate " . $path);
                 $this->call('migrate', [
-                    '--path' => "app/{$module_name}/Install/Migration"
+                    '--path' => $path
                 ]);
             } catch (\Exception $exception) {
                 $this->output->error($exception->getMessage());
