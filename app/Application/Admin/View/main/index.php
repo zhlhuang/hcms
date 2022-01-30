@@ -1,7 +1,7 @@
 <div class="page-container">
     <el-card>
         <div>
-            hello demo {$msg}
+            hello main {$msg}
         </div>
     </el-card>
 </div>

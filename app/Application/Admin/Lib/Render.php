@@ -68,10 +68,14 @@ class Render
 
     public function getContents(string $template, array $data = [], string $view_path = ''): string
     {
-        $config = array_merge($this->config, [
-            'view_path' => $view_path
-        ]);
 
+        if ($view_path !== '') {
+            $config = array_merge($this->config, [
+                'view_path' => $view_path
+            ]);
+        } else {
+            $config = $this->config;
+        }
         try {
             switch ($this->mode) {
                 case Mode::SYNC:

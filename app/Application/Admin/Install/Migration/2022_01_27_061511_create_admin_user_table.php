@@ -20,6 +20,8 @@ class CreateAdminUserTable extends Migration
             //所属角色id
             $table->integer('role_id', false)
                 ->default(0);
+            //真实姓名
+            $table->string('real_name', 128);
             $table->timestamps();
             $table->softDeletes();
         });

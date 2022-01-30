@@ -10,11 +10,14 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Middleware;
 
+use Hyperf\Di\Annotation\Inject;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Qbhy\HyperfAuth\AuthManager;
+use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 
 class AdminMiddleware implements MiddlewareInterface
 {
@@ -23,15 +26,30 @@ class AdminMiddleware implements MiddlewareInterface
      */
     protected $container;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @Inject()
+     * @var AuthManager
+     */
+    protected $auth;
+
+    /**
+     * @var HttpResponse
+     */
+    protected $response;
+
+    public function __construct(ContainerInterface $container, HttpResponse $response)
     {
         $this->container = $container;
+        $this->response = $response;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-//        var_dump($request->getUri()
-//            ->getPath());
+        //TODO 如果是其他调用方式，例如API的post请求、ajax 可以返回json格式
+        if (!$this->auth->guard('session')
+            ->check()) {
+            return $this->response->redirect('/admin/passport/login');
+        }
 
         return $handler->handle($request);
     }

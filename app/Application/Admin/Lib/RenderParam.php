@@ -10,23 +10,28 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Lib;
 
+use App\Application\Admin\Service\AdminUserService;
+
 class RenderParam
 {
     public $template = '';
     protected $data = [];
-    protected $common_data = [
-        'version' => "0.1.0"
-    ];
+    protected $common_data = [];
 
 
     public function __construct(array $data = [])
     {
         $this->data = $data;
+        $admin_user = AdminUserService::getInstance()
+            ->getAdminUser();
+        $this->common_data = [
+            'version' => "0.1.0",
+            'admin_user' => $admin_user ? $admin_user->toArray() : []
+        ];
     }
 
     public static function display(string $template = '', array $data = []): RenderParam
     {
-
         return (new self($data))->setTemplate($template);
     }
 

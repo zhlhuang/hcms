@@ -4,34 +4,26 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
-use App\Application\Admin\Model\AdminUser;
+use App\Annotation\View;
+use App\Application\Admin\Lib\RenderParam;
+use App\Application\Admin\Service\AdminUserService;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\HttpServer\Annotation\Middleware;
+use App\Application\Admin\Middleware\AdminMiddleware;
 
 /**
+ * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="/admin/index")
  */
 class IndexController extends AdminAbstractController
 {
     /**
+     * @View()
      * @GetMapping(path="index")
      */
     function index()
     {
-        /**
-         * @var AdminUser $admin_user
-         */
-        try {
-            $admin_user = $this->auth->guard('session')
-                ->user();
-        } catch (\Exception $exception) {
-            return $this->returnSuccessJson(['msg' => '用户没有登录']);
-        }
-
-        if (empty($admin_user->admin_user_id)) {
-            return $this->returnSuccessJson(['msg' => '用户没有登录']);
-        }
-
-        return $this->returnSuccessJson(['msg' => '用户已经登录']);
+        return RenderParam::display();
     }
 }

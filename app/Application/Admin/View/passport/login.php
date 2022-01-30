@@ -1,24 +1,3 @@
-{__NOLAYOUT__}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>登录</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="renderer" content="webkit"/>
-    <meta http-equiv="Cache-Control" content="no-siteapp"/>
-
-    <link rel="stylesheet" href="/assets/element-ui@2.15.6/index.css?version={$version}">
-
-    <script src="/assets/js/jquery.min.js?version={$version}"></script>
-    <script src="/assets/js/vue.js?version={$version}"></script>
-    <script src="/assets/js/vue-common.js?version={$version}"></script>
-    <script src="/assets/js/vue-list.js?version={$version}"></script>
-    <script src="/assets/element-ui@2.15.6/index.js?version={$version}"></script>
-</head>
-
-<body>
 <div id="app" v-cloak class="login-con">
     <div class="login-dev loading">
         <el-card>
@@ -75,7 +54,6 @@
         </div>
     </div>
 </div>
-</body>
 <script>
     $(function () {
         new Vue({
@@ -88,6 +66,10 @@
                 }
             },
             mounted() {
+                //如果是在iframe里面，需要跳转到 /admin/passport/login 页面
+                if (window.parent !== window) {
+                    window.parent.location.href = "/admin/passport/login"
+                }
                 this.time = new Date().getTime()
                 window.addEventListener("keydown", this.handleKeyDown, true); //开启监听键盘按下事件
             },
@@ -160,14 +142,4 @@
         background: #f6f7ff;
         background: url(/assets/img/login/login-bg.png) repeat;
     }
-
-    /* vue相关  */
-    [v-cloak] {
-        display: none;
-    }
-
-    * {
-        font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-    }
 </style>
-</html>

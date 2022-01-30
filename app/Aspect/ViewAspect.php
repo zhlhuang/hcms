@@ -18,6 +18,7 @@ use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * @Aspect()
@@ -40,6 +41,10 @@ class ViewAspect extends AbstractAspect
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
         $res = $proceedingJoinPoint->process();
+        //如果返回的是Response 对象，直接返回
+        if ($res instanceof ResponseInterface) {
+            return $res;
+        }
 
         //获取template名称，默认是控制的方法名称
         $template = $proceedingJoinPoint->getReflectMethod()->name;

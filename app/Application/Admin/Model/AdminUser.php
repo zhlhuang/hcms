@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace App\Application\Admin\Model;
 
+use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\DbConnection\Model\Model;
 use Qbhy\HyperfAuth\AuthAbility;
 use Qbhy\HyperfAuth\Authenticatable;
@@ -19,7 +20,7 @@ use Qbhy\HyperfAuth\Authenticatable;
  */
 class AdminUser extends Model implements Authenticatable
 {
-    use AuthAbility;
+    use AuthAbility, SoftDeletes;
 
     /**
      * The table associated with the model.
