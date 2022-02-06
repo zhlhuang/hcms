@@ -42,14 +42,15 @@ window.__vueCommon = {
         /**
          * 获取url参数
          * @param variable
-         * @returns {*}
+         * @param default_value
+         * @returns {{}|*|string}
          */
-        getUrlQuery: function (variable) {
+        getUrlQuery: function (variable = '', default_value = '') {
             var urlObj = this.parserUrl(window.location.href);
-            if (!variable) {
+            if (variable === '') {
                 return urlObj && urlObj.search
             }
-            return urlObj && urlObj.search && urlObj.search[variable] ? urlObj.search[variable] : '';
+            return urlObj && urlObj.search && urlObj.search[variable] ? urlObj.search[variable] : default_value;
         },
         httpGet: function (url, data, loading = true, loadingTarget = '.loading') {
             console.log(url, loading, loadingTarget)
@@ -70,11 +71,11 @@ window.__vueCommon = {
                                 location.href = "{:urlx('passport/login')}"
                             }, 1500)
                         }
-                        setTimeout(function () {
+                        setTimeout(() => {
                             resolve(res);
                         }, 300)
                     }, error: (err) => {
-                        this.$message().error('系统繁忙，请稍后再试。');
+                        this.$message.error('系统繁忙，请稍后再试。');
                         reject(err)
                     },
                     complete: () => {
@@ -106,7 +107,7 @@ window.__vueCommon = {
                             resolve(res);
                         }, 300)
                     }, error: (err) => {
-                        this.$message().error('系统繁忙，请稍后再试。');
+                        this.$message.error('系统繁忙，请稍后再试。');
                         reject(err)
                     },
                     complete: () => {

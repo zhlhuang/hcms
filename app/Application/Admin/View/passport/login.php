@@ -142,4 +142,8 @@
         background: #f6f7ff;
         background: url(/assets/img/login/login-bg.png) repeat;
     }
+
+    .el-form-item .el-input__inner {
+        width: 100%;
+    }
 </style>

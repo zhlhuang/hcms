@@ -43,8 +43,10 @@ class AdminAbstractController
     protected $response;
 
 
-    protected function returnSuccessJson(array $data = [], $msg = 'ok', int $code = 200, $status = true)
+    protected function returnSuccessJson(array $data = [], $msg = '', int $code = 200, $status = true)
     {
+        !$msg && $msg = $this->request->isMethod('GET') ? '请求成功' : '操作成功';
+
         return $this->response->json(compact('data', 'msg', 'status', 'code'));
     }
 

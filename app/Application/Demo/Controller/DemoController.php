@@ -24,6 +24,25 @@ use App\Application\Admin\Middleware\AdminMiddleware;
  */
 class DemoController extends AdminAbstractController
 {
+
+    /**
+     * @View()
+     * @GetMapping(path="edit")
+     */
+    function edit()
+    {
+        return RenderParam::display('edit', ['title' => '编辑示例页面']);
+    }
+
+    /**
+     * @View()
+     * @GetMapping(path="lists")
+     */
+    function lists()
+    {
+        return RenderParam::display();
+    }
+
     /**
      * @View()
      * @GetMapping(path="index")

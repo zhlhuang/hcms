@@ -10,3 +10,26 @@
 .page-container {
     padding: 8px;
 }
+
+.pagination-container {
+    margin-top: 10px;
+    text-align: center;
+}
+
+/*默认输入框宽度*/
+.el-form-item .el-input__inner {
+    width: 300px;
+}
+
+.form-small {
+    color: #999999;
+}
+
+.el-link + .el-link {
+    margin-left: 10px;
+}
+
+/*所有 Default 样式的link 没有下划线*/
+.el-link.el-link--default:after {
+    border: 0 !important;
+}

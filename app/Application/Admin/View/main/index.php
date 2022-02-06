@@ -1,4 +1,4 @@
-<div class="page-container">
+<div class="page-container" v-cloak>
     <el-card>
         <div>
             hello main {$msg}

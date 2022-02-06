@@ -688,26 +688,15 @@
                     lock: true,
                     text: ''
                 });
-                this.navData = [
-                    {
-                        icon: "el-icon-data-analysis",
-                        id: 'index123', //不能为数字，唯一标示
-                        items: [],
-                        name: "概览",
-                        pid: 0,
-                        url: "/admin/main/index",
-                    },
-                    {
-                        icon: "el-icon-receiving",
-                        id: 'demo222',
-                        items: [],
-                        name: "示例",
-                        pid: 0,
-                        url: "/demo/demo/index",
+                this.httpGet("{:url('admin/index/index/lists')}").then(res => {
+                    if (res.status) {
+                        let {menu_list = []} = res.data
+                        this.navData = menu_list
+                        console.log(this.navData)
+                        PermissionInLoading.close()
+                        this.goUrl([this.navData[0].name], this.navData[0])
                     }
-                ]
-                PermissionInLoading.close()
-                this.goUrl([this.navData[0].name], this.navData[0])
+                })
             },
             //注册事件
             registerEvent: function () {
@@ -789,6 +778,10 @@
             this.onresize()
         },
         mounted: function () {
+            //如果是在iframe里面，需要刷新页面
+            if (window.parent !== window) {
+                window.parent.location.reload()
+            }
             this.init()
             this.registerEvent()
             this.getMenuList()
