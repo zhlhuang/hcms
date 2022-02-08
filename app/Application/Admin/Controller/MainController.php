@@ -13,7 +13,7 @@ use App\Application\Admin\Middleware\AdminMiddleware;
 
 /**
  * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="/admin/main")
+ * @Controller(prefix="admin/main")
  */
 class MainController extends AdminAbstractController
 {

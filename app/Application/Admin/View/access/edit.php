@@ -9,7 +9,7 @@
         </div>
         <div>
             <el-form size="small" label-width="80px">
-                <el-form-item label="上级菜单">
+                <el-form-item label="上级权限">
                     <el-cascader
                             v-model="cascader_value"
                             filterable

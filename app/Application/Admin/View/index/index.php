@@ -16,31 +16,31 @@
                         :class="{hid : minHid}"
                         :unique-opened="true"
                 >
-                    <div v-for="(item, index) in navData" :key="item.id">
-                        <el-menu-item v-if="item.items.length === 0" :index="item.id" @click="goUrl([item.name], item)">
-                            <i :class="item.icon"></i>
-                            <span slot="title">{{item.name}}</span>
+                    <div v-for="(item, index) in navData" :key="item.menu_id">
+                        <el-menu-item v-if="item.children.length === 0" :index="item.menu_id" @click="goUrl([item.access_name], item)">
+                            <i :class="item.menu_icon"></i>
+                            <span slot="title">{{item.access_name}}</span>
                         </el-menu-item>
-                        <el-submenu v-else :index="item.id">
+                        <el-submenu v-else :index="item.menu_id">
                             <template slot="title">
-                                <i :class="item.icon"></i>
-                                <span class="title">{{item.name}}</span>
+                                <i :class="item.menu_icon"></i>
+                                <span class="title">{{item.access_name}}</span>
                             </template>
-                            <div v-for="(val, j) in item.items" :key="val.id">
-                                <el-menu-item v-if="val.items.length === 0" :index="val.id"
-                                              @click="goUrl([item.name, val.name], val)">
+                            <div v-for="(val, j) in item.children" :key="val.menu_id">
+                                <el-menu-item v-if="val.children.length === 0" :index="val.menu_id"
+                                              @click="goUrl([item.access_name, val.access_name], val)">
                                     <template slot="title">
-                                        <span class="title">{{val.name}}</span>
+                                        <span class="title">{{val.access_name}}</span>
                                     </template>
                                 </el-menu-item>
-                                <el-submenu :index="val.id" v-else>
+                                <el-submenu :index="val.menu_id" v-else>
                                     <template slot="title">
-                                        <span class="title">{{val.name}}</span>
+                                        <span class="title">{{val.access_name}}</span>
                                     </template>
-                                    <el-menu-item v-for="(sub, v) in val.items" :key="sub.id" :index="sub.id"
-                                                  @click="goUrl([item.name, val.name, sub.name], sub)">
+                                    <el-menu-item v-for="(sub, v) in val.children" :key="sub.menu_id" :index="sub.menu_id"
+                                                  @click="goUrl([item.access_name, val.access_name, sub.access_name], sub)">
                                         <template slot="title">
-                                            <span class="title">{{sub.name}}</span>
+                                            <span class="title">{{sub.access_name}}</span>
                                         </template>
                                     </el-menu-item>
                                 </el-submenu>
@@ -538,10 +538,10 @@
                     // 把点击的导航添加到tag
                     this.iframeUrls.push(data.url)
                     this.tags.push({
-                        name: data.name,
+                        name: data.access_name,
                         url: data.url,
                         breadcrumb: breadcrumb,
-                        defaultActive: data.id
+                        defaultActive: data.menu_id
                     })
                     setTimeout(function () {
                         var tagList = that.$refs.tagList
@@ -694,7 +694,7 @@
                         this.navData = menu_list
                         console.log(this.navData)
                         PermissionInLoading.close()
-                        this.goUrl([this.navData[0].name], this.navData[0])
+                        this.goUrl([this.navData[0].access_name], this.navData[0])
                     }
                 })
             },
@@ -726,7 +726,7 @@
                     params: {}
                 }).then(function (res) {
                     if (res.status) {
-                        that.adminUserInfo.name = res.data.username
+                        that.adminUserInfo.access_name = res.data.username
                         that.adminUserInfo.role_name = res.data.role_name
                     } else {
                         layer.msg(res.msg)

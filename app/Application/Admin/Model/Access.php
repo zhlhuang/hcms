@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace App\Application\Admin\Model;
 
+use App\Application\Admin\Service\AccessService;
 use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\DbConnection\Model\Model;
 
@@ -52,5 +53,19 @@ class Access extends Model
     public function children(): HasMany
     {
         return $this->hasMany(Access::class, 'parent_access_id', 'access_id');
+    }
+
+    public function saved()
+    {
+        //更新权限菜单和权限
+        AccessService::getInstance()
+            ->updateAccess();
+    }
+
+    public function deleted()
+    {
+        //更新权限菜单和权限
+        AccessService::getInstance()
+            ->updateAccess();
     }
 }

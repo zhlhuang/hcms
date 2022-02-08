@@ -63,4 +63,9 @@ class AdminUserService
     {
         return $this->getAdminUser()->admin_user_id ?: 0;
     }
+
+    public function getAdminUserRoleId(): int
+    {
+        return $this->getAdminUser()->role_id ?: 0;
+    }
 }

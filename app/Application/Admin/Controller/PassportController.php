@@ -16,7 +16,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 use Psr\SimpleCache\CacheInterface;
 
 /**
- * @Controller(prefix="/admin/passport")
+ * @Controller(prefix="admin/passport")
  */
 class PassportController extends AdminAbstractController
 {

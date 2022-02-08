@@ -7,7 +7,7 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\View;
 use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Model\Access;
-use Hyperf\Database\Model\Relations\Relation;
+use App\Application\Admin\Service\AccessService;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
@@ -16,7 +16,7 @@ use Hyperf\HttpServer\Annotation\PostMapping;
 
 /**
  * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="/admin/access")
+ * @Controller(prefix="admin/access")
  */
 class AccessController extends AdminAbstractController
 {
@@ -46,6 +46,19 @@ class AccessController extends AdminAbstractController
      */
     function submitEdit()
     {
+        $validator = $this->validationFactory->make($this->request->all(), [
+            'access_name' => 'required',
+            'uri' => 'required',
+        ], [
+            'access_name.required' => '请输入菜单/权限名称',
+            'uri.required' => '请输入uri',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->returnSuccessError($validator->errors()
+                ->first());
+        }
+
         $access_id = (int)$this->request->post('access_id', 0);
         $parent_access_id = (int)$this->request->post('parent_access_id', 0);
         if ($parent_access_id > 0 && $access_id === $parent_access_id) {
@@ -87,7 +100,9 @@ class AccessController extends AdminAbstractController
      */
     function edit()
     {
-        return RenderParam::display('edit', ['title' => '新增菜单与权限']);
+        $access_id = (int)$this->request->input('access_id', 0);
+
+        return RenderParam::display('edit', ['title' => $access_id > 0 ? '编辑菜单与权限' : '新增菜单与权限']);
     }
 
     /**
@@ -111,16 +126,8 @@ class AccessController extends AdminAbstractController
      */
     function lists()
     {
-        $lists = Access::where('parent_access_id', 0)
-            ->with([
-                'children' => function (Relation $relation) {
-                    $relation->with(['children'])
-                        ->orderBy('sort');
-                }
-            ])
-            ->orderBy('sort')
-            ->select()
-            ->get();
+        $lists = AccessService::getInstance()
+            ->getAccessByRoleId();
 
         return $this->returnSuccessJson(compact('lists'));
     }
