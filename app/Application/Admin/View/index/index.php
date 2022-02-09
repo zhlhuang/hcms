@@ -756,8 +756,6 @@
                         setTimeout(() => {
                             location.href = "/admin/passport/login"
                         }, 1500)
-                    } else {
-                        this.$message.error(res.msg)
                     }
                 })
             }

@@ -20,7 +20,9 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Exception\NotFoundException;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Exception\HttpException;
+use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\Utils\Codec\Json;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
@@ -57,6 +59,7 @@ class HttpExceptionHandler extends ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response)
     {
+
         $description = $throwable->getMessage();
         $app_env = $this->config->get('app_env', 'dev');
         if ($app_env === 'dev') {
@@ -66,8 +69,21 @@ class HttpExceptionHandler extends ExceptionHandler
             $location = '';
             $content = '';
         }
-
+        $xmlhttprequest = strtolower($this->request->header('X-Requested-With') ?: '');
         $this->stopPropagation();
+        if ($xmlhttprequest === 'xmlhttprequest') {
+            //如果是ajax 请求，返回json 错误
+            $result = Json::encode([
+                'status' => false,
+                'code' => 404,
+                'data' => compact('description', 'location', 'content'),
+                'msg' => $throwable->getMessage()
+            ]);
+
+            return $response->withAddedHeader('content-type', 'application/json; charset=utf-8')
+                ->withBody(new SwooleStream($result));
+        }
+
         $render = new Render($this->container, $this->config);
         $renderParam = new RenderParam(compact('description', 'location', 'content'));
 

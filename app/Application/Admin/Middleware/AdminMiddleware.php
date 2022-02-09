@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Middleware;
 
+use App\Application\Admin\Service\AccessService;
 use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpMessage\Exception\NotFoundHttpException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,6 +51,18 @@ class AdminMiddleware implements MiddlewareInterface
         if (!$this->auth->guard('session')
             ->check()) {
             return $this->response->redirect('/admin/passport/login');
+        }
+        /**
+         * 获取当前访问的 path
+         */
+        $path = trim($request->getUri()
+            ->getPath(), '/');
+        /**
+         * 校验权限
+         */
+        if (!AccessService::getInstance()
+            ->checkAccess($path)) {
+            throw new NotFoundHttpException('非法请求');
         }
 
         return $handler->handle($request);

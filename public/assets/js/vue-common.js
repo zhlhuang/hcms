@@ -64,12 +64,8 @@ window.__vueCommon = {
                     data: data,
                     dataType: 'json',
                     success: (res) => {
-                        //未登录
-                        if (res.code === -1) {
+                        if (!res.status) {
                             this.$message.error(res.msg)
-                            setTimeout(() => {
-                                location.href = "{:urlx('passport/login')}"
-                            }, 1500)
                         }
                         setTimeout(() => {
                             resolve(res);
@@ -97,11 +93,8 @@ window.__vueCommon = {
                     data: data,
                     dataType: 'json',
                     success: (res) => {
-                        if (res.code === -1) {
+                        if (!res.status) {
                             this.$message.error(res.msg)
-                            setTimeout(() => {
-                                location.href = "{:urlx('passport/login')}"
-                            }, 1500)
                         }
                         setTimeout(function () {
                             resolve(res);

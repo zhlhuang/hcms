@@ -13,12 +13,19 @@ namespace App\Application\Admin\Service;
 use App\Application\Admin\Model\Access;
 use App\Application\Admin\Model\AdminRoleAccess;
 use Hyperf\Utils\Context;
+use Hyperf\Utils\Str;
 
 class AccessService
 {
 
     protected $all_access = [];
     protected $menu_list = [];
+    /**
+     * 不需要校验的权限集合
+     *
+     * @var string[]
+     */
+    protected $not_auth = ['admin/index/index'];
 
     private function __construct()
     {
@@ -28,7 +35,13 @@ class AccessService
         $this->menu_list = $this->getMenuList($this->all_access);
     }
 
-    private function getMenuList($access_list): array
+    /**
+     * 根据权限过滤出菜单
+     *
+     * @param array $access_list
+     * @return array
+     */
+    private function getMenuList(array $access_list = []): array
     {
         $menu_list = [];
         foreach ($access_list as $item) {
@@ -45,7 +58,13 @@ class AccessService
         return $menu_list;
     }
 
-    private function getAccessList($parent_access_id = 0): array
+    /**
+     * 获取权限树
+     *
+     * @param int $parent_access_id
+     * @return array
+     */
+    private function getAccessList(int $parent_access_id = 0): array
     {
         $access_list = Access::where('parent_access_id', $parent_access_id)
             ->orderBy('sort')
@@ -106,10 +125,11 @@ class AccessService
      */
     private function getRoleAccessList(int $role_id): array
     {
-        //获取角色权限列表
-        return AdminRoleAccess::where('role_id', $role_id)
-            ->pluck('access_uri', 'access_id')
-            ->toArray();
+        return Context::getOrSet(self::class . 'role_access_list_' . $role_id, function () use ($role_id): array {
+            return AdminRoleAccess::where('role_id', $role_id)
+                    ->pluck('access_uri', 'access_id')
+                    ->toArray() + $this->not_auth; //加上默认不需要校验的权限
+        });
     }
 
     /**
@@ -149,6 +169,26 @@ class AccessService
 
             return $this->filterRoleAccess($this->all_access, $role_access_list);
         }
+    }
+
+    /**
+     * 根据path校验当前管理是否有权限
+     *
+     * @param string $path
+     * @return bool
+     */
+    public function checkAccess(string $path): bool
+    {
+        $role_id = AdminUserService::getInstance()
+            ->getAdminUserRoleId();
+        if ($role_id === 0) {
+            return true;
+        }
+        $role_access_list = $this->getRoleAccessList($role_id);
+
+        return !empty(array_filter($role_access_list, function ($item) use ($path) {
+            return Str::is($item, $path) || Str::is($item . '/*', $path);
+        }));
     }
 
     /**

@@ -118,8 +118,6 @@
                             if (res.status) {
                                 this.$message.success(res.msg)
                                 this.GetList()
-                            } else {
-                                this.$message.error(res.msg)
                             }
                         })
                     }).catch(err => {

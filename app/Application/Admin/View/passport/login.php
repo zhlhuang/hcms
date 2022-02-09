@@ -97,8 +97,6 @@
                             setTimeout(() => {
                                 location.href = '/admin/index/index'
                             }, 1000)
-                        } else {
-                            this.$message.error(res.msg)
                         }
                     }).catch(err => {
                     })

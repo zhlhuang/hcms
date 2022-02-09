@@ -152,8 +152,6 @@
                                     ...access
                                 }
                             }
-                        } else {
-                            this.$message.error(res.msg)
                         }
                     })
                 },
@@ -168,8 +166,6 @@
                         if (res.status) {
                             this.$message.success(res.msg)
                             location.href = "{:url('admin/access/index')}"
-                        } else {
-                            this.$message.error(res.msg)
                         }
                     })
                 },

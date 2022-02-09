@@ -151,8 +151,6 @@
                                     this.$refs.tree.setCheckedKeys(role_access_ids);
                                 }
                             }, 300)
-                        } else {
-                            this.$message.error(res.msg)
                         }
                     })
                 },
@@ -168,8 +166,6 @@
                         if (res.status) {
                             this.$message.success(res.msg)
                             location.href = "{:url('admin/role/index')}"
-                        } else {
-                            this.$message.error(res.msg)
                         }
                     })
                 }
