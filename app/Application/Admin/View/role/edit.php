@@ -73,9 +73,6 @@
                     } else {
                         return 0
                     }
-                },
-                icon_list() {
-                    return this.icon_list_string.split(',')
                 }
             },
             mounted() {

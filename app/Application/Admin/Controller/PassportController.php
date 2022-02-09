@@ -46,7 +46,7 @@ class PassportController extends AdminAbstractController
     {
         $username = $this->request->post('username', '');
         //生成密码
-        $password = md5($this->request->post('password', '') . $username);
+        $password = AdminUser::makePassword($username, $this->request->post('password', ''));
         $valid_code = $this->request->post('valid_code', '');
         $time = $this->request->post('time', 0);
 

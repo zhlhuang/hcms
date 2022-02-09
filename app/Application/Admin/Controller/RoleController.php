@@ -6,6 +6,8 @@
  * Time: 22:50.
  */
 
+declare(strict_types=1);
+
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;

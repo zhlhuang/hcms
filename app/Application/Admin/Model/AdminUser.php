@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace App\Application\Admin\Model;
 
+use Hyperf\Database\Model\Relations\HasOne;
 use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\DbConnection\Model\Model;
 use Qbhy\HyperfAuth\AuthAbility;
@@ -11,6 +12,7 @@ use Qbhy\HyperfAuth\Authenticatable;
 
 /**
  * @property int            $admin_user_id
+ * @property string         $real_name
  * @property string         $username
  * @property string         $password
  * @property int            $role_id
@@ -47,4 +49,36 @@ class AdminUser extends Model implements Authenticatable
         'updated_at' => 'datetime'
     ];
 
+    protected $hidden = ['deleted_at'];
+
+    /**
+     * 获取所属角色名称
+     *
+     * @return string
+     */
+    public function getRoleNameAttribute(): string
+    {
+        if ($this->role_id === 0) {
+            return "系统管理员";
+        }
+
+        return ($this->role && $this->role->role_name) ? $this->role->role_name : '';
+    }
+
+    /**
+     * 生成离散登录密码
+     *
+     * @param string $username
+     * @param string $password
+     * @return string
+     */
+    static function makePassword(string $username, string $password): string
+    {
+        return md5($password . $username);
+    }
+
+    public function role(): HasOne
+    {
+        return $this->hasOne(AdminRole::class, 'role_id', 'role_id');
+    }
 }

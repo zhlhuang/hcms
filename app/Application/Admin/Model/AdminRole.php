@@ -48,7 +48,37 @@ class AdminRole extends Model
         'updated_at' => 'datetime'
     ];
 
-    static function saveRole($role_id = 0, $data = [], $access_list = []): self
+    /**
+     * 获取角色所有下级角色id
+     *
+     * @param $role_id
+     * @return array
+     */
+    static function getChildRoleIds($role_id): array
+    {
+        $role_ids = self::where('parent_role_id', $role_id)
+            ->pluck('role_id')
+            ->toArray();
+        if (empty($role_ids)) {
+            return [];
+        }
+        $c_role_ids = [];
+        foreach ($role_ids as $c_role_id) {
+            $c_role_ids += self::getChildRoleIds($c_role_id);
+        }
+
+        return array_merge($role_ids, $c_role_ids);
+    }
+
+    /**
+     * 保存角色信息
+     *
+     * @param int   $role_id
+     * @param array $data
+     * @param array $access_list
+     * @return static
+     */
+    static function saveRole(int $role_id = 0, array $data = [], array $access_list = []): self
     {
         Db::beginTransaction();
         $role = self::updateOrCreate(['role_id' => $role_id], $data);
@@ -78,11 +108,21 @@ class AdminRole extends Model
         return $role;
     }
 
+    /**
+     * 角色关联的权限（注意role_id=0系统管理员是没有关联权限的）
+     *
+     * @return HasMany
+     */
     function accessList(): HasMany
     {
         return $this->hasMany(AdminRoleAccess::class, 'role_id', 'role_id');
     }
 
+    /**
+     * 下级角色
+     *
+     * @return HasMany
+     */
     function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_role_id', 'role_id');

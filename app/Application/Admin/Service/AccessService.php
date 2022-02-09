@@ -6,6 +6,8 @@
  * Time: 18:56.
  */
 
+declare(strict_types=1);
+
 namespace App\Application\Admin\Service;
 
 use App\Application\Admin\Model\Access;
@@ -20,11 +22,13 @@ class AccessService
 
     private function __construct()
     {
+        //获取权限
         $this->all_access = $this->getAccessList();
+        //获取菜单
         $this->menu_list = $this->getMenuList($this->all_access);
     }
 
-    private function getMenuList($access_list)
+    private function getMenuList($access_list): array
     {
         $menu_list = [];
         foreach ($access_list as $item) {
@@ -41,7 +45,7 @@ class AccessService
         return $menu_list;
     }
 
-    private function getAccessList($parent_access_id = 0)
+    private function getAccessList($parent_access_id = 0): array
     {
         $access_list = Access::where('parent_access_id', $parent_access_id)
             ->orderBy('sort')
@@ -77,18 +81,30 @@ class AccessService
         });
     }
 
-    public function getMenuByRoleId($role_id = 0)
+    /**
+     * 根据角色id获取菜单列表
+     *
+     * @param int $role_id
+     * @return array
+     */
+    public function getMenuByRoleId(int $role_id = 0): array
     {
         if ($role_id === 0) {
             return $this->menu_list;
         } else {
             $role_access_list = $this->getRoleAccessList($role_id);
+
             return $this->filterRoleAccess($this->menu_list, $role_access_list);
         }
     }
 
-
-    private function getRoleAccessList($role_id)
+    /**
+     * 获取角色权限记录  access_id => uri
+     *
+     * @param int $role_id
+     * @return array
+     */
+    private function getRoleAccessList(int $role_id): array
     {
         //获取角色权限列表
         return AdminRoleAccess::where('role_id', $role_id)
@@ -96,8 +112,14 @@ class AccessService
             ->toArray();
     }
 
-
-    private function filterRoleAccess($access_list, $role_access_list)
+    /**
+     * 筛选角色的权限
+     *
+     * @param $access_list
+     * @param $role_access_list
+     * @return array
+     */
+    private function filterRoleAccess($access_list, $role_access_list): array
     {
         $filter_access_list = [];
         foreach ($access_list as $value) {
@@ -112,16 +134,26 @@ class AccessService
         return $filter_access_list;
     }
 
-    public function getAccessByRoleId($role_id = 0)
+    /**
+     * 通过角色id获取权限列表
+     *
+     * @param int $role_id
+     * @return array
+     */
+    public function getAccessByRoleId(int $role_id = 0): array
     {
         if ($role_id === 0) {
             return $this->all_access;
         } else {
             $role_access_list = $this->getRoleAccessList($role_id);
+
             return $this->filterRoleAccess($this->all_access, $role_access_list);
         }
     }
 
+    /**
+     * 更新权限列表
+     */
     public function updateAccess()
     {
         $this->all_access = $this->getAccessList();
