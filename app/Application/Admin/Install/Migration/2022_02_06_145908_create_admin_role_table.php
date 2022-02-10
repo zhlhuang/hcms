@@ -14,13 +14,16 @@ class CreateAdminRoleTable extends Migration
         Schema::create('admin_role', function (Blueprint $table) {
             $table->bigIncrements('role_id');
             $table->string('role_name', 128)
+                ->nullable(false)
                 ->default('')
                 ->comment('角色名称');
             $table->string('description', '512')
+                ->nullable(false)
                 ->default('')
                 ->comment('角色描述');
             $table->integer('parent_role_id')
                 ->default(0)
+                ->nullable(false)
                 ->comment('父角色id');
             $table->timestamps();
             $table->softDeletes();

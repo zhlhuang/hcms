@@ -2,8 +2,8 @@
     <el-card>
         <div slot="header" class="breadcrumb">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><a href="/admin/main/index">首页</a></el-breadcrumb-item>
-                <el-breadcrumb-item><a href="/demo/demo/lists">列表示例</a></el-breadcrumb-item>
+                <el-breadcrumb-item><a href="{:url('admin/main/index')}">首页</a></el-breadcrumb-item>
+                <el-breadcrumb-item><a href="{:url('demo/demo/lists')}">列表示例</a></el-breadcrumb-item>
                 <el-breadcrumb-item>{$title}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -20,7 +20,7 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="名称">
-                    <el-input v-model="form.access_name"></el-input>
+                    <el-input v-model="form.access_name" placeholder=""></el-input>
                 </el-form-item>
                 <el-form-item label="Uri">
                     <el-input v-model="form.uri"></el-input>
@@ -81,7 +81,9 @@
                     // this.httpPost("{:url('admin/access/edit')}", {
                     //     ...this.form,
                     // }).then(res => {
-                    //
+                    //     if (res.status) {
+                    //         this.$message.success(res.msg)
+                    //     }
                     // })
                 },
             }

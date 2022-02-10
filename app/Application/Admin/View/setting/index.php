@@ -3,18 +3,19 @@
         <div slot="header" class="breadcrumb">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item><a href="{:url('admin/main/index')}">首页</a></el-breadcrumb-item>
-                <el-breadcrumb-item>列表示例</el-breadcrumb-item>
+                <el-breadcrumb-item>配置列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div>
             <el-form size="small" :inline="true">
                 <el-form-item>
-                    <el-input v-model="where.user" placeholder="审批人"></el-input>
+                    <el-input v-model="where.keyword" placeholder="关键字"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="where.region" placeholder="活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                    <el-select v-model="where.setting_group" placeholder="分组">
+                        <el-option label="不限" value=""></el-option>
+                        <el-option v-for="(item,index) in setting_group" :key="index" :label="item"
+                                   :value="item"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -28,26 +29,41 @@
                     :data="data_list"
                     style="width: 100%">
                 <el-table-column
-                        prop="date"
-                        label="日期"
+                        prop="setting_id"
+                        label="ID"
+                        min-width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="setting_key"
+                        label="key"
                         min-width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="name"
-                        label="姓名"
-                        min-width="180">
+                        prop="setting_description"
+                        min-width="200"
+                        label="描述">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
-                        min-width="380"
-                        label="地址">
+                        prop="setting_group"
+                        label="分组"
+                        min-width="100">
+                </el-table-column>
+                <el-table-column
+                        prop="type"
+                        label="类型"
+                        min-width="100">
+                </el-table-column>
+                <el-table-column
+                        prop="updated_at"
+                        label="更新时间"
+                        min-width="140">
                 </el-table-column>
                 <el-table-column
                         align="center"
                         min-width="180"
                         label="操作">
                     <template slot-scope="{row}">
-                        <el-link>
+                        <el-link :href="`{:url('admin/setting/edit')}?setting_id=`+row.setting_id">
                             <el-button size="small" type="primary">编辑</el-button>
                         </el-link>
                         <el-link @click="deleteEvent">
@@ -78,49 +94,30 @@
             data: {
                 is_init_list: true,
                 where: {},
+                setting_group: [],
             },
             methods: {
-                GetList() {
-                    this.handRes({
-                        current_page: 1,
-                        last_page: 2,
-                        total: 25,
-                        data: [{
-                            date: '2016-05-02',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1518 弄'
-                        }, {
-                            date: '2016-05-04',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1517 弄'
-                        }, {
-                            date: '2016-05-01',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1519 弄'
-                        }, {
-                            date: '2016-05-03',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1516 弄'
-                        }]
-                    })
-                    // this.httpGet('/admin/access/index/lists', {
-                    //     page: this.current_page,
-                    //     ...this.where
-                    // }).then(res => {
-                    //     let {lists = {}} = res.data
-                    //     this.handRes(lists)
-                    // })
-                },
                 deleteEvent({setting_id}) {
                     this.$confirm("是否确认删除该记录？", '提示', {setting_id}).then(() => {
-                        // this.httpGet("{:url('admin/setting/delete')}", {}).then(res => {
-                        //     if (res.status) {
-                        //         this.$message.success(res.msg)
-                        //     }
-                        // })
+                        this.httpGet("{:url('admin/setting/delete')}", {}).then(res => {
+                            if (res.status) {
+                                this.$message.success(res.msg)
+                            }
+                        })
+                    })
+                },
+                GetList() {
+                    this.httpGet("{:url('admin/setting/index/lists')}", {
+                        page: this.current_page,
+                        ...this.where
+                    }).then(res => {
+                        let {lists = {}, setting_group = []} = res.data
+                        this.setting_group = setting_group
+                        this.handRes(lists)
                     })
                 },
                 searchEvent() {
+                    this.GetList()
                 }
             }
         })
