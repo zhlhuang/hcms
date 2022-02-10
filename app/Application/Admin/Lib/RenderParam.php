@@ -22,11 +22,9 @@ class RenderParam
     public function __construct(array $data = [])
     {
         $this->data = $data;
-        $admin_user = AdminUserService::getInstance()
-            ->getAdminUser();
         $this->common_data = [
-            'version' => "0.1.0",
-            'admin_user' => $admin_user ? $admin_user->toArray() : []
+            'version' => config('version.version'),
+            'env' => env('APP_ENV')
         ];
     }
 

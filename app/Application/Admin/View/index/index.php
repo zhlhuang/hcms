@@ -17,7 +17,8 @@
                         :unique-opened="true"
                 >
                     <div v-for="(item, index) in navData" :key="item.menu_id">
-                        <el-menu-item v-if="item.children.length === 0" :index="item.menu_id" @click="goUrl([item.access_name], item)">
+                        <el-menu-item v-if="item.children.length === 0" :index="item.menu_id"
+                                      @click="goUrl([item.access_name], item)">
                             <i :class="item.menu_icon"></i>
                             <span slot="title">{{item.access_name}}</span>
                         </el-menu-item>
@@ -37,7 +38,8 @@
                                     <template slot="title">
                                         <span class="title">{{val.access_name}}</span>
                                     </template>
-                                    <el-menu-item v-for="(sub, v) in val.children" :key="sub.menu_id" :index="sub.menu_id"
+                                    <el-menu-item v-for="(sub, v) in val.children" :key="sub.menu_id"
+                                                  :index="sub.menu_id"
                                                   @click="goUrl([item.access_name, val.access_name, sub.access_name], sub)">
                                         <template slot="title">
                                             <span class="title">{{sub.access_name}}</span>
@@ -68,7 +70,7 @@
                     <el-dropdown>
                         <span class="el-dropdown-link">
                             <template>
-                                <span>{$admin_user.real_name}</span>
+                                <span>{{admin_user.real_name}}</span>
                                 <i class="el-icon-arrow-down el-icon--right"></i>
                             </template>
                         </span>
@@ -113,6 +115,7 @@
                         :style="{display: iframeUrl == url ? 'block': 'none'}"></iframe>
             </template>
         </section>
+        <div class="version">v {$version}</div>
     </div>
     <div class="mask" v-show="!minHid" @click="maskClick"></div>
 </div>
@@ -174,6 +177,17 @@
         flex: 1;
         transition: .23s ease-in;
         z-index: 10;
+    }
+
+    .centent .version {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        text-align: center;
+        font-size: 12px;
+        line-height: 30px;
+        color: #999999;
+        background: #F8F8F8;
     }
 
     .centent .navicon {
@@ -505,16 +519,7 @@
             // 单线右键选中项序号
             tempIndex: -1,
             //用户等级
-            adminUserInfo: {
-                role_name: '',
-                name: '',
-            },
-            // 角色权限列表
-            roleAccessList: [],
-            // 信息列表
-            msgList: [],
-            showMsg: false,
-            msgListTotal: 0
+            admin_user: {},
         },
         filters: {
             ellipsis: function (value) {
@@ -690,8 +695,9 @@
                 });
                 this.httpGet("{:url('admin/index/index/lists')}").then(res => {
                     if (res.status) {
-                        let {menu_list = []} = res.data
+                        let {menu_list = [], admin_user = {}} = res.data
                         this.navData = menu_list
+                        this.admin_user = admin_user
                         console.log(this.navData)
                         PermissionInLoading.close()
                         this.goUrl([this.navData[0].access_name], this.navData[0])

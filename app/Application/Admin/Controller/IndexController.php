@@ -28,8 +28,10 @@ class IndexController extends AdminAbstractController
         $menu_list = AccessService::getInstance()
             ->getMenuByRoleId(AdminUserService::getInstance()
                 ->getAdminUserRoleId());
+        $admin_user = AdminUserService::getInstance()
+            ->getAdminUser();
 
-        return $this->returnSuccessJson(compact('menu_list'));
+        return $this->returnSuccessJson(compact('menu_list', 'admin_user'));
     }
 
     /**
