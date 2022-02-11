@@ -13,6 +13,7 @@ use App\Annotation\View;
 use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Setting;
+use App\Application\Admin\Service\SettingService;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
@@ -27,9 +28,10 @@ class SettingController extends AdminAbstractController
     /**
      * @GetMapping(path="site/info")
      */
-    function info()
+    function siteInfo()
     {
-        $setting = Setting::getSettings('site');
+        $setting = SettingService::getInstance()
+            ->getSiteSetting();
 
         return $this->returnSuccessJson(compact('setting'));
     }
@@ -37,10 +39,11 @@ class SettingController extends AdminAbstractController
     /**
      * @PostMapping(path="site")
      */
-    function submit()
+    function siteSave()
     {
         $setting = $this->request->post('setting', []);
-        $res = Setting::saveSetting($setting);
+        $res = SettingService::getInstance()
+            ->setSiteSetting($setting);
 
         return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnSuccessError();
     }
@@ -62,7 +65,6 @@ class SettingController extends AdminAbstractController
         $lists = Setting::where($where)
             ->orderBy('setting_id', 'DESC')
             ->paginate();
-
         $setting_group = Setting::where([])
             ->distinct()
             ->pluck('setting_group')

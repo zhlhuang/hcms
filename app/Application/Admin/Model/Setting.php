@@ -4,8 +4,8 @@ declare (strict_types=1);
 
 namespace App\Application\Admin\Model;
 
-use Hyperf\DbConnection\Db;
 use Hyperf\DbConnection\Model\Model;
+use Hyperf\ModelCache\Cacheable;
 
 /**
  * @property int            $setting_id
@@ -19,7 +19,6 @@ use Hyperf\DbConnection\Model\Model;
  */
 class Setting extends Model
 {
-
     protected $primaryKey = 'setting_id';
     /**
      * The table associated with the model.
@@ -46,60 +45,24 @@ class Setting extends Model
     const TYPE_JSON = 'json';
 
     /**
-     * 获取配置列表
+     * 获取格式化后的配置
      *
-     * @param string $group
-     * @return array
+     * @return array|float|mixed|string
      */
-    static function getSettings(string $group = ''): array
+    function getFormatValueAttribute()
     {
-        $where = [];
-        if ($group !== '') {
-            $where[] = ['setting_group', '=', $group];
+        $type = $this->type ?: self::TYPE_STRING;
+        $value = $this->setting_value;
+        if ($type === self::TYPE_NUMBER) {
+            return (float)$value;
         }
-
-        return self::where($where)
-            ->pluck('setting_value', 'setting_key')
-            ->toArray() ?: [];
-    }
-
-    /**
-     * 通过key=>value 更新配置
-     *
-     * @param array  $setting_data
-     * @param string $group
-     * @return bool
-     */
-    static function saveSetting(array $setting_data, string $group = ''): bool
-    {
-        Db::beginTransaction();
-        foreach ($setting_data as $key => $value) {
-            $setting = self::where('setting_key', $key)
-                ->first();
-            if (!$setting) {
-                if (!$group) {
-                    $group = explode('_', $key)[0] ?? "";
-                }
-                $setting = self::create([
-                    'setting_key' => $key,
-                    'setting_value' => $value,
-                    'setting_group' => $group,
-                    'setting_description' => '',
-                    'type' => self::TYPE_STRING,
-                ]);
-            } else {
-                $setting->setting_value = $value;
-                $setting->save();
-            }
-
-            if (!$setting->setting_id) {
-                Db::rollBack();
-
-                return false;
+        if ($type === self::TYPE_JSON) {
+            $res = json_decode($value, true);
+            if (is_array($res)) {
+                return $res;
             }
         }
-        Db::commit();
 
-        return true;
+        return $value;
     }
 }

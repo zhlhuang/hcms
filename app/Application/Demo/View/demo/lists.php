@@ -28,6 +28,7 @@
                     :data="data_list"
                     style="width: 100%">
                 <el-table-column
+                        fixed
                         prop="date"
                         label="日期"
                         min-width="180">
@@ -43,6 +44,7 @@
                         label="地址">
                 </el-table-column>
                 <el-table-column
+                        fixed="right"
                         align="center"
                         min-width="180"
                         label="操作">

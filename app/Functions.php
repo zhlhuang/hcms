@@ -6,6 +6,10 @@
  * Time: 17:14.
  */
 
+declare(strict_types=1);
+
+use App\Application\Admin\Service\SettingService;
+
 /**
  * @param $uri
  * @param $params
@@ -13,7 +17,9 @@
  */
 function url($uri, $params = null): string
 {
-    $url = "/" . $uri;
+    $site_dir = SettingService::getInstance()
+        ->getSiteSetting('site_dir', '/');
+    $url = $site_dir . $uri;
     if (!empty($params)) {
         //带有数组参数
         if (is_array($params)) {

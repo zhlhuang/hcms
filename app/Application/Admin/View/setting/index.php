@@ -29,6 +29,7 @@
                     :data="data_list"
                     style="width: 100%">
                 <el-table-column
+                        fixed
                         prop="setting_id"
                         label="ID"
                         min-width="80">
@@ -36,7 +37,12 @@
                 <el-table-column
                         prop="setting_key"
                         label="key"
-                        min-width="180">
+                        min-width="140">
+                </el-table-column>
+                <el-table-column
+                        prop="setting_value"
+                        min-width="180"
+                        label="值">
                 </el-table-column>
                 <el-table-column
                         prop="setting_description"
@@ -56,9 +62,10 @@
                 <el-table-column
                         prop="updated_at"
                         label="更新时间"
-                        min-width="140">
+                        width="140">
                 </el-table-column>
                 <el-table-column
+                        fixed="right"
                         align="center"
                         min-width="180"
                         label="操作">
