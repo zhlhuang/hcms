@@ -61,12 +61,12 @@ class PassportController extends AdminAbstractController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnSuccessError($validator->errors()
+            return $this->returnErrorJson($validator->errors()
                 ->first());
         }
         $cache_code = $this->cache->get('valid_' . $time);
         if ($valid_code != $cache_code) {
-            return $this->returnSuccessError('验证码错误');
+            return $this->returnErrorJson('验证码错误');
         }
 
         /** @var ?AdminUser $admin_user */
@@ -79,7 +79,7 @@ class PassportController extends AdminAbstractController
                     ->login($admin_user),
             ], '登录成功');
         } else {
-            return $this->returnSuccessError('账号或密码错误');
+            return $this->returnErrorJson('账号或密码错误');
         }
     }
 

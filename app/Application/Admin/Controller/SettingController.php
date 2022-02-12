@@ -13,7 +13,7 @@ use App\Annotation\View;
 use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Setting;
-use App\Application\Admin\Service\SettingService;
+use App\Application\Admin\Service\AdminSettingService;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
@@ -30,8 +30,7 @@ class SettingController extends AdminAbstractController
      */
     function siteInfo()
     {
-        $setting = SettingService::getInstance()
-            ->getSiteSetting();
+        $setting = AdminSettingService::getSiteSetting();
 
         return $this->returnSuccessJson(compact('setting'));
     }
@@ -42,10 +41,9 @@ class SettingController extends AdminAbstractController
     function siteSave()
     {
         $setting = $this->request->post('setting', []);
-        $res = SettingService::getInstance()
-            ->setSiteSetting($setting);
+        $res = AdminSettingService::setSiteSetting($setting);
 
-        return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnSuccessError();
+        return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
     }
 
     /**
@@ -89,7 +87,7 @@ class SettingController extends AdminAbstractController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnSuccessError($validator->errors()
+            return $this->returnErrorJson($validator->errors()
                 ->first());
         }
 
@@ -102,7 +100,7 @@ class SettingController extends AdminAbstractController
             'type' => $this->request->post('type', Setting::TYPE_STRING),
         ]);
 
-        return $setting ? $this->returnSuccessJson(compact('setting')) : $this->returnSuccessError();
+        return $setting ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
     }
 
     /**

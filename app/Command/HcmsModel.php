@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
  * @Command
  */
 #[Command]
-class Hcms extends HyperfCommand
+class HcmsModel extends HyperfCommand
 {
     /**
      * @var ContainerInterface
@@ -25,16 +25,16 @@ class Hcms extends HyperfCommand
     {
         $this->container = $container;
 
-        parent::__construct('Hcms:install');
+        parent::__construct('Hcms:model');
     }
 
     public function configure()
     {
         parent::configure();
-        $this->setDescription('This is Hcms');
+        $this->setDescription('This is Hcms Model');
         //安装指令
-
-        $this->addArgument('module', InputArgument::REQUIRED, '安装模块');
+        $this->addArgument('module', InputArgument::REQUIRED, '执行的模块');
+        $this->addArgument('table_name', InputArgument::REQUIRED, '创建model的表名');
     }
 
     public function handle()
@@ -45,18 +45,12 @@ class Hcms extends HyperfCommand
             return;
         }
         $module_name = ucfirst(strtolower($this->input->getArgument('module')));
-        $module_dir = "app/Application/{$module_name}/";
-        //不存在该模块
-        if (!is_dir($module_dir)) {
-            $this->output->error("module {$module_name} is not exist");
-
-            return;
-        }
+        $table_name = $this->input->getArgument('table_name');
         //执行数据库部署
         try {
-            $path = $module_dir . "Install/Migration";
-            $this->output->info("migrate " . $path);
-            $this->call('migrate', [
+            $path = "app/Application/{$module_name}/Model";
+            $this->call('gen:model', [
+                'table' => $table_name,
                 '--path' => $path
             ]);
         } catch (\Exception $exception) {

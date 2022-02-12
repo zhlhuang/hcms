@@ -9,18 +9,20 @@ use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\DbConnection\Model\Model;
 
 /**
- * @property int            $access_id
- * @property int            $parent_access_id
- * @property string         $access_name
- * @property string         $uri
- * @property int            $is_menu
- * @property string         $menu_icon
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property int                                             $access_id
+ * @property int                                             $parent_access_id
+ * @property string                                          $access_name
+ * @property string                                          $uri
+ * @property string                                          $params
+ * @property int                                             $sort
+ * @property int                                             $is_menu
+ * @property string                                          $menu_icon
+ * @property \Carbon\Carbon                                  $created_at
+ * @property \Carbon\Carbon                                  $updated_at
+ * @property-read \Hyperf\Database\Model\Collection|Access[] $children
  */
 class Access extends Model
 {
-
     protected $primaryKey = 'access_id';
     /**
      * The table associated with the model.
@@ -42,11 +44,11 @@ class Access extends Model
     protected $casts = [
         'access_id' => 'integer',
         'parent_access_id' => 'integer',
+        'sort' => 'integer',
         'is_menu' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
-
     const IS_MENU_YES = 1;
     const IS_MENU_NO = 0;
 

@@ -23,5 +23,8 @@ return [
         'cache_path' => BASE_PATH . '/runtime/view/',
         'layout_on' => true,
         'layout_name' => '../../../Admin/View/common/layout',
+        'taglib_pre_load' => 'App\Application\Admin\View\HcmsTag',
+        'display_cache' => (env('APP_ENV') !== 'dev'), //开发模式下，模板不缓存
+        'tpl_cache' => (env('APP_ENV') !== 'dev') //开发模式下，模板不缓存
     ],
 ];

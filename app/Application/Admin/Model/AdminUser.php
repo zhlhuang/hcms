@@ -12,13 +12,15 @@ use Qbhy\HyperfAuth\Authenticatable;
 
 /**
  * @property int            $admin_user_id
- * @property string         $real_name
  * @property string         $username
  * @property string         $password
  * @property int            $role_id
+ * @property string         $real_name
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string         $deleted_at
+ * @property-read string    $role_name
+ * @property-read AdminRole $role
  */
 class AdminUser extends Model implements Authenticatable
 {
@@ -48,7 +50,6 @@ class AdminUser extends Model implements Authenticatable
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
-
     protected $hidden = ['deleted_at'];
 
     /**
@@ -62,7 +63,7 @@ class AdminUser extends Model implements Authenticatable
             return "系统管理员";
         }
 
-        return ($this->role && $this->role->role_name) ? $this->role->role_name : '';
+        return $this->role && $this->role->role_name ? $this->role->role_name : '';
     }
 
     /**

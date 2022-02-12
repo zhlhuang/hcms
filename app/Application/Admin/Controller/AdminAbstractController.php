@@ -50,7 +50,7 @@ class AdminAbstractController
         return $this->response->json(compact('data', 'msg', 'status', 'code'));
     }
 
-    protected function returnSuccessError(string $msg = '操作失败', int $code = 400, array $data = [], bool $status = false)
+    protected function returnErrorJson(string $msg = '操作失败', int $code = 400, array $data = [], bool $status = false)
     {
         return $this->response->json(compact('data', 'msg', 'status', 'code'));
     }

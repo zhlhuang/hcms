@@ -39,16 +39,16 @@ class RoleController extends AdminAbstractController
         $role_id = $this->request->post('role_id', 0);
         $role = AdminRole::find($role_id);
         if (!$role) {
-            return $this->returnSuccessError('找不到该记录');
+            return $this->returnErrorJson('找不到该记录');
         }
 
         //如果有下级菜单，不能删除
         if (AdminRole::where('parent_role_id', $role->role_id)
                 ->count() > 0) {
-            return $this->returnSuccessError('该角色有下级角色，不能删除');
+            return $this->returnErrorJson('该角色有下级角色，不能删除');
         }
 
-        return $role->delete() ? $this->returnSuccessJson() : $this->returnSuccessError();
+        return $role->delete() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
 
@@ -64,7 +64,7 @@ class RoleController extends AdminAbstractController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnSuccessError($validator->errors()
+            return $this->returnErrorJson($validator->errors()
                 ->first());
         }
 
@@ -72,7 +72,7 @@ class RoleController extends AdminAbstractController
         $access_list = $this->request->post('access_list', []);
         $parent_role_id = (int)$this->request->post('parent_role_id', 0);
         if ($parent_role_id > 0 && $role_id === $parent_role_id) {
-            return $this->returnSuccessError('父级角色不能是自己或自己的下级');
+            return $this->returnErrorJson('父级角色不能是自己或自己的下级');
         }
         $role = AdminRole::saveRole($role_id, [
             'parent_role_id' => $parent_role_id,
@@ -80,7 +80,7 @@ class RoleController extends AdminAbstractController
             'description' => $this->request->post('description', ''),
         ], $access_list);
 
-        return $role ? $this->returnSuccessJson(compact('role')) : $this->returnSuccessError();
+        return $role ? $this->returnSuccessJson(compact('role')) : $this->returnErrorJson();
     }
 
     /**

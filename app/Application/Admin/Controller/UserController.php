@@ -37,10 +37,10 @@ class UserController extends AdminAbstractController
         $admin_user = AdminUser::where('admin_user_id', $admin_user_id)
             ->first();
         if (!$admin_user) {
-            return $this->returnSuccessError('找不到该记录');
+            return $this->returnErrorJson('找不到该记录');
         }
 
-        return $admin_user->delete() ? $this->returnSuccessJson() : $this->returnSuccessError();
+        return $admin_user->delete() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
 
@@ -59,7 +59,7 @@ class UserController extends AdminAbstractController
             'username.required' => '请输入登录用户名',
         ]);
         if ($validator->fails()) {
-            return $this->returnSuccessError($validator->errors()
+            return $this->returnErrorJson($validator->errors()
                 ->first());
         }
         /**
@@ -72,13 +72,13 @@ class UserController extends AdminAbstractController
         $username = $this->request->post('username', '');
 
         if ($admin_user->admin_user_id === 0 && $password === '') {
-            return $this->returnSuccessError('请输入密码');
+            return $this->returnErrorJson('请输入密码');
         }
         //如果是新增，检查是否存在同样的用户名
         if (AdminUser::where('username', $username)
                 ->whereNotIn('admin_user_id', [$admin_user->admin_user_id])
                 ->count() > 0) {
-            return $this->returnSuccessError("用户名{$username}已经存在");
+            return $this->returnErrorJson("用户名{$username}已经存在");
         }
         if ($password !== '' || !$admin_user->admin_user_id) {
             $admin_user->password = AdminUser::makePassword($username, $password);
@@ -87,7 +87,7 @@ class UserController extends AdminAbstractController
         $admin_user->real_name = $this->request->post('real_name', []);
         $admin_user->username = $this->request->post('username', []);
 
-        return $admin_user->save() ? $this->returnSuccessJson(compact('admin_user')) : $this->returnSuccessError();
+        return $admin_user->save() ? $this->returnSuccessJson(compact('admin_user')) : $this->returnErrorJson();
     }
 
     /**

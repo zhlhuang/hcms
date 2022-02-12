@@ -10,20 +10,21 @@ use Hyperf\DbConnection\Db;
 use Hyperf\DbConnection\Model\Model;
 
 /**
- * @property int            $role_id
- * @property string         $role_name
- * @property string         $description
- * @property int            $parent_role_id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property string         $deleted_at
+ * @property int                                                      $role_id
+ * @property string                                                   $role_name
+ * @property string                                                   $description
+ * @property int                                                      $parent_role_id
+ * @property \Carbon\Carbon                                           $created_at
+ * @property \Carbon\Carbon                                           $updated_at
+ * @property string                                                   $deleted_at
+ * @property-read \Hyperf\Database\Model\Collection|AdminRoleAccess[] $accessList
+ * @property-read \Hyperf\Database\Model\Collection|self[]            $children
  */
 class AdminRole extends Model
 {
     use SoftDeletes;
 
     protected $primaryKey = 'role_id';
-
     /**
      * The table associated with the model.
      *
@@ -92,11 +93,10 @@ class AdminRole extends Model
                     $role_access = AdminRoleAccess::firstOrCreate([
                         'role_id' => $role->role_id,
                         'access_id' => $access_id,
-                        'access_uri' => $access_uri,
+                        'access_uri' => $access_uri
                     ]);
                     $in_role_access_ids[] = $role_access->access_id;
                 }
-
             }
             //删除没有提交的记录
             AdminRoleAccess::where('role_id', $role->role_id)

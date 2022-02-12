@@ -6,14 +6,14 @@
  * Time: 13:40.
  */
 
-namespace App\Application\Admin\Service;
+namespace App\Service;
 
 use App\Application\Admin\Model\Setting;
 use Hyperf\Database\Model\Model;
 use Hyperf\DbConnection\Db;
 use Hyperf\Utils\Context;
 
-abstract class AbstractSettingService
+class SettingService
 {
 
     protected $setting_list;
@@ -46,8 +46,8 @@ abstract class AbstractSettingService
 
     static function getInstance(): self
     {
-        return Context::getOrSet(static::class, function () {
-            return new static();
+        return Context::getOrSet(self::class, function () {
+            return new self();
         });
     }
 

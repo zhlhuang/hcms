@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-use App\Application\Admin\Service\SettingService;
+use App\Application\Admin\Service\AdminSettingService;
 
 /**
  * @param $uri
@@ -17,8 +17,7 @@ use App\Application\Admin\Service\SettingService;
  */
 function url($uri, $params = null): string
 {
-    $site_dir = SettingService::getInstance()
-        ->getSiteSetting('site_dir', '/');
+    $site_dir = AdminSettingService::getSiteSetting('site_dir', '/');
     $url = $site_dir . $uri;
     if (!empty($params)) {
         //带有数组参数

@@ -29,16 +29,16 @@ class AccessController extends AdminAbstractController
         $access_id = $this->request->post('access_id', 0);
         $access = Access::find($access_id);
         if (!$access) {
-            return $this->returnSuccessError('找不到该记录');
+            return $this->returnErrorJson('找不到该记录');
         }
 
         //如果有下级菜单，不能删除
         if (Access::where('parent_access_id', $access->access_id)
                 ->count() > 0) {
-            return $this->returnSuccessError('该菜单有下级菜单，不能删除');
+            return $this->returnErrorJson('该菜单有下级菜单，不能删除');
         }
 
-        return $access->delete() ? $this->returnSuccessJson() : $this->returnSuccessError();
+        return $access->delete() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
     /**
@@ -55,14 +55,14 @@ class AccessController extends AdminAbstractController
         ]);
 
         if ($validator->fails()) {
-            return $this->returnSuccessError($validator->errors()
+            return $this->returnErrorJson($validator->errors()
                 ->first());
         }
 
         $access_id = (int)$this->request->post('access_id', 0);
         $parent_access_id = (int)$this->request->post('parent_access_id', 0);
         if ($parent_access_id > 0 && $access_id === $parent_access_id) {
-            return $this->returnSuccessError('上级菜单不能是自己或自己的下级');
+            return $this->returnErrorJson('上级菜单不能是自己或自己的下级');
         }
         $access = Access::updateOrCreate(['access_id' => $access_id], [
             'parent_access_id' => $parent_access_id,
@@ -74,7 +74,7 @@ class AccessController extends AdminAbstractController
             'menu_icon' => $this->request->post('menu_icon', ''),
         ]);
 
-        return $access ? $this->returnSuccessJson(compact('access')) : $this->returnSuccessError();
+        return $access ? $this->returnSuccessJson(compact('access')) : $this->returnErrorJson();
     }
 
     /**
@@ -114,11 +114,11 @@ class AccessController extends AdminAbstractController
         $access = Access::where('access_id', $access_id)
             ->first();
         if (!$access) {
-            return $this->returnSuccessError('找不到该记录');
+            return $this->returnErrorJson('找不到该记录');
         }
         $access->sort = $this->request->input('sort', 100);
 
-        return $access->save() ? $this->returnSuccessJson() : $this->returnSuccessError();
+        return $access->save() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
     /**
