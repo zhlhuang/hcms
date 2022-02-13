@@ -12,12 +12,15 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\View;
 use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use App\Application\Admin\Model\UploadFile;
 use App\Application\Admin\Model\UploadFileGroup;
 use App\Application\Admin\Service\AdminSettingService;
+use App\Application\Admin\Service\UploadService;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 
 /**
  * @Middleware(AdminMiddleware::class)
@@ -25,6 +28,53 @@ use Hyperf\HttpServer\Annotation\PostMapping;
  */
 class UploadController extends AdminAbstractController
 {
+    /**
+     * 删除文件
+     * @PostMapping(path="file/delete")
+     */
+    function fileDelete()
+    {
+        $selected_file_ids = $this->request->post('selected_file_ids', []);
+        if (!is_array($selected_file_ids) || empty($selected_file_ids)) {
+            return $this->returnErrorJson('请选择你要删除的文件。');
+        }
+        $res = UploadFile::whereIn('file_id', $selected_file_ids)
+            ->delete();
+
+        return $res ? $this->returnSuccessJson() : $this->returnErrorJson();
+    }
+
+    /**
+     * 文件列表
+     * @GetMapping(path="file/lists")
+     */
+    function fileList()
+    {
+        $where = [];
+        $lists = UploadFile::where($where)
+            ->orderBy('file_id', 'DESC')
+            ->paginate();
+
+        return $this->returnSuccessJson(compact('lists'));
+    }
+
+    /**
+     * 上传文件
+     * @RequestMapping(path="file")
+     */
+    function fileUpload()
+    {
+        $file = $this->request->file('file');
+        $group_id = (int)$this->request->input('group_id', 0);
+        $upload_service = new UploadService($file);
+        $upload_file = $upload_service->setUserId($this->getAdminUserId())
+            ->setUserType('admin')
+            ->setGroupId($group_id)
+            ->save();
+
+        return $this->returnSuccessJson(compact('upload_file'));
+    }
+
     /**
      * @PostMapping(path="group/delete")
      */

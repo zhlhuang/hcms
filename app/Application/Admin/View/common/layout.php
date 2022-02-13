@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/assets/css/index.css?v={$version}">
 
     <script src="/assets/js/jquery.min.js?v={$version}"></script>
-    {if $env == 'dev11'}
+    {if $env == 'dev'}
     <script src="/assets/js/vue.js?v={$version}"></script>
     {else /}
     <!-- 正式版本使 min -->

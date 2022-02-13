@@ -16,7 +16,13 @@
                 <el-form-item required label="本地上传目录">
                     <el-input v-model="setting.upload_file_dir" placeholder="本地上传文件存储的目录"></el-input>
                     <div class="form-small">
-                        <small> 为了方便访问，建议放在public/upload目录下</small>
+                        <small> 为了方便访问文件都是放在public目录，填写upload会存放在public/upload目录下</small>
+                    </div>
+                </el-form-item>
+                <el-form-item required label="文件访问域名">
+                    <el-input v-model="setting.upload_domain" placeholder="本地上传文件存储的目录"></el-input>
+                    <div class="form-small">
+                        <small>文件访问的域名，注意需要以 / 结尾，本地上传驱动可以使用 / </small>
                     </div>
                 </el-form-item>
                 <el-form-item required label="允许上传格式">
@@ -39,6 +45,7 @@
                 setting: {
                     upload_drive: "local",
                     upload_file_dir: "public/upload",
+                    upload_domain: "/",
                     upload_allow_ext: "jpg|jpeg|gif|bmp|png|doc|docx|xls|xlsx|ppt|pptx|pdf|txt|rar|zip|mp4"
                 }
             },

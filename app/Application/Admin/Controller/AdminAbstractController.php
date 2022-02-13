@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Application\Admin\Service\AdminUserService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
@@ -42,6 +43,12 @@ class AdminAbstractController
      */
     protected $response;
 
+    protected function getAdminUserId(): int
+    {
+        return AdminUserService::getInstance()
+            ->getAdminUserId();
+    }
+
 
     protected function returnSuccessJson(array $data = [], $msg = '', int $code = 200, $status = true)
     {
@@ -50,7 +57,7 @@ class AdminAbstractController
         return $this->response->json(compact('data', 'msg', 'status', 'code'));
     }
 
-    protected function returnErrorJson(string $msg = '操作失败', int $code = 400, array $data = [], bool $status = false)
+    protected function returnErrorJson(string $msg = '操作失败', int $code = 500, array $data = [], bool $status = false)
     {
         return $this->response->json(compact('data', 'msg', 'status', 'code'));
     }

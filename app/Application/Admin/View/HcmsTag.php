@@ -16,7 +16,7 @@ class HcmsTag extends TagLib
 {
     protected $includeFile = [];
 
-    private $template;
+    public $template;
 
     public function __construct(Template $template)
     {
@@ -47,6 +47,7 @@ class HcmsTag extends TagLib
             $parseStr = str_replace('[' . $k . ']', $v, $parseStr);
         }
 
+        $this->template->parse($parseStr);
         $this->template->parseInclude($parseStr);
 
         return $parseStr;
