@@ -10,7 +10,6 @@ namespace App\Application\Admin\Service;
 
 use App\Application\Admin\Model\UploadFile;
 use App\Exception\ErrorException;
-use Hyperf\HttpMessage\Exception\HttpException;
 use Hyperf\HttpMessage\Upload\UploadedFile;
 
 class UploadService
@@ -25,16 +24,22 @@ class UploadService
         $this->config = AdminSettingService::getUploadSetting();
         $this->upload_file = new UploadFile();
         $this->upload_file->file_drive = $this->config['upload_drive'] ?? '';
-        $this->upload_file->file_name = $this->file->getBasename();
+        $this->upload_file->file_name = $this->file->getClientFilename();
         $this->upload_file->file_type = $file_type;
         $this->upload_file->file_ext = $this->file->getExtension();
-        $this->upload_file->file_size = $this->file->getSize();
+        $this->upload_file->file_size = ceil($this->file->getSize() / 1024);//转化成KB单位
     }
 
+    /**
+     * 上传文件校验
+     *
+     * @throws ErrorException
+     */
     private function uploadValid()
     {
         //获取允许上传的文件格式
         $upload_allow_ext = $this->config['upload_allow_ext'] ?? '';
+        $upload_file_size = $this->config['upload_file_size'] ?? '';
         //设置为空不做校验
         if ($upload_allow_ext !== '') {
             $upload_allow_ext_array = explode('|', $upload_allow_ext);
@@ -42,8 +47,32 @@ class UploadService
                 throw new ErrorException('不支持上传该文件');
             }
         }
+
+        if ($upload_file_size > 0 && $this->upload_file->file_size > $upload_file_size) {
+            throw new ErrorException("文件上传不能大于{$upload_file_size}KB");
+        }
     }
 
+    /**
+     * 获取图片的缩略图
+     *
+     * @return string
+     */
+    private function getFileThumb(): string
+    {
+        $file_type = $this->upload_file->file_type;
+        if ($file_type === UploadFile::FILE_TYPE_IMAGE) {
+            return $this->upload_file->file_url;
+        }
+
+        return '';
+    }
+
+    /**
+     * 获取存储的目录
+     *
+     * @return string
+     */
     private function getPathDir(): string
     {
         $path_dir = '';
@@ -56,6 +85,12 @@ class UploadService
         return $path_dir;
     }
 
+    /**
+     * 保存图片
+     *
+     * @return UploadFile
+     * @throws ErrorException
+     */
     public function save(): UploadFile
     {
         $this->uploadValid();
@@ -70,6 +105,7 @@ class UploadService
         $this->file->moveTo($file_path);
 
         $this->upload_file->file_url = $file_url;
+        $this->upload_file->file_thumb = $this->getFileThumb();
         $this->upload_file->file_path = $file_path;
         if (!$this->upload_file->save()) {
             throw new \Exception('保存文件上传信息失败');

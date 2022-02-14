@@ -78,7 +78,8 @@
             </div>
         </div>
     </el-card>
-    <select-image :show="show_select_image" @close="show_select_image=false"></select-image>
+    <select-image :show="show_select_image" @confirm="selectImageConfirm"
+                  @close="show_select_image=false"></select-image>
 </div>
 {hcmstag:include file="admin@/components/upload/select-image"}
 <script>
@@ -86,11 +87,14 @@
         new Vue({
             el: ".page-container",
             data: {
-                show_select_image:false,
+                show_select_image: false,
                 is_init_list: true,
                 where: {},
             },
             methods: {
+                selectImageConfirm(files) {
+                    console.log('selectImageConfirm', files)
+                },
                 GetList() {
                     this.handRes({
                         current_page: 1,

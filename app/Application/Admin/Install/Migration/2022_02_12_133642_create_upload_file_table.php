@@ -30,6 +30,10 @@ class CreateUploadFileTable extends Migration
                 ->nullable(false)
                 ->default('')
                 ->comment('文件存储路径');
+            $table->string('file_thumb', 1024)
+                ->nullable(false)
+                ->default('')
+                ->comment('文件缩略图访问路径');
             $table->string('file_name', 128)
                 ->nullable(false)
                 ->default('')

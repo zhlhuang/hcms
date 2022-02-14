@@ -39,5 +39,4 @@ class UploadFileGroup extends Model
      */
     protected $casts = ['group_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 
-    const FILE_TYPE_IMAGE = 'image';
 }

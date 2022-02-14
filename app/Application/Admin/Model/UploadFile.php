@@ -12,6 +12,7 @@ use Hyperf\DbConnection\Model\Model;
  * @property string         $file_drive
  * @property int            $group_id
  * @property string         $file_url
+ * @property string         $file_thumb
  * @property string         $file_path
  * @property string         $file_name
  * @property string         $file_type
@@ -53,4 +54,5 @@ class UploadFile extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
+    const FILE_TYPE_IMAGE = 'image';
 }

@@ -53,7 +53,6 @@ window.__vueCommon = {
             return urlObj && urlObj.search && urlObj.search[variable] ? urlObj.search[variable] : default_value;
         },
         httpGet: function (url, data, loading = true, loadingTarget = '.loading') {
-            console.log(url, loading, loadingTarget)
             return new Promise((resolve, reject) => {
                 let loadingInstance = loading ? this.$loading({
                     target: loadingTarget

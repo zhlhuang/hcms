@@ -1,7 +1,7 @@
 <!-- 所有上传组件的公共方法和数据 -->
 {hcmstag:include file="admin@/components/upload/upload-file-mixin"}
 <script type="text/x-template" id="select-image">
-    <div class="select-image">
+    <div class="select-file">
         <div style="height: 400px;">
             <el-dialog title="选择图片" @close="$emit('close')" width="668px" :visible.sync="dialogVisible">
                 <div>
@@ -11,7 +11,7 @@
                                 <ul role="menubar" class="el-menu">
                                     <li class="el-menu-item-group">
                                         <ul class="group_list">
-                                            <li class="el-menu-item" style="padding: 0 8px;" @click="selectGroup('all')"
+                                            <li class="el-menu-item" style="padding: 0 8px;" @click="selectGroup(-1)"
                                                 :class="{'group_active' : now_group == -1}">
                                                 全部
                                             </li>
@@ -85,7 +85,7 @@
                                     <template v-for="(item,index) in data_list">
                                         <div :key="index"
                                              class="img-list-item">
-                                            <img :src="item.file_url"
+                                            <img :src="item.file_thumb"
                                                  style="width:80px;height: 80px;"
                                                  @click="selectFileEvent(index)">
                                             <div v-if="item.is_select" class="is_check" @click="selectFileEvent(index)">
@@ -102,7 +102,7 @@
                                         </el-button>
                                         <el-select v-show="selected_file_list.length > 0" v-model="move_group_id"
                                                    placeholder="移动至" style="width:130px;margin-left: 10px;" size="small"
-                                                   @change="moveGroup">
+                                                   @change="moveFileGroup">
                                             <el-option label="请选择分组" :value="-1"></el-option>
                                             <el-option label="未分组" :value="0"></el-option>
                                             <el-option :label="item.group_name" :value="item.group_id"
@@ -127,7 +127,7 @@
                 </div>
                 <div>
                     <div solt="footer" style="text-align: right;padding-top: 10px;">
-                        <el-button size="small" type="primary" @click="confirm">确定</el-button>
+                        <el-button size="small" type="primary" @click="confirmEvent">确定</el-button>
                         <el-button size="small" type="default" @click="$emit('close')">关闭</el-button>
                     </div>
                 </div>
@@ -147,7 +147,6 @@
                 return {
                     file_accept: "image/*",
                     max_upload: 99,
-                    dialogVisible: true,
                     file_type: 'image'
                 }
             },
@@ -162,12 +161,11 @@
             },
             computed: {},
             methods: {
-                confirm() {
-                },
                 GetList() {
                     this.httpGet("{:url('admin/upload/file/lists')}", {
                         page: this.current_page,
-                        file_type: this.file_type
+                        file_type: this.file_type,
+                        group_id: this.now_group,
                     }).then(res => {
                         if (res.status) {
                             let {lists = []} = res.data
@@ -193,7 +191,7 @@
     }
 
     /* 上传图片    */
-    .select-image .thumb-uploader .el-upload {
+    .select-file .thumb-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;
         cursor: pointer;
@@ -201,7 +199,7 @@
         overflow: hidden;
     }
 
-    .select-image .thumb-uploader .el-upload:hover {
+    .select-file .thumb-uploader .el-upload:hover {
         border-color: #409EFF;
     }
 
@@ -210,7 +208,7 @@
     }
 
     /*图库*/
-    .select-image .img-list-item {
+    .select-file .img-list-item {
         width: 82px;
         height: 82px;
         border: 1px dashed #d9d9d9;
@@ -223,11 +221,11 @@
         vertical-align: top;
     }
 
-    .select-image .group_active {
+    .select-file .group_active {
         color: #409eff;
     }
 
-    .select-image .is_check {
+    .select-file .is_check {
         position: absolute;
         top: 0;
         left: 0;
@@ -239,36 +237,36 @@
         font-size: 40px;
     }
 
-    .select-image .group_list {
+    .select-file .group_list {
         height: 330px;
         overflow: scroll;
         border-bottom: 1px solid gainsboro;
     }
 
-    .select-image .el-menu {
+    .select-file .el-menu {
         border: none;
     }
 
-    .select-image .el-menu-item {
+    .select-file .el-menu-item {
         height: 40px;
         line-height: 40px;
     }
 
-    .select-image .el-upload-dragger {
+    .select-file .el-upload-dragger {
         height: 36px;
         line-height: 30px;
         text-align: right;
         padding: 0 2px;
     }
 
-    .select-image .el-upload-dragger .el-icon-upload {
+    .select-file .el-upload-dragger .el-icon-upload {
         font-size: 18px !important;
         color: #C0C4CC;
         line-height: 22px;
         margin: 0;
     }
 
-    .select-image .is_check {
+    .select-file .is_check {
         position: absolute;
         top: 0;
         left: 0;

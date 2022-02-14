@@ -25,9 +25,14 @@
                         <small>文件访问的域名，注意需要以 / 结尾，本地上传驱动可以使用 / </small>
                     </div>
                 </el-form-item>
-                <el-form-item required label="允许上传格式">
-                    <el-input v-model="setting.upload_allow_ext" placeholder="请输入关于站点的介绍"
+                <el-form-item required label="上传格式">
+                    <el-input v-model="setting.upload_allow_ext" placeholder="请输入允许上传格式"
                               style="width: 600px"></el-input>
+                </el-form-item>
+                <el-form-item required label="上传文件大小">
+                    <el-input v-model="setting.upload_file_size" placeholder="请输入允许上传文件的大小">
+                        <template slot="append">KB</template>
+                    </el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="submitEvent" type="primary">保存</el-button>
@@ -46,7 +51,8 @@
                     upload_drive: "local",
                     upload_file_dir: "public/upload",
                     upload_domain: "/",
-                    upload_allow_ext: "jpg|jpeg|gif|bmp|png|doc|docx|xls|xlsx|ppt|pptx|pdf|txt|rar|zip|mp4"
+                    upload_allow_ext: "jpg|jpeg|gif|bmp|png|doc|docx|xls|xlsx|ppt|pptx|pdf|txt|rar|zip|mp4",
+                    upload_file_size: 2048
                 }
             },
             mounted() {

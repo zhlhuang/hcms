@@ -30,6 +30,25 @@ class UploadController extends AdminAbstractController
 {
     /**
      * 删除文件
+     * @PostMapping(path="file/move")
+     */
+    function fileMove()
+    {
+        $selected_file_ids = $this->request->post('selected_file_ids', []);
+        $group_id = (int)$this->request->post('group_id', 0);
+        if (!is_array($selected_file_ids) || empty($selected_file_ids)) {
+            return $this->returnErrorJson('请选择你要移动的文件。');
+        }
+        $res = UploadFile::whereIn('file_id', $selected_file_ids)
+            ->update([
+                'group_id' => $group_id
+            ]);
+
+        return $res ? $this->returnSuccessJson() : $this->returnErrorJson();
+    }
+
+    /**
+     * 删除文件
      * @PostMapping(path="file/delete")
      */
     function fileDelete()
@@ -50,9 +69,28 @@ class UploadController extends AdminAbstractController
      */
     function fileList()
     {
-        $where = [];
+        $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
+        $group_id = (int)$this->request->input('group_id', -1);
+        $where = [
+            ['file_type', '=', $file_type]
+        ];
+        if ($group_id !== -1) {
+            $where[] = ['group_id', '=', $group_id];
+        }
+
         $lists = UploadFile::where($where)
             ->orderBy('file_id', 'DESC')
+            ->select([
+                'file_id',
+                'file_name',
+                'file_path',
+                'file_size',
+                'file_type',
+                'file_url',
+                'file_thumb',
+                'group_id',
+                'file_ext'
+            ])
             ->paginate();
 
         return $this->returnSuccessJson(compact('lists'));
@@ -76,6 +114,7 @@ class UploadController extends AdminAbstractController
     }
 
     /**
+     * 删除分组
      * @PostMapping(path="group/delete")
      */
     function groupDelete()
@@ -92,11 +131,12 @@ class UploadController extends AdminAbstractController
     }
 
     /**
+     * 分组列表
      * @GetMapping(path="group/lists")
      */
     function groupList()
     {
-        $file_type = $this->request->post('file_type', UploadFileGroup::FILE_TYPE_IMAGE);
+        $file_type = $this->request->post('file_type', UploadFile::FILE_TYPE_IMAGE);
         $where = [
             ['file_type', '=', $file_type]
         ];
@@ -107,6 +147,7 @@ class UploadController extends AdminAbstractController
     }
 
     /**
+     * 新增/编辑分组
      * @PostMapping(path="group")
      */
     function groupEdit()
@@ -123,7 +164,7 @@ class UploadController extends AdminAbstractController
         }
         $group_id = $this->request->post('group_id', 0);
         $group_name = $this->request->post('group_name', '');
-        $file_type = $this->request->post('file_type', UploadFileGroup::FILE_TYPE_IMAGE);
+        $file_type = $this->request->post('file_type', UploadFile::FILE_TYPE_IMAGE);
         $file_group = UploadFileGroup::firstOrNew([
             'group_id' => $group_id
         ]);
@@ -134,6 +175,7 @@ class UploadController extends AdminAbstractController
     }
 
     /**
+     * 上传配置
      * @GetMapping(path="setting/info")
      */
     function settingInfo()
@@ -144,6 +186,7 @@ class UploadController extends AdminAbstractController
     }
 
     /**
+     * 修改上传配置
      * @PostMapping(path="setting")
      */
     function settingSubmit()
@@ -155,6 +198,7 @@ class UploadController extends AdminAbstractController
     }
 
     /**
+     * 上传配置页面
      * @View()
      * @GetMapping(path="setting")
      */
@@ -164,6 +208,7 @@ class UploadController extends AdminAbstractController
     }
 
     /**
+     * 文件列表页面
      * @View()
      * @GetMapping(path="index")
      */
