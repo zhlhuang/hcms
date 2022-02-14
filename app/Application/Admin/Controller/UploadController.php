@@ -200,6 +200,27 @@ class UploadController extends AdminAbstractController
     }
 
     /**
+     * @GetMapping(path="index/lists")
+     */
+    function lists()
+    {
+        $where = [];
+        $file_name = $this->request->input('file_name', '');
+        $file_type = $this->request->input('file_type', '');
+        if ($file_type !== '') {
+            $where[] = ['file_type', '=', $file_type];
+        }
+        if ($file_name !== '') {
+            $where[] = ['file_name', 'like', "%{$file_name}%"];
+        }
+        $lists = UploadFile::where($where)
+            ->orderBy('file_id', 'DESC')
+            ->paginate();
+
+        return $this->returnSuccessJson(compact('lists'));
+    }
+
+    /**
      * 上传配置页面
      * @View()
      * @GetMapping(path="setting")

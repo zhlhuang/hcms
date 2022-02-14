@@ -31,12 +31,24 @@
             },
             uploadData() {
                 return {
-                    group_id: this.now_group > 0 ? this.group_id : 0,
+                    group_id: this.now_group > 0 ? this.now_group : 0,
                     file_type: this.file_type
                 }
             }
         },
         methods: {
+            GetList() {
+                this.httpGet("{:url('admin/upload/file/lists')}", {
+                    page: this.current_page,
+                    file_type: this.file_type,
+                    group_id: this.now_group,
+                }, true, '.el-dialog__body').then(res => {
+                    if (res.status) {
+                        let {lists = []} = res.data
+                        this.handRes(lists)
+                    }
+                })
+            },
             confirmEvent() {
                 if (this.selected_file_list.length === 0) {
                     this.$message.error('请选择你需要的图片')
@@ -49,7 +61,7 @@
                 return this.httpPost("{:url('admin/upload/file/move')}", {
                     selected_file_ids: this.selected_file_ids,
                     group_id: this.move_group_id
-                }).then(res => {
+                }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
                         this.$message.success(res.msg)
                         this.GetList()
@@ -62,7 +74,7 @@
                 }).then(() => {
                     console.log('clickDeleteSelected', this.selected_file_ids)
                     return this.httpPost("{:url('admin/upload/file/delete')}", {selected_file_ids: this.selected_file_ids})
-                }).then(res => {
+                }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
                         this.$message.success(res.msg)
                         this.GetList()
@@ -122,7 +134,7 @@
             getGroupList() {
                 this.httpGet("{:url('admin/upload/group/lists')}", {
                     file_type: this.file_type,
-                }).then(res => {
+                }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
                         let {group_list = []} = res.data
                         this.group_list = group_list
@@ -144,7 +156,7 @@
                     return this.httpPost("{:url('admin/upload/group/delete')}", {
                         group_id
                     })
-                }).then(res => {
+                }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
                         this.$message.success(res.msg);
                         this.getGroupList()
@@ -166,7 +178,7 @@
                                 group_name: instance.inputValue,
                                 file_type: this.file_type,
                                 group_id
-                            }).then(res => {
+                            }, true, '.el-dialog__body').then(res => {
                                 if (res.status) {
                                     this.$message.success(res.msg);
                                     this.getGroupList()

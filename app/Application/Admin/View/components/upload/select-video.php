@@ -2,7 +2,7 @@
 {hcmstag:include file="admin@/components/upload/upload-file-mixin"}
 <script type="text/x-template" id="select-video">
     <div class="select-file">
-        <div style="height: 400px;">
+        <div style="max-height: 400px;">
             <el-dialog title="选择视频" @close="$emit('close')" width="668px" :visible.sync="dialogVisible">
                 <div>
                     <el-row>
@@ -164,18 +164,6 @@
             },
             computed: {},
             methods: {
-                GetList() {
-                    this.httpGet("{:url('admin/upload/file/lists')}", {
-                        page: this.current_page,
-                        file_type: this.file_type,
-                        group_id: this.now_group,
-                    }).then(res => {
-                        if (res.status) {
-                            let {lists = []} = res.data
-                            this.handRes(lists)
-                        }
-                    })
-                }
             }
         });
     })

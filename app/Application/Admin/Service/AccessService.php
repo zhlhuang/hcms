@@ -25,7 +25,7 @@ class AccessService
      *
      * @var string[]
      */
-    protected $not_auth = ['admin/index/index'];
+    protected $not_auth = [];
 
     private function __construct()
     {
@@ -33,6 +33,7 @@ class AccessService
         $this->all_access = $this->getAccessList();
         //获取菜单
         $this->menu_list = $this->getMenuList($this->all_access);
+        $this->not_auth = config('access.not_auth');
     }
 
     /**
@@ -126,9 +127,9 @@ class AccessService
     private function getRoleAccessList(int $role_id): array
     {
         return Context::getOrSet(self::class . 'role_access_list_' . $role_id, function () use ($role_id): array {
-            return AdminRoleAccess::where('role_id', $role_id)
-                    ->pluck('access_uri', 'access_id')
-                    ->toArray() + $this->not_auth; //加上默认不需要校验的权限
+            return array_merge(AdminRoleAccess::where('role_id', $role_id)
+                ->pluck('access_uri', 'access_id')
+                ->toArray(), $this->not_auth); //加上默认不需要校验的权限
         });
     }
 

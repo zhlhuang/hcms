@@ -9,7 +9,7 @@
         <div>
             <el-form size="small" :inline="true">
                 <el-form-item>
-                    <el-input v-model="where.user" placeholder="审批人"></el-input>
+                    <el-input v-model="where.user" clearable placeholder="审批人"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-select v-model="where.region" placeholder="活动区域">
@@ -52,7 +52,7 @@
                         <el-link>
                             <el-button size="small" type="primary">编辑</el-button>
                         </el-link>
-                        <el-link @click="deleteEvent">
+                        <el-link @click="deleteEvent(row)">
                             <el-button size="small" type="danger">删除</el-button>
                         </el-link>
                     </template>
@@ -115,7 +115,7 @@
                 },
                 deleteEvent({setting_id}) {
                     this.$confirm("是否确认删除该记录？", '提示', {setting_id}).then(() => {
-                        // this.httpGet("{:url('admin/setting/delete')}", {}).then(res => {
+                        // this.httpPost("{:url('admin/setting/delete')}", {}).then(res => {
                         //     if (res.status) {
                         //         this.$message.success(res.msg)
                         //     }

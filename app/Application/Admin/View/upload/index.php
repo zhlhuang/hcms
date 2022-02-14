@@ -9,10 +9,10 @@
         <div>
             <el-form size="small" :inline="true">
                 <el-form-item>
-                    <el-input v-model="where.user" placeholder="文件名称"></el-input>
+                    <el-input v-model="where.file_name" clearable placeholder="文件名称"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="where.region" placeholder="文件类型">
+                    <el-select v-model="where.file_type" placeholder="文件类型">
                         <el-option label="不限" value=""></el-option>
                         <el-option label="图片" value="image"></el-option>
                         <el-option label="视频" value="video"></el-option>
@@ -23,13 +23,13 @@
                     <el-link>
                         <el-button type="primary" @click="searchEvent">查询</el-button>
                     </el-link>
-                    <div style="margin-top: 10px;">
-                        <el-button @click="show_select_image=true" type="primary">选择图片</el-button>
-                        <el-button @click="show_select_video=true" type="primary">选择视频</el-button>
-                        <el-button @click="show_select_doc=true" type="primary">选择文档</el-button>
-                    </div>
                 </el-form-item>
             </el-form>
+            <div style="margin-bottom: 10px;">
+                <el-button size="small" @click="show_select_image=true" type="primary">选择图片</el-button>
+                <el-button size="small" @click="show_select_video=true" type="primary">选择视频</el-button>
+                <el-button size="small" @click="show_select_doc=true" type="primary">选择文档</el-button>
+            </div>
         </div>
         <div>
             <el-table
@@ -38,30 +38,49 @@
                     style="width: 100%">
                 <el-table-column
                         fixed
-                        prop="date"
-                        label="日期"
-                        min-width="180">
+                        prop="file_id"
+                        label="ID"
+                        width="80">
                 </el-table-column>
                 <el-table-column
-                        prop="name"
-                        label="姓名"
-                        min-width="180">
+                        prop="file_name"
+                        label="文件名称"
+                        min-width="140">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
-                        min-width="380"
-                        label="地址">
+                        align="center"
+                        prop="file_type"
+                        label="文件类型"
+                        width="80">
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="file_size"
+                        label="大小(KB)"
+                        width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="file_url"
+                        min-width="200"
+                        label="访问地址">
+                </el-table-column>
+                <el-table-column
+                        prop="file_path"
+                        min-width="200"
+                        label="文件路径">
+                </el-table-column>
+                <el-table-column
+                        prop="created_at"
+                        width="140"
+                        label="创建时间">
                 </el-table-column>
                 <el-table-column
                         fixed="right"
                         align="center"
-                        min-width="180"
+                        min-width="80"
                         label="操作">
                     <template slot-scope="{row}">
-                        <el-link>
-                            <el-button size="small" type="primary">编辑</el-button>
-                        </el-link>
-                        <el-link @click="deleteEvent">
+                        <el-link @click="deleteEvent(row)">
                             <el-button size="small" type="danger">删除</el-button>
                         </el-link>
                     </template>
@@ -87,8 +106,11 @@
     <select-doc :show="show_select_doc" @confirm="selectDocConfirm"
                 @close="show_select_doc=false"></select-doc>
 </div>
+<!--引入图片选择组件-->
 {hcmstag:include file="admin@/components/upload/select-image"}
+<!--引入视频选择组件-->
 {hcmstag:include file="admin@/components/upload/select-video"}
+<!--引入文档选择组件-->
 {hcmstag:include file="admin@/components/upload/select-doc"}
 <script>
     $(function () {
@@ -112,46 +134,30 @@
                     console.log('selectImageConfirm', files)
                 },
                 GetList() {
-                    this.handRes({
-                        current_page: 1,
-                        last_page: 2,
-                        total: 25,
-                        data: [{
-                            date: '2016-05-02',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1518 弄'
-                        }, {
-                            date: '2016-05-04',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1517 弄'
-                        }, {
-                            date: '2016-05-01',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1519 弄'
-                        }, {
-                            date: '2016-05-03',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1516 弄'
-                        }]
+                    this.httpGet("{:url('admin/upload/index/lists')}", {
+                        page: this.current_page,
+                        ...this.where
+                    }).then(res => {
+                        let {lists = {}} = res.data
+                        this.handRes(lists)
                     })
-                    // this.httpGet('/admin/access/index/lists', {
-                    //     page: this.current_page,
-                    //     ...this.where
-                    // }).then(res => {
-                    //     let {lists = {}} = res.data
-                    //     this.handRes(lists)
-                    // })
                 },
-                deleteEvent({setting_id}) {
-                    this.$confirm("是否确认删除该记录？", '提示', {setting_id}).then(() => {
-                        // this.httpGet("{:url('admin/setting/delete')}", {}).then(res => {
-                        //     if (res.status) {
-                        //         this.$message.success(res.msg)
-                        //     }
-                        // })
+                deleteEvent({file_id}) {
+                    this.$confirm("是否确认删除该记录？", '提示', {file_id}).then(() => {
+                        this.httpPost("{:url('admin/upload/file/delete')}", {
+                            selected_file_ids: [file_id]
+                        }).then(res => {
+                            if (res.status) {
+                                this.$message.success(res.msg)
+                                this.GetList()
+                            }
+                        })
+                    }).catch(err => {
                     })
                 },
                 searchEvent() {
+                    this.current_page = 1
+                    this.GetList()
                 }
             }
         })
