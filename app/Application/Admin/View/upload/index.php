@@ -23,9 +23,11 @@
                     <el-link>
                         <el-button type="primary" @click="searchEvent">查询</el-button>
                     </el-link>
-                    <el-link>
-                        <el-button @click="show_select_image=true" type="primary" @click="searchEvent">上传文件</el-button>
-                    </el-link>
+                    <div style="margin-top: 10px;">
+                        <el-button @click="show_select_image=true" type="primary">选择图片</el-button>
+                        <el-button @click="show_select_video=true" type="primary">选择视频</el-button>
+                        <el-button @click="show_select_doc=true" type="primary">选择文档</el-button>
+                    </div>
                 </el-form-item>
             </el-form>
         </div>
@@ -80,18 +82,32 @@
     </el-card>
     <select-image :show="show_select_image" @confirm="selectImageConfirm"
                   @close="show_select_image=false"></select-image>
+    <select-video :show="show_select_video" @confirm="selectVideoConfirm"
+                  @close="show_select_video=false"></select-video>
+    <select-doc :show="show_select_doc" @confirm="selectDocConfirm"
+                @close="show_select_doc=false"></select-doc>
 </div>
 {hcmstag:include file="admin@/components/upload/select-image"}
+{hcmstag:include file="admin@/components/upload/select-video"}
+{hcmstag:include file="admin@/components/upload/select-doc"}
 <script>
     $(function () {
         new Vue({
             el: ".page-container",
             data: {
+                show_select_doc: false,
                 show_select_image: false,
+                show_select_video: false,
                 is_init_list: true,
                 where: {},
             },
             methods: {
+                selectDocConfirm(files) {
+                    console.log('selectDocConfirm', files)
+                },
+                selectVideoConfirm(files) {
+                    console.log('selectVideoConfirm', files)
+                },
                 selectImageConfirm(files) {
                     console.log('selectImageConfirm', files)
                 },

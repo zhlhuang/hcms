@@ -62,7 +62,28 @@ class UploadService
     {
         $file_type = $this->upload_file->file_type;
         if ($file_type === UploadFile::FILE_TYPE_IMAGE) {
+            //图片缩略图
             return $this->upload_file->file_url;
+        }
+        if ($file_type === UploadFile::FILE_TYPE_VIDEO) {
+            //视频文件缩略图
+            return '/assets/img/upload/video.png';
+        }
+        if ($file_type === UploadFile::FILE_TYPE_DOC) {
+            //文档文件，根据文档后缀决定缩略图
+            $array = [
+                'pdf' => 'pdf.png',
+                'ppt' => 'ppt.png',
+                'pptx' => 'ppt.png',
+                'doc' => 'doc.png',
+                'docx' => 'doc.png',
+                'xls' => 'xls.png',
+                'xlsx' => 'xls.png',
+                'file' => 'file.png',
+                'video' => 'video.png'
+            ];
+
+            return '/assets/img/upload/' . ($array[$this->upload_file->file_ext] ?? 'file.png');
         }
 
         return '';

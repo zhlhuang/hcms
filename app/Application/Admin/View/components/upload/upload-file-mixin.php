@@ -31,7 +31,8 @@
             },
             uploadData() {
                 return {
-                    group_id: this.now_group > 0 ? this.group_id : 0
+                    group_id: this.now_group > 0 ? this.group_id : 0,
+                    file_type: this.file_type
                 }
             }
         },
@@ -153,7 +154,7 @@
             },
             editGroup(inputValue = '', group_id = 0) {
                 var that = this;
-                that.$prompt('请输入分组名称', '新增分组', {
+                that.$prompt('请输入分组名称', (group_id > 0 ? '编辑' : '新增') + '分组', {
                     confirmButtonText: '保存',
                     cancelButtonText: '取消',
                     inputValue,

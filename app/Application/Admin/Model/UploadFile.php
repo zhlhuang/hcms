@@ -55,4 +55,6 @@ class UploadFile extends Model
         'updated_at' => 'datetime'
     ];
     const FILE_TYPE_IMAGE = 'image';
+    const FILE_TYPE_VIDEO = 'video';
+    const FILE_TYPE_DOC = 'doc';
 }

@@ -16,7 +16,6 @@ window.__vueList = {
     },
     methods: {
         currentChangeEvent(e) {
-            console.log('currentChangeEvent', e)
             this.current_page = e
             this.GetList()
         },

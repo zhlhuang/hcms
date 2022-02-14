@@ -104,7 +104,8 @@ class UploadController extends AdminAbstractController
     {
         $file = $this->request->file('file');
         $group_id = (int)$this->request->input('group_id', 0);
-        $upload_service = new UploadService($file);
+        $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
+        $upload_service = new UploadService($file, $file_type);
         $upload_file = $upload_service->setUserId($this->getAdminUserId())
             ->setUserType('admin')
             ->setGroupId($group_id)
@@ -136,7 +137,7 @@ class UploadController extends AdminAbstractController
      */
     function groupList()
     {
-        $file_type = $this->request->post('file_type', UploadFile::FILE_TYPE_IMAGE);
+        $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
         $where = [
             ['file_type', '=', $file_type]
         ];
@@ -166,7 +167,8 @@ class UploadController extends AdminAbstractController
         $group_name = $this->request->post('group_name', '');
         $file_type = $this->request->post('file_type', UploadFile::FILE_TYPE_IMAGE);
         $file_group = UploadFileGroup::firstOrNew([
-            'group_id' => $group_id
+            'group_id' => $group_id,
+            'file_type' => $file_type
         ]);
         $file_group->group_name = $group_name;
         $file_group->file_type = $file_type;
