@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace App\Exception\Handler;
 
-use App\Application\Admin\Lib\Render;
-use App\Application\Admin\Lib\RenderParam;
 use App\Exception\ErrorException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\Di\Exception\NotFoundException;
 use Hyperf\ExceptionHandler\ExceptionHandler;
-use Hyperf\HttpMessage\Exception\HttpException;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Codec\Json;
+use Hyperf\View\RenderInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
@@ -40,10 +37,16 @@ class ErrorExceptionHandler extends ExceptionHandler
     protected $config;
 
     /**
-     * @inject()
+     * @Inject()
      * @var RequestInterface
      */
     protected $request;
+
+    /**
+     * @inject()
+     * @var RenderInterface
+     */
+    protected $render;
 
     public function __construct(StdoutLoggerInterface $logger)
     {
@@ -76,10 +79,7 @@ class ErrorExceptionHandler extends ExceptionHandler
                 ->withBody(new SwooleStream($result));
         }
 
-        $render = new Render($this->container, $this->config);
-        $renderParam = new RenderParam(compact('description', 'location', 'content'));
-
-        return $render->render('error', $renderParam->getData());
+        return $this->render->render('Admin/View/error', compact('description', 'location', 'content'));
     }
 
     public function isValid(Throwable $throwable): bool

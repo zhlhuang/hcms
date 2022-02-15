@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Admin\Service\upload;
+namespace App\Application\Admin\Service\Upload;
 
 use App\Application\Admin\Model\UploadFile;
 use App\Application\Admin\Service\AdminSettingService;

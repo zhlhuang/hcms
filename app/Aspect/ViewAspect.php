@@ -11,12 +11,13 @@ declare(strict_types=1);
 namespace App\Aspect;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\Render;
 use App\Application\Admin\Lib\RenderParam;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Aspect;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
+use Hyperf\View\RenderInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -31,6 +32,12 @@ class ViewAspect extends AbstractAspect
 
     protected $container;
     protected $config;
+
+    /**
+     * @Inject()
+     * @var RenderInterface
+     */
+    protected $render;
 
     public function __construct(ContainerInterface $container, ConfigInterface $config)
     {
@@ -54,19 +61,16 @@ class ViewAspect extends AbstractAspect
         } else {
             $data = $res;
         }
-
         $class = $proceedingJoinPoint->getReflectMethod()->class;
         //解析调用Controller的命名空间。
         list($module_name, $controller) = (explode('\\Controller\\', str_replace(['App\\Application\\'], '', $class)));
         $controller = strtolower(str_replace("Controller", '', $controller)); //控制器名称
         $module_name = ucfirst($module_name); //模块名称
+        $controller = str_replace("\\", "/", $controller);
 
-        // 根据模块和Controller名称，解析出template 目录
-        $view_path = BASE_PATH . "/app/Application/{$module_name}/View/{$controller}/";
+        // 根据模块和Controller名称，解析出template名称
+        $template = "{$module_name}/View/{$controller}/" . $template;
 
-
-        $render = new Render($this->container, $this->config);
-
-        return $render->render($template, $data, $view_path);
+        return $this->render->render($template, $data);
     }
 }

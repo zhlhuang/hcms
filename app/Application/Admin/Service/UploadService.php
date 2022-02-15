@@ -9,10 +9,10 @@
 namespace App\Application\Admin\Service;
 
 use App\Application\Admin\Model\UploadFile;
-use App\Application\Admin\Service\upload\AbstractUploadDriver;
-use App\Application\Admin\Service\upload\AliyunMirrorUploadDriver;
-use App\Application\Admin\Service\upload\LocalUploadDriver;
-use App\Application\Admin\Service\upload\TencentMirrorUploadDriver;
+use App\Application\Admin\Service\Upload\AbstractUploadDriver;
+use App\Application\Admin\Service\Upload\AliyunMirrorUploadDriver;
+use App\Application\Admin\Service\Upload\LocalUploadDriver;
+use App\Application\Admin\Service\Upload\TencentMirrorUploadDriver;
 use App\Exception\ErrorException;
 use Hyperf\HttpMessage\Upload\UploadedFile;
 

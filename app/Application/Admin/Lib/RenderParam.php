@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Lib;
 
-use App\Application\Admin\Service\AdminUserService;
-
 class RenderParam
 {
     public $template = '';

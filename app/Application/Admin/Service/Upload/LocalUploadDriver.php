@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Admin\Service\upload;
+namespace App\Application\Admin\Service\Upload;
 
 use App\Application\Admin\Model\UploadFile;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Exception\ErrorException;
 use Hyperf\HttpMessage\Upload\UploadedFile;
 
-class TencentMirrorUploadDriver extends AbstractUploadDriver
+class LocalUploadDriver extends AbstractUploadDriver
 {
     public function save(): UploadFile
     {
@@ -25,12 +25,12 @@ class TencentMirrorUploadDriver extends AbstractUploadDriver
     {
         $file_type = $this->upload_file->file_type;
         if ($file_type === UploadFile::FILE_TYPE_IMAGE) {
-            //腾讯云图片处理成缩略图
-            return $this->upload_file->file_url . '?imageMogr2/gravity/center/crop/200x200/interlace/0';
+            //图片缩略图
+            return $this->upload_file->file_url;
         }
         if ($file_type === UploadFile::FILE_TYPE_VIDEO) {
-            //腾讯云视频通过快照获取缩略图，注意需要开启媒体处理
-            return $this->upload_file->file_url . '?ci-process=snapshot&time=1&format=png&time=2&width=200&height=200';
+            //视频文件缩略图
+            return '/assets/img/upload/video.png';
         }
         if ($file_type === UploadFile::FILE_TYPE_DOC) {
             //文档文件，根据文档后缀决定缩略图
