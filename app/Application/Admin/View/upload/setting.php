@@ -10,7 +10,8 @@
             <el-form size="small" label-width="120px">
                 <el-form-item required label="上传驱动">
                     <el-select v-model="setting.upload_drive" placeholder="请选择上传驱动">
-                        <el-option value="local" label="本地上传"></el-option>
+                        <el-option v-for="(item,index) in driver_list" :value="item.value"
+                                   :label="item.name"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item required label="本地上传目录">
@@ -22,7 +23,7 @@
                 <el-form-item required label="文件访问域名">
                     <el-input v-model="setting.upload_domain" placeholder="本地上传文件存储的目录"></el-input>
                     <div class="form-small">
-                        <small>文件访问的域名，注意需要以 / 结尾，本地上传驱动可以使用 / </small>
+                        <small>文件访问的域名，注意需要以 / 结尾，本地上传驱动可以使用 /，如果使用对象存储的镜像回源，直接填写对象存储的访问域名</small>
                     </div>
                 </el-form-item>
                 <el-form-item required label="上传格式">
@@ -47,6 +48,7 @@
         new Vue({
             el: ".page-container",
             data: {
+                driver_list: [],
                 setting: {
                     upload_drive: "local",
                     upload_file_dir: "public/upload",
@@ -62,7 +64,8 @@
                 getInfo() {
                     this.httpGet("{:url('admin/upload/setting/info')}", {}).then(res => {
                         if (res.status) {
-                            let {setting = {}} = res.data
+                            let {setting = {}, driver_list = []} = res.data
+                            this.driver_list = driver_list
                             if (setting.upload_drive) {
                                 this.setting = setting
                             }

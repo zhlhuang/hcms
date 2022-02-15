@@ -57,4 +57,17 @@ class UploadFile extends Model
     const FILE_TYPE_IMAGE = 'image';
     const FILE_TYPE_VIDEO = 'video';
     const FILE_TYPE_DOC = 'doc';
+
+    const UPLOAD_DRIVE_LOCAL = 'local';
+    const UPLOAD_DRIVE_ALIYUN_MIRROR = 'aliyun_mirror';
+    const UPLOAD_DRIVE_TENCENT_MIRROR = 'tencent_mirror';
+
+    static function getDriverList()
+    {
+        return [
+            ['value' => self::UPLOAD_DRIVE_LOCAL, 'name' => '本地上传'],
+            ['value' => self::UPLOAD_DRIVE_ALIYUN_MIRROR, 'name' => '阿里云OSS镜像'],
+            ['value' => self::UPLOAD_DRIVE_TENCENT_MIRROR, 'name' => '腾讯云COS镜像'],
+        ];
+    }
 }

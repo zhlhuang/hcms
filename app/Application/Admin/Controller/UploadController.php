@@ -183,8 +183,9 @@ class UploadController extends AdminAbstractController
     function settingInfo()
     {
         $setting = AdminSettingService::getUploadSetting();
+        $driver_list = UploadFile::getDriverList();
 
-        return self::returnSuccessJson(compact('setting'));
+        return self::returnSuccessJson(compact('driver_list', 'setting'));
     }
 
     /**
