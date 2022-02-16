@@ -3,24 +3,29 @@
         <div slot="header" class="breadcrumb">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item><a href="{:url('admin/main/index')}">首页</a></el-breadcrumb-item>
-                <el-breadcrumb-item>列表示例</el-breadcrumb-item>
+                <el-breadcrumb-item>队列执行记录</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div>
             <el-form size="small" :inline="true">
                 <el-form-item>
-                    <el-input v-model="where.user" clearable placeholder="审批人"></el-input>
+                    <el-input v-model="where.class_name" clearable placeholder="类名"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-select v-model="where.region" placeholder="活动区域">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
+                    <el-input v-model="where.method" clearable placeholder="方法名称"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="searchEvent">查询</el-button>
                 </el-form-item>
             </el-form>
+            <div>
+                <el-radio-group size="small" v-model="where.status" @change="refreshList" style="margin-bottom: 30px;">
+                    <el-radio-button :label="-1">全部</el-radio-button>
+                    <el-radio-button :label="0">执行中</el-radio-button>
+                    <el-radio-button :label="1">成功</el-radio-button>
+                    <el-radio-button :label="2">失败</el-radio-button>
+                </el-radio-group>
+            </div>
         </div>
         <div>
             <el-table
@@ -29,33 +34,77 @@
                     style="width: 100%">
                 <el-table-column
                         fixed
-                        prop="date"
-                        label="日期"
+                        prop="queue_id"
+                        label="ID"
+                        width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="class_name"
+                        label="类名"
                         min-width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="name"
-                        label="姓名"
+                        prop="method"
+                        min-width="100"
+                        label="方法">
+                </el-table-column>
+                <el-table-column
+                        prop="params"
+                        label="参数"
                         min-width="180">
                 </el-table-column>
                 <el-table-column
-                        prop="address"
-                        min-width="380"
-                        label="地址">
-                </el-table-column>
-                <el-table-column
-                        fixed="right"
                         align="center"
-                        min-width="180"
-                        label="操作">
+                        prop="status"
+                        label="状态"
+                        min-width="80">
                     <template slot-scope="{row}">
-                        <el-link>
-                            <el-button size="small" type="primary">编辑</el-button>
-                        </el-link>
-                        <el-link @click="deleteEvent(row)">
-                            <el-button size="small" type="danger">删除</el-button>
-                        </el-link>
+                        <div>
+                            <el-tag v-if="row.status===0" size="small" type="primary">执行中</el-tag>
+                            <el-tag v-if="row.status===1" size="small" type="success">成功</el-tag>
+                            <el-tag v-if="row.status===2" size="small" type="danger">失败</el-tag>
+                        </div>
                     </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="process_count"
+                        label="执行次数"
+                        min-width="60">
+                </el-table-column>
+                <el-table-column
+                        prop="error_msg"
+                        label="错误信息"
+                        min-width="100">
+                    <template slot-scope="{row}">
+                        <div v-if="row.error_msg">
+                            <el-popover
+                                    placement="bottom"
+                                    title="错误详情"
+                                    width="700"
+                                    trigger="click">
+                                <div>
+                                    <pre style="white-space: pre-wrap;">{{row.error_data}}</pre>
+                                </div>
+                                <div slot="reference">
+                                    <span>{{row.error_msg}}</span><i
+                                            style="font-size: 14px;cursor: pointer;color: #999999;margin-left: 4px;"
+                                            class="el-icon-question"></i>
+                                </div>
+                            </el-popover>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="process_time"
+                        label="执行时间"
+                        width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="created_at"
+                        label="创建时间"
+                        width="140">
                 </el-table-column>
             </el-table>
             <div class="pagination-container">
@@ -79,50 +128,22 @@
             el: ".page-container",
             data: {
                 is_init_list: true,
-                where: {},
+                where: {
+                    status: -1
+                },
             },
             methods: {
                 GetList() {
-                    this.handRes({
-                        current_page: 1,
-                        last_page: 2,
-                        total: 25,
-                        data: [{
-                            date: '2016-05-02',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1518 弄'
-                        }, {
-                            date: '2016-05-04',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1517 弄'
-                        }, {
-                            date: '2016-05-01',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1519 弄'
-                        }, {
-                            date: '2016-05-03',
-                            name: '王小虎',
-                            address: '上海市普陀区金沙江路 1516 弄'
-                        }]
-                    })
-                    // this.httpGet('/admin/access/index/lists', {
-                    //     page: this.current_page,
-                    //     ...this.where
-                    // }).then(res => {
-                    //     let {lists = {}} = res.data
-                    //     this.handRes(lists)
-                    // })
-                },
-                deleteEvent({setting_id}) {
-                    this.$confirm("是否确认删除该记录？", '提示', {setting_id}).then(() => {
-                        // this.httpPost("{:url('admin/setting/delete')}", {}).then(res => {
-                        //     if (res.status) {
-                        //         this.$message.success(res.msg)
-                        //     }
-                        // })
+                    this.httpGet("{:url('admin/queue/index/lists')}", {
+                        page: this.current_page,
+                        ...this.where
+                    }).then(res => {
+                        let {lists = {}} = res.data
+                        this.handRes(lists)
                     })
                 },
                 searchEvent() {
+                    this.refreshList()
                 }
             }
         })

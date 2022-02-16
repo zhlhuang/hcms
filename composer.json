@@ -14,6 +14,7 @@
   "require": {
     "php": ">=7.3",
     "96qbhy/hyperf-auth": "^2.6",
+    "hyperf/async-queue": "^2.2",
     "hyperf/cache": "~2.2.0",
     "hyperf/command": "~2.2.0",
     "hyperf/config": "~2.2.0",
@@ -26,6 +27,7 @@
     "hyperf/memory": "~2.2.0",
     "hyperf/paginator": "^2.2",
     "hyperf/process": "~2.2.0",
+    "hyperf/redis": "^2.2",
     "hyperf/session": "^2.2",
     "hyperf/validation": "^2.2",
     "hyperf/view": "^2.2",
@@ -82,6 +84,9 @@
     "start": [
       "Composer\\Config::disableProcessTimeout",
       "php ./bin/hyperf.php start"
+    ],
+    "watch": [
+      "php bin/hyperf.php server:watch"
     ]
   }
 }

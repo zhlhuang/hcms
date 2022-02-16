@@ -32,8 +32,8 @@ class AppExceptionHandler extends ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response)
     {
-        $this->logger->error(sprintf('%s %s[%s] in %s', get_class($throwable), $throwable->getMessage(),
-            $throwable->getLine(), $throwable->getTraceAsString()));
+        $this->logger->error(sprintf('AppExceptionHandler :: %s %s[%s] in %s', get_class($throwable),
+            $throwable->getMessage(), $throwable->getLine(), $throwable->getTraceAsString()));
         $this->logger->error($throwable->getTraceAsString());
 
         return $response->withHeader('Server', 'Hyperf')
