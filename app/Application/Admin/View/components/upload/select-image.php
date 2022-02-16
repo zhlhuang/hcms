@@ -63,6 +63,7 @@
                                         :action="upload_url"
                                         :accept="file_accept"
                                         :on-success="handleUploadSuccess"
+                                        :on-error="handleUploadError"
                                         :on-exceed="handleExceed"
                                         :on-progress="handleUploadProgress"
                                         :on-change="handleUploadChange"

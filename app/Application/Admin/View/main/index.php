@@ -1,7 +1,17 @@
 <div class="page-container" v-cloak>
     <el-card>
         <div>
-            hello main {$msg}
+            <el-form size="small">
+                <el-form-item label="操作系统">{$os}</el-form-item>
+                <el-form-item label="PHP运行方式">{$php_sapi}</el-form-item>
+                <el-form-item label="PHP 版本">{$php_version}</el-form-item>
+                <el-form-item label="Swoole 版本">{$swoole_version}</el-form-item>
+                <el-form-item label="数据库版本">{$mysql_version}</el-form-item>
+                <el-form-item label="redis版本">{$redis_version}</el-form-item>
+                <el-form-item label="最大上传">{$upload_max_filesize}</el-form-item>
+                <el-form-item label="请求超时">{$max_execution_time}</el-form-item>
+                <el-form-item label="存储空间">{$free_space}</el-form-item>
+            </el-form>
         </div>
     </el-card>
 </div>

@@ -98,6 +98,12 @@
             },
             handleUploadChange() {
             },
+            handleUploadError(e) {
+                this.$loading(
+                    {target: '.el-dialog__body'}
+                ).close();
+                this.$message.error('上传请求错误，你留意你上传文件的大小或格式')
+            },
             handleUploadSuccess(res) {
                 console.log('handleUploadSuccess', res)
                 this.$loading(
@@ -111,13 +117,14 @@
             },
             handleUploadProgress(e) {
                 console.log('handleUploadProgress', e)
-                let show_text = '上传中' + (parseFloat(e.percent).toFixed(2)) + '%'
-                if (e.percent === 100) {
+                let percent = parseInt(e.percent)
+                let show_text = '上传中' + percent + '%'
+                if (percent === 100) {
                     this.$loading({
                         target: '.el-dialog__body',
                         text: show_text
                     }).close();
-                } else {
+                } else if (percent > 0) {
                     this.$loading({
                         target: '.el-dialog__body',
                         text: show_text
