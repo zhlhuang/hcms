@@ -9,9 +9,13 @@
 namespace App\Service;
 
 use App\Application\Admin\Model\Setting;
+use Hyperf\Cache\Annotation\Cacheable;
+use Hyperf\Cache\Listener\DeleteListenerEvent;
 use Hyperf\Database\Model\Model;
 use Hyperf\DbConnection\Db;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\Utils\Context;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 class SettingService
 {
@@ -21,27 +25,6 @@ class SettingService
 
     protected function __construct()
     {
-        $this->updateData();
-    }
-
-    /**
-     * 初始化/更新 配置
-     */
-    private function updateData()
-    {
-        $this->setting_list = Setting::where([])
-            ->select(['setting_value', 'setting_key', 'type', 'setting_group'])
-            ->get()
-            ->each(function (Model $model) {
-                $model->append('format_value');
-            })
-            ->toArray();
-
-        $group_setting = [];
-        foreach ($this->setting_list as $setting) {
-            $group_setting[$setting['setting_group']][$setting['setting_key']] = $setting['format_value'];
-        }
-        $this->group_setting = $group_setting;
     }
 
     static function getInstance(): self
@@ -51,19 +34,52 @@ class SettingService
         });
     }
 
+    protected function getSettingList(): array
+    {
+        if (empty($this->setting_list)) {
+            $this->setting_list = Setting::where([])
+                ->select(['setting_value', 'setting_key', 'type', 'setting_group'])
+                ->get()
+                ->each(function (Model $model) {
+                    $model->append('format_value');
+                })
+                ->toArray();
+        }
+
+        return $this->setting_list;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getGroupSetting()
+    {
+        if (empty($this->group_setting)) {
+            $setting_list = $this->getSettingList();
+
+            $group_setting = [];
+            foreach ($setting_list as $setting) {
+                $group_setting[$setting['setting_group']][$setting['setting_key']] = $setting['format_value'];
+            }
+            $this->group_setting = $group_setting;
+        }
+
+        return $this->group_setting;
+    }
+
     /**
      * 根据配置的分组获取配置
-     *
-     * @param string $group
-     * @return array
+     * @Cacheable(prefix="setting",ttl=86400,listener="setting-update")
      */
     public function getSettings(string $group = ''): array
     {
         if ($group !== '') {
-            return $this->group_setting[$group] ?? [];
+            $group_setting = $this->getGroupSetting();
+
+            return $group_setting[$group] ?? [];
         }
 
-        return $this->setting_list;
+        return $this->getSettingList();
     }
 
     /**
@@ -102,9 +118,21 @@ class SettingService
             }
         }
         //更新数据
-        $this->updateData();
+        $this->flushCache($group);
         Db::commit();
 
         return true;
+    }
+
+    /**
+     * @Inject()
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+
+    private function flushCache(string $group = '')
+    {
+        //清空缓存
+        $this->dispatcher->dispatch(new DeleteListenerEvent('setting-update', ['group' => $group]));
     }
 }

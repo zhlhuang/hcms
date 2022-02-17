@@ -80,7 +80,7 @@ class RoleController extends AdminAbstractController
             'description' => $this->request->post('description', ''),
         ], $access_list);
 
-        return $role ? $this->returnSuccessJson(compact('role')) : $this->returnErrorJson();
+        return $role->role_id > 0 ? $this->returnSuccessJson(compact('role')) : $this->returnErrorJson();
     }
 
     /**

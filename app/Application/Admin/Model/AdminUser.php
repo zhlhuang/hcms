@@ -4,10 +4,12 @@ declare (strict_types=1);
 
 namespace App\Application\Admin\Model;
 
+use App\Application\Admin\Model\Lib\AuthAbilityCache;
 use Hyperf\Database\Model\Relations\HasOne;
 use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\DbConnection\Model\Model;
-use Qbhy\HyperfAuth\AuthAbility;
+use Hyperf\ModelCache\Cacheable;
+use Hyperf\ModelCache\CacheableInterface;
 use Qbhy\HyperfAuth\Authenticatable;
 
 /**
@@ -22,9 +24,12 @@ use Qbhy\HyperfAuth\Authenticatable;
  * @property-read string    $role_name
  * @property-read AdminRole $role
  */
-class AdminUser extends Model implements Authenticatable
+class AdminUser extends Model implements Authenticatable, CacheableInterface
 {
-    use AuthAbility, SoftDeletes;
+    /**
+     *  这里因为使用了模型缓存，所以重构 AuthAbility
+     */
+    use AuthAbilityCache, SoftDeletes, Cacheable;
 
     /**
      * The table associated with the model.

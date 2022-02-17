@@ -7,6 +7,7 @@ namespace App\Application\Admin\Model;
 use App\Application\Admin\Service\AccessService;
 use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\DbConnection\Model\Model;
+use Hyperf\ModelCache\Cacheable;
 
 /**
  * @property int                                             $access_id
@@ -23,6 +24,8 @@ use Hyperf\DbConnection\Model\Model;
  */
 class Access extends Model
 {
+    use Cacheable;
+
     protected $primaryKey = 'access_id';
     /**
      * The table associated with the model.
@@ -70,4 +73,5 @@ class Access extends Model
         AccessService::getInstance()
             ->updateAccess();
     }
+
 }

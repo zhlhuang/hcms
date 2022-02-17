@@ -1,0 +1,130 @@
+<script type="text/javascript" src="/assets/ueditor/ueditor.config.simplicity.js"></script>
+<script type="text/javascript" src="/assets/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" src="/assets/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script>
+    var _UEDITOR_CONFIG = {
+        rowspacingtop: ['0', '5', '10', '15', '20', '25'],
+        rowspacingbottom: ['0', '5', '10', '15', '20', '25'],
+        lineheight: ['0', '1', '1.5', '1.75', '2', '3', '4', '5']
+    }
+</script>
+<!--  上传图片组件,不需要时，可以直接注释  -->
+<link rel="stylesheet" href="/assets/ueditor/cms_uploadImage/index.css">
+<!--  上传图片组件  -->
+
+<!-- 上传视频组件,不需要时，可以直接注释 默认不显示  -->
+<!--<link rel="stylesheet" href="/assets/ueditor/cms_uploadVideo/index.css">-->
+<!-- 上传图片组件  -->
+
+<script type="text/x-template" id="ueditor">
+    <div>
+        <div>
+            <div style="line-height: 0;">
+                <textarea id="editor_content" :style="`height: `+height+`px;width: `+width+`px;`"></textarea>
+            </div>
+        </div>
+        <div>
+            <select-ue-image :show="show_image" @confirm="confirmImage"
+                             @close="show_image=false"></select-ue-image>
+            <select-ue-video :show="show_video" @confirm="confirmVideo"
+                             @close="show_video=false"></select-ue-video>
+        </div>
+    </div>
+</script>
+{hcmstag:include file="admin/@/components/upload/select-ue-image"}
+{hcmstag:include file="admin/@/components/upload/select-ue-video"}
+<script>
+    $(function () {
+        var ueditorInstance = UE.getEditor('editor_content');
+        Vue.component('ueditor', {
+            template: '#ueditor',
+            props: {
+                init: {
+                    type: [String],
+                    default: ''
+                },
+                update: {
+                    type: [String, Number],
+                    default: 0
+                },
+                height: {
+                    type: [String, Number],
+                    default: 500
+                },
+                width: {
+                    type: [String, Number],
+                    default: 390
+                },
+            },
+            data() {
+                return {
+                    show_image: false,
+                    show_video: false
+                }
+            },
+            watch: {
+                init(value) {
+                    ueditorInstance.setContent(value)
+                }
+            },
+            computed: {},
+            methods: {
+                changeContent() {
+                    this.$emit('update', ueditorInstance.getContent())
+                },
+                confirmVideo(files) {
+                    console.log('confirmVideo', files)
+                    if (files) {
+                        for (var i = 0; i < files.length; i++) {
+                            ueditorInstance.focus();
+                            ueditorInstance.execCommand(
+                                "inserthtml",
+                                '<video class="edui-upload-video vjs-default-skin video-js" controls="" preload="none" width="420" height="280" src="' + files[i]['fileurl'] + '" data-setup="{}">\
+                                 <source src="' + files[i]['file_url'] + '" type="video/mp4"/>\
+                                 </video>'
+                            );
+                        }
+                    }
+                },
+                confirmImage(files) {
+                    console.log('confirmImage', files)
+                    if (files) {
+                        for (var i = 0; i < files.length; i++) {
+                            ueditorInstance.focus();
+                            ueditorInstance.execCommand(
+                                "inserthtml",
+                                '<img src="' + files[i]['file_url'] + '" style="width: 100%;font-size:0;line-height:0;vertical-align:top;outline-width:0px;">'
+                            );
+                        }
+                    }
+                }
+            },
+            mounted() {
+                ueditorInstance.addListener('contentChange', this.changeContent)
+                UE.registerUI('cms_uploadImage', (editor, uiName) => {
+                    var btn = new UE.ui.Button({
+                        name: 'cms-uploadImage',
+                        title: '内置图片上传',
+                        onclick: () => {
+                            this.show_image = true
+                        }
+                    });
+                    return btn;
+                });
+                //内置视频上传，需要再打开注释
+                // UE.registerUI('cms_uploadVideo', (editor, uiName) => {
+                //     var btn = new UE.ui.Button({
+                //         name: 'cms-uploadVideo',
+                //         title: '内置视频上传',
+                //         onclick: () => {
+                //             this.show_video = true
+                //         }
+                //     });
+                //     return btn;
+                // });
+                this.init && ueditorInstance.setContent(this.init)
+            }
+        });
+
+    })
+</script>

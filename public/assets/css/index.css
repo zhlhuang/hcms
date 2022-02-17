@@ -34,3 +34,10 @@
     border: 0 !important;
 }
 
+.form-upload__image {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+

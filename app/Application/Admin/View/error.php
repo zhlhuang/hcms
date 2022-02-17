@@ -8,12 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="renderer" content="webkit"/>
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
-    <link rel="stylesheet" href="/assets/element-ui@2.15.6/index.css?version={$version}">
-    <script src="/assets/js/jquery.min.js?version={$version}"></script>
-    <script src="/assets/js/vue.js?version={$version}"></script>
-    <script src="/assets/js/vue-common.js?version={$version}"></script>
-    <script src="/assets/js/vue-list.js?version={$version}"></script>
-    <script src="/assets/element-ui@2.15.6/index.js?version={$version}"></script>
+    <link rel="stylesheet" href="/assets/element-ui@2.15.6/index.css">
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/vue.js"></script>
+    <script src="/assets/js/vue-common.js"></script>
+    <script src="/assets/js/vue-list.js"></script>
+    <script src="/assets/element-ui@2.15.6/index.js"></script>
 </head>
 
 <body>

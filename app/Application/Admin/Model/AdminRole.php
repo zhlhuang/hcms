@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace App\Application\Admin\Model;
 
+use App\Application\Admin\Service\AccessService;
 use Hyperf\Database\Model\Relations\HasMany;
 use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\DbConnection\Db;
@@ -104,6 +105,9 @@ class AdminRole extends Model
                 ->delete();
         }
         Db::commit();
+        //清除角色权限
+        AccessService::getInstance()
+            ->flushRoleAccessListCache($role->role_id);
 
         return $role;
     }

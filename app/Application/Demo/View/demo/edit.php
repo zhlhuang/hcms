@@ -22,11 +22,13 @@
                 <el-form-item label="名称">
                     <el-input v-model="form.access_name" placeholder=""></el-input>
                 </el-form-item>
-                <el-form-item label="Uri">
-                    <el-input v-model="form.uri"></el-input>
-                </el-form-item>
-                <el-form-item label="参数">
-                    <el-input v-model="form.params"></el-input>
+                <el-form-item label="图片">
+                    <div v-if="form.img_url" @click="show_select_image=true">
+                        <el-image class="form-upload__image" :src="form.img_url"></el-image>
+                    </div>
+                    <div v-else>
+                        <el-button @click="show_select_image=true" type="primary">选择图片</el-button>
+                    </div>
                 </el-form-item>
                 <el-form-item label="排序">
                     <el-input v-model="form.sort" type="number"></el-input>
@@ -40,6 +42,11 @@
                         <el-radio :label="0">仅权限</el-radio>
                     </el-radio-group>
                 </el-form-item>
+                <el-form-item label="富文本">
+                    <div>
+                        <ueditor :init="''" @update="richUpdateEvent"></ueditor>
+                    </div>
+                </el-form-item>
                 <el-form-item>
                     <el-button @click="submitEvent" type="primary" size="small">
                         提交
@@ -48,14 +55,20 @@
             </el-form>
         </div>
     </el-card>
+    <select-image :show="show_select_image" @confirm="selectImageConfirm"
+                  @close="show_select_image=false"></select-image>
 </div>
-
+{hcmstag:include file="admin@/components/ueditor"}
+<!--图片选择组件-->
+{hcmstag:include file="admin@/components/upload/select-image"}
 <script>
     $(function () {
         new Vue({
             el: ".page-container",
             data: {
+                show_select_image: false,
                 form: {
+                    img_url: '',
                     is_menu: 1,
                     sort: 100,
                     parent_access_id: 0,
@@ -65,6 +78,13 @@
                 this.getInfo()
             },
             methods: {
+                selectImageConfirm(e) {
+                    console.log('selectImageConfirm', e)
+                    this.form.img_url = e[0].file_url
+                },
+                richUpdateEvent(e) {
+                    console.log('richUpdateEvent', e)
+                },
                 /**
                  * 获取编辑所需信息
                  */
