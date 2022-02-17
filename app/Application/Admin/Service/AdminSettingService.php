@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Service;
 
-use App\Service\SettingService;
+use App\Service\AbstractSettingService;
 
-class AdminSettingService
+class AdminSettingService extends AbstractSettingService
 {
     /**
      * 获取上传配置
@@ -21,10 +21,9 @@ class AdminSettingService
      * @param mixed  $default
      * @return array|mixed|string
      */
-    public static function getUploadSetting(string $key = '', $default = '')
+    public function getUploadSetting(string $key = '', $default = '')
     {
-        $site_setting = SettingService::getInstance()
-            ->getSettings('upload');
+        $site_setting = $this->getSettings('upload');
         if ($key !== '') {
             return $site_setting[$key] ?? $default;
         }
@@ -38,10 +37,9 @@ class AdminSettingService
      * @param array $setting
      * @return bool
      */
-    public static function setUploadSetting(array $setting): bool
+    public function setUploadSetting(array $setting): bool
     {
-        return SettingService::getInstance()
-            ->saveSetting($setting, 'upload');
+        return $this->saveSetting($setting, 'upload');
     }
 
     /**
@@ -51,10 +49,9 @@ class AdminSettingService
      * @param mixed  $default
      * @return array|mixed|string
      */
-    public static function getSiteSetting(string $key = '', $default = '')
+    public function getSiteSetting(string $key = '', $default = '')
     {
-        $site_setting = SettingService::getInstance()
-            ->getSettings('site');
+        $site_setting = $this->getSettings('site');
         if ($key !== '') {
             return $site_setting[$key] ?? $default;
         }
@@ -68,9 +65,8 @@ class AdminSettingService
      * @param array $setting
      * @return bool
      */
-    public static function setSiteSetting(array $setting): bool
+    public function setSiteSetting(array $setting): bool
     {
-        return SettingService::getInstance()
-            ->saveSetting($setting, 'site');
+        return $this->saveSetting($setting, 'site');
     }
 }

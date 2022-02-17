@@ -23,7 +23,13 @@ class SettingService
     protected $setting_list;
     protected $group_setting;
 
-    protected function __construct()
+    /**
+     * @Inject()
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+
+    private function __construct()
     {
     }
 
@@ -125,12 +131,11 @@ class SettingService
     }
 
     /**
-     * @Inject()
-     * @var EventDispatcherInterface
+     * 清空指定分组的缓存
+     *
+     * @param string $group
      */
-    protected $dispatcher;
-
-    private function flushCache(string $group = '')
+    public function flushCache(string $group = '')
     {
         //清空缓存
         $this->dispatcher->dispatch(new DeleteListenerEvent('setting-update', ['group' => $group]));

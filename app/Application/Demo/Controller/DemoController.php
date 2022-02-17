@@ -13,7 +13,9 @@ namespace App\Application\Demo\Controller;
 use App\Annotation\View;
 use App\Application\Admin\Controller\AdminAbstractController;
 use App\Application\Admin\Lib\RenderParam;
+use App\Application\Demo\Service\DemoSettingService;
 use App\Application\Demo\Service\QueueService;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
@@ -27,8 +29,14 @@ use Hyperf\HttpServer\Annotation\PostMapping;
 class DemoController extends AdminAbstractController
 {
 
+    /**
+     * @Inject()
+     * @var DemoSettingService
+     */
+    protected $demo_setting;
 
     /**
+     * 示例队列消息生成
      * @PostMapping(path="queue")
      */
     function setQueueMessage()
@@ -46,6 +54,36 @@ class DemoController extends AdminAbstractController
         }
 
         return $this->returnSuccessJson(compact('type'));
+    }
+
+    /**
+     * @PostMapping(path="setting")
+     */
+    function settingSave()
+    {
+        $setting = $this->request->post('setting', []);
+        $res = $this->demo_setting->setDemoSetting($setting);
+
+        return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
+    }
+
+    /**
+     * @GetMapping(path="setting/info")
+     */
+    function settingInfo()
+    {
+        $setting = $this->demo_setting->getDemoSetting();
+
+        return $this->returnSuccessJson(compact('setting'));
+    }
+
+    /**
+     * @View()
+     * @GetMapping(path="setting")
+     */
+    function setting()
+    {
+        return RenderParam::display();
     }
 
     /**

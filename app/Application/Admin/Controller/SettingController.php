@@ -14,6 +14,8 @@ use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Setting;
 use App\Application\Admin\Service\AdminSettingService;
+use App\Service\SettingService;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
@@ -25,12 +27,19 @@ use Hyperf\HttpServer\Annotation\PostMapping;
  */
 class SettingController extends AdminAbstractController
 {
+
+    /**
+     * @Inject()
+     * @var AdminSettingService
+     */
+    protected $setting;
+
     /**
      * @GetMapping(path="site/info")
      */
     function siteInfo()
     {
-        $setting = AdminSettingService::getSiteSetting();
+        $setting = $this->setting->getSiteSetting();
 
         return $this->returnSuccessJson(compact('setting'));
     }
@@ -41,7 +50,7 @@ class SettingController extends AdminAbstractController
     function siteSave()
     {
         $setting = $this->request->post('setting', []);
-        $res = AdminSettingService::setSiteSetting($setting);
+        $res = $this->setting->setSiteSetting($setting);
 
         return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
     }
@@ -99,6 +108,10 @@ class SettingController extends AdminAbstractController
             'setting_group' => $this->request->post('setting_group', ''),
             'type' => $this->request->post('type', Setting::TYPE_STRING),
         ]);
+
+        //清空指定分组的缓存
+        SettingService::getInstance()
+            ->flushCache($setting->setting_group);
 
         return $setting ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
     }

@@ -16,6 +16,7 @@ use App\Application\Admin\Model\UploadFile;
 use App\Application\Admin\Model\UploadFileGroup;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Application\Admin\Service\UploadService;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
@@ -28,6 +29,13 @@ use Hyperf\HttpServer\Annotation\RequestMapping;
  */
 class UploadController extends AdminAbstractController
 {
+
+    /**
+     * @Inject()
+     * @var AdminSettingService
+     */
+    protected $setting;
+
     /**
      * 删除文件
      * @PostMapping(path="file/move")
@@ -182,7 +190,7 @@ class UploadController extends AdminAbstractController
      */
     function settingInfo()
     {
-        $setting = AdminSettingService::getUploadSetting();
+        $setting = $this->setting->getUploadSetting();
         $driver_list = UploadFile::getDriverList();
 
         return self::returnSuccessJson(compact('driver_list', 'setting'));
@@ -195,7 +203,7 @@ class UploadController extends AdminAbstractController
     function settingSubmit()
     {
         $setting = $this->request->post('setting', []);
-        $res = AdminSettingService::setUploadSetting($setting);
+        $res = $this->setting->setUploadSetting($setting);
 
         return $res ? self::returnSuccessJson() : self::returnErrorJson();
     }

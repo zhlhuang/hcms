@@ -12,7 +12,7 @@ class CreateDemoTable extends Migration
     public function up(): void
     {
         Schema::create('demo', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->bigIncrements('demo_id');
             $table->timestamps();
         });
     }

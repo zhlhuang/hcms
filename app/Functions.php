@@ -17,7 +17,7 @@ use App\Application\Admin\Service\AdminSettingService;
  */
 function url($uri, $params = null): string
 {
-    $site_dir = AdminSettingService::getSiteSetting('site_dir', '/');
+    $site_dir = (new AdminSettingService)->getSiteSetting('site_dir', '/');
     $url = $site_dir . $uri;
     if (!empty($params)) {
         //带有数组参数
