@@ -7,10 +7,8 @@ namespace App\Command;
 use App\Application\Admin\Model\Access;
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Command\Annotation\Command;
-use Hyperf\DbConnection\Db;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 
 /**
  * @Command
@@ -82,11 +80,11 @@ class HcmsInstall extends HyperfCommand
     /**
      * 创建权限和菜单
      *
-     * @param $access_list
-     * @param $parent_access_id
-     * @return bool
+     * @param array $access_list
+     * @param int   $parent_access_id
+     * @return void
      */
-    private function createAccess($access_list, $parent_access_id = 0)
+    private function createAccess(array $access_list, int $parent_access_id = 0): void
     {
         foreach ($access_list as $access) {
             $access_model = Access::firstOrCreate([
@@ -94,7 +92,7 @@ class HcmsInstall extends HyperfCommand
                 'uri' => $access['uri'],
                 'params' => $access['params']
             ], [
-                'parent_access_id' => $access['parent_access_id'] ?? $parent_access_id,
+                'parent_access_id' => intval($access['parent_access_id'] ?? $parent_access_id),
                 'sort' => $access['sort'] ?? 100,
                 'is_menu' => $access['is_menu'] ?? Access::IS_MENU_YES,
                 'menu_icon' => $access['menu_icon'] ?? '',
@@ -103,7 +101,5 @@ class HcmsInstall extends HyperfCommand
                 $this->createAccess($access['children'], $access_model->access_id);
             }
         }
-
-        return true;
     }
 }

@@ -11,9 +11,10 @@ declare(strict_types=1);
 namespace App\Application\Admin\Middleware;
 
 use App\Application\Admin\Service\AccessService;
+use App\Application\Admin\Service\AdminSettingService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Exception\NotFoundHttpException;
-use Psr\Container\ContainerInterface;
+use Hyperf\Logger\LoggerFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -24,25 +25,32 @@ use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 class AdminMiddleware implements MiddlewareInterface
 {
     /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
      * @Inject()
      * @var AuthManager
      */
     protected $auth;
 
     /**
+     * @Inject()
      * @var HttpResponse
      */
     protected $response;
 
-    public function __construct(ContainerInterface $container, HttpResponse $response)
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @Inject()
+     * @var AdminSettingService
+     */
+    protected $setting;
+
+    public function __construct(LoggerFactory $loggerFactory)
     {
-        $this->container = $container;
-        $this->response = $response;
+        // 第一个参数对应日志的 name, 第二个参数对应 config/autoload/logger.php 内的 key
+        $this->logger = $loggerFactory->get('admin', 'request');
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -65,6 +73,37 @@ class AdminMiddleware implements MiddlewareInterface
             throw new NotFoundHttpException('非法请求');
         }
 
-        return $handler->handle($request);
+        $response = $handler->handle($request);
+        $this->log($request, $response);
+
+        return $response;
+    }
+
+    /**
+     * 记录post请求日志
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface      $response
+     */
+    private function log(ServerRequestInterface $request, ResponseInterface $response)
+    {
+        if ($request->getMethod() === 'POST') {
+            //只对ost请求进行记录
+            $log_is_open = (int)$this->setting->getLogSetting('is_open', 1);
+            if ($log_is_open === 1) {
+                $response_body = json_decode($response->getBody()
+                    ->getContents(), true);
+                if (!is_array($response_body)) {
+                    $response_body = $response->getBody()
+                        ->getContents();
+                }
+                $this->logger->info('request ' . $request->getMethod() . ' ' . $request->getUri(), [
+                    'query' => $request->getQueryParams(),
+                    'body' => $request->getParsedBody(),
+                    'response_code' => $response->getStatusCode(),
+                    'response_body' => $response_body
+                ]);
+            }
+        }
     }
 }

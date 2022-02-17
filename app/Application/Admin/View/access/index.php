@@ -2,8 +2,7 @@
     <el-card>
         <div slot="header" class="breadcrumb">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><a href="{:url('admin/main/index')}">首页</a></el-breadcrumb-item>
-                <el-breadcrumb-item>权限列表</el-breadcrumb-item>
+                <el-breadcrumb-item>菜单与权限</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div>

@@ -2,7 +2,6 @@
     <el-card>
         <div slot="header" class="breadcrumb">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item><a href="{:url('admin/main/index')}">首页</a></el-breadcrumb-item>
                 <el-breadcrumb-item><a href="{:url('admin/setting/index')}">配置列表</a></el-breadcrumb-item>
                 <el-breadcrumb-item>{$title}</el-breadcrumb-item>
             </el-breadcrumb>

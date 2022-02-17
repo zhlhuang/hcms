@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /**
  * This file is part of Hyperf.
  *
@@ -24,6 +25,22 @@ return [
                 'format' => null,
                 'dateFormat' => 'Y-m-d H:i:s',
                 'allowInlineLineBreaks' => true,
+            ],
+        ],
+    ],
+    'request' => [
+        'handler' => [
+            'class' => Monolog\Handler\RotatingFileHandler::class,
+            'constructor' => [
+                'filename' => BASE_PATH . '/runtime/logs/request/request.log',
+                'level' => Monolog\Logger::DEBUG,
+            ],
+        ],
+        'formatter' => [
+            'class' => Monolog\Formatter\JsonFormatter::class,
+            'constructor' => [
+                'batchMode' => Monolog\Formatter\JsonFormatter::BATCH_MODE_NEWLINES,
+                'appendNewline' => true,
             ],
         ],
     ],

@@ -69,4 +69,32 @@ class AdminSettingService extends AbstractSettingService
     {
         return $this->saveSetting($setting, 'site');
     }
+
+    /**
+     * 获取日志配置
+     *
+     * @param string $key
+     * @param mixed  $default
+     * @return array|mixed|string
+     */
+    public function getLogSetting(string $key = '', $default = '')
+    {
+        $site_setting = $this->getSettings('log');
+        if ($key !== '') {
+            return $site_setting[$key] ?? $default;
+        }
+
+        return $site_setting;
+    }
+
+    /**
+     * 保存日志配置
+     *
+     * @param array $setting
+     * @return bool
+     */
+    public function setLogSetting(array $setting): bool
+    {
+        return $this->saveSetting($setting, 'log');
+    }
 }
