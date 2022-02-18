@@ -23,12 +23,12 @@ class AdminSettingService extends AbstractSettingService
      */
     public function getUploadSetting(string $key = '', $default = '')
     {
-        $site_setting = $this->getSettings('upload');
+        $upload_setting = $this->getSettings('upload');
         if ($key !== '') {
-            return $site_setting[$key] ?? $default;
+            return $upload_setting[$key] ?? $default;
         }
 
-        return $site_setting;
+        return $upload_setting;
     }
 
     /**
@@ -79,12 +79,12 @@ class AdminSettingService extends AbstractSettingService
      */
     public function getLogSetting(string $key = '', $default = '')
     {
-        $site_setting = $this->getSettings('log');
+        $setting = $this->getSettings('log');
         if ($key !== '') {
-            return $site_setting[$key] ?? $default;
+            return $setting[$key] ?? $default;
         }
 
-        return $site_setting;
+        return $setting;
     }
 
     /**

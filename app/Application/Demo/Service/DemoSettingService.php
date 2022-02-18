@@ -13,12 +13,17 @@ use App\Service\AbstractSettingService;
 
 class DemoSettingService extends AbstractSettingService
 {
-    public function getDemoSetting()
+    public function getDemoSetting(string $key = '', $default = '')
     {
-        return $this->getSettings('demo');
+        $setting = $this->getSettings('log');
+        if ($key !== '') {
+            return $setting[$key] ?? $default;
+        }
+
+        return $setting;
     }
 
-    public function setDemoSetting($setting)
+    public function setDemoSetting($setting): bool
     {
         return $this->saveSetting($setting, 'demo');
     }
