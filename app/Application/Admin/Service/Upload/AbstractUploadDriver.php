@@ -12,6 +12,7 @@ namespace App\Application\Admin\Service\Upload;
 use App\Application\Admin\Model\UploadFile;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Exception\ErrorException;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Upload\UploadedFile;
 
 abstract class AbstractUploadDriver
@@ -21,10 +22,16 @@ abstract class AbstractUploadDriver
     protected $config;
 
 
+    /**
+     * @Inject()
+     * @var AdminSettingService
+     */
+    protected $setting;
+
     public function __construct(UploadedFile $file, string $file_type = 'image')
     {
         $this->file = $file;
-        $this->config = AdminSettingService::getUploadSetting();
+        $this->config = $this->setting->getUploadSetting();
         $this->upload_file = new UploadFile();
         $this->upload_file->file_drive = $this->config['upload_drive'] ?? '';
         $this->upload_file->file_name = $this->file->getClientFilename();

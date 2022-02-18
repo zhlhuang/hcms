@@ -14,6 +14,7 @@ use App\Application\Admin\Service\Upload\AliyunMirrorUploadDriver;
 use App\Application\Admin\Service\Upload\LocalUploadDriver;
 use App\Application\Admin\Service\Upload\TencentMirrorUploadDriver;
 use App\Exception\ErrorException;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Upload\UploadedFile;
 
 /**
@@ -29,6 +30,12 @@ class UploadService
      */
     protected $upload_driver;
 
+    /**
+     * @Inject()
+     * @var AdminSettingService
+     */
+    protected $setting;
+
     protected $driver_list = [
         UploadFile::UPLOAD_DRIVE_LOCAL => LocalUploadDriver::class,
         UploadFile::UPLOAD_DRIVE_ALIYUN_MIRROR => AliyunMirrorUploadDriver::class,
@@ -42,7 +49,7 @@ class UploadService
 
     public function __construct(UploadedFile $file, string $file_type = 'image')
     {
-        $upload_driver = AdminSettingService::getUploadSetting('upload_drive', UploadFile::UPLOAD_DRIVE_LOCAL);
+        $upload_driver = $this->setting->getUploadSetting('upload_drive', UploadFile::UPLOAD_DRIVE_LOCAL);
 
         if (empty($this->driver_list[$upload_driver])) {
             throw new ErrorException('找不到对应的上传驱动');
