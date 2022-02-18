@@ -23,6 +23,9 @@
                 </el-form-item>
                 <el-form-item label="用户名">
                     <el-input v-model="form.username"></el-input>
+                    <div v-if="this.role_id>0" class="form-small">
+                        <small>修改用户名时，必须同时输入密码，否则新的用户名将无法登录！</small>
+                    </div>
                 </el-form-item>
                 <el-form-item label="密码">
                     <el-input v-model="form.password" placeholder="不输入则不修改，新增必须填写"></el-input>

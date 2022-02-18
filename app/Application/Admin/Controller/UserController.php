@@ -70,24 +70,17 @@ class UserController extends AdminAbstractController
         ]);
         $password = $this->request->post('password', '');
         $username = $this->request->post('username', '');
-
+        $real_name = $this->request->post('real_name', '');
         if ($admin_user->admin_user_id === 0 && $password === '') {
             return $this->returnErrorJson('请输入密码');
-        }
-        //如果是新增，检查是否存在同样的用户名
-        if (AdminUser::where('username', $username)
-                ->whereNotIn('admin_user_id', [$admin_user->admin_user_id])
-                ->count() > 0) {
-            return $this->returnErrorJson("用户名{$username}已经存在");
         }
         if ($password !== '' || !$admin_user->admin_user_id) {
             $admin_user->password = AdminUser::makePassword($username, $password);
         }
-        $admin_user->role_id = (int)$this->request->post('role_id', 0);
-        $admin_user->real_name = $this->request->post('real_name', []);
-        $admin_user->username = $this->request->post('username', []);
+        $role_id = (int)$this->request->post('role_id', 0);
+        $res = $admin_user->createAdminUser($username, $password, $real_name, $role_id);
 
-        return $admin_user->save() ? $this->returnSuccessJson(compact('admin_user')) : $this->returnErrorJson();
+        return $res ? $this->returnSuccessJson(compact('admin_user')) : $this->returnErrorJson();
     }
 
     /**

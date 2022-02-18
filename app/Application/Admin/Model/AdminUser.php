@@ -5,6 +5,8 @@ declare (strict_types=1);
 namespace App\Application\Admin\Model;
 
 use App\Application\Admin\Model\Lib\AuthAbilityCache;
+use App\Application\Admin\Service\AdminUserService;
+use App\Exception\ErrorException;
 use Hyperf\Database\Model\Relations\HasOne;
 use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\DbConnection\Model\Model;
@@ -58,17 +60,42 @@ class AdminUser extends Model implements Authenticatable, CacheableInterface
     protected $hidden = ['deleted_at'];
 
     /**
-     * 获取所属角色名称
+     * 创建管理用户
      *
-     * @return string
+     * @param string $username
+     * @param string $password
+     * @param string $real_name
+     * @param int    $role_id
+     * @return bool
+     * @throws ErrorException
      */
-    public function getRoleNameAttribute(): string
+    function createAdminUser(string $username, string $password, string $real_name, int $role_id): bool
     {
-        if ($this->role_id === 0) {
-            return "系统管理员";
+        //检查是否存在同样的用户名
+        $username_exist = AdminUser::where('username', $username)
+                ->whereNotIn('admin_user_id', [$this->admin_user_id])
+                ->count() > 0;
+        if ($username_exist) {
+            throw new ErrorException("用户名{$username}已经存在");
         }
+        if ($password !== '' || !$this->admin_user_id) {
+            $this->password = self::makePassword($username, $password);
+        }
+        $login_user_role_id = AdminUserService::getInstance()
+            ->getAdminUserRoleId();
+        if ($login_user_role_id > 0) {
+            //检查选择的角色是否合法
+            $allow_child_role_ids = AdminUserService::getInstance()
+                ->getAdminUserChildRoleIds();
+            if (!in_array($role_id, $allow_child_role_ids)) {
+                throw new ErrorException('请选择正确的角色');
+            }
+        }
+        $this->role_id = $role_id;
+        $this->real_name = $real_name;
+        $this->username = $username;
 
-        return $this->role && $this->role->role_name ? $this->role->role_name : '';
+        return $this->save();
     }
 
     /**
@@ -81,6 +108,20 @@ class AdminUser extends Model implements Authenticatable, CacheableInterface
     static function makePassword(string $username, string $password): string
     {
         return md5($password . $username);
+    }
+
+    /**
+     * 获取所属角色名称
+     *
+     * @return string
+     */
+    public function getRoleNameAttribute(): string
+    {
+        if ($this->role_id === 0) {
+            return "系统管理员";
+        }
+
+        return $this->role && $this->role->role_name ? $this->role->role_name : '';
     }
 
     public function role(): HasOne

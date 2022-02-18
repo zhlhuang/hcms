@@ -12,7 +12,7 @@ use Hyperf\Validation\Contract\ValidatorFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Qbhy\HyperfAuth\AuthManager;
 
-class AdminAbstractController
+abstract class AdminAbstractController
 {
     /**
      * @Inject()
