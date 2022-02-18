@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Application\Admin\Model\Access;
+use App\Application\Admin\Model\Setting;
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Command\Annotation\Command;
 use Psr\Container\ContainerInterface;
@@ -71,9 +72,42 @@ class HcmsInstall extends HyperfCommand
                 }
                 //创建权限
                 $this->createAccess($access_list);
+                $this->output->info('create access finished');
+            }
+
+            $setting_file = $module_install_dir . '/setting.php';
+            if (file_exists($setting_file)) {
+                $setting_list = include_once $setting_file;
+                if (!is_array($setting_list)) {
+                    throw new \Exception('配置文件setting.php 格式错误');
+                }
+                //创建权限
+                $this->createSetting($setting_list);
+                $this->output->info('create setting finished');
             }
         } catch (\Exception $exception) {
             $this->output->error($exception->getMessage());
+        }
+    }
+
+    /**
+     * 创建配置
+     *
+     * @param array $setting_list
+     */
+    private function createSetting(array $setting_list = [])
+    {
+        foreach ($setting_list as $group => $settings) {
+            foreach ($settings as $setting) {
+                Setting::firstOrCreate([
+                    'setting_key' => $setting['setting_key'],
+                    'setting_group' => $group,
+                ], [
+                    'setting_description' => $setting['setting_description'] ?? '',
+                    'setting_value' => $setting['setting_value'] ?? '',
+                    'type' => $setting['type'] ?? '',
+                ]);
+            }
         }
     }
 
@@ -90,7 +124,7 @@ class HcmsInstall extends HyperfCommand
             $access_model = Access::firstOrCreate([
                 'access_name' => $access['access_name'],
                 'uri' => $access['uri'],
-                'params' => $access['params']
+                'params' => $access['params'] ?? ''
             ], [
                 'parent_access_id' => intval($access['parent_access_id'] ?? $parent_access_id),
                 'sort' => $access['sort'] ?? 100,

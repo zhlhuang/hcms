@@ -18,7 +18,7 @@
                 <el-form-item label="日志记录">
                     <el-switch
                             @change="submitEvent"
-                            v-model="setting.is_open"
+                            v-model="setting.log_is_open"
                             :active-value="1"
                             :inactive-value="0"
                             inactive-color="#C0CCDA"

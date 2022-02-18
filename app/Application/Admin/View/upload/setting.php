@@ -51,7 +51,7 @@
                 driver_list: [],
                 setting: {
                     upload_drive: "local",
-                    upload_file_dir: "public/upload",
+                    upload_file_dir: "upload",
                     upload_domain: "/",
                     upload_allow_ext: "jpg|jpeg|gif|bmp|png|doc|docx|xls|xlsx|ppt|pptx|pdf|txt|rar|zip|mp4",
                     upload_file_size: 2048

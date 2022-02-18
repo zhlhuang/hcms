@@ -89,7 +89,7 @@ class AdminMiddleware implements MiddlewareInterface
     {
         if ($request->getMethod() === 'POST') {
             //只对ost请求进行记录
-            $log_is_open = (int)$this->setting->getLogSetting('is_open', 1);
+            $log_is_open = (int)$this->setting->getLogSetting('log_is_open', 1);
             if ($log_is_open === 1) {
                 $response_body = json_decode($response->getBody()
                     ->getContents(), true);

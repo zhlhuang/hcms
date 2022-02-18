@@ -34,6 +34,14 @@ return [
                 'menu_icon' => '',
             ],
             [
+                'access_name' => '配置示例',
+                'uri' => 'demo/demo/setting',
+                'params' => '',
+                'sort' => 100,
+                'is_menu' => 1,
+                'menu_icon' => '',
+            ],
+            [
                 'access_name' => '队列示例',
                 'uri' => 'demo/demo/queue',
                 'params' => '',
