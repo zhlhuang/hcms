@@ -109,7 +109,7 @@ class PassportController extends AdminAbstractController
             $font->align('left');
             $font->valign('center');
         });
-        $this->cache->set('valid_' . $time, $code, 3600);
+        $this->cache->set('valid_' . $time, $code, 300);
 
         return $this->response->withHeader('Content-Type', 'image/png')
             ->raw($image->encode('png'));

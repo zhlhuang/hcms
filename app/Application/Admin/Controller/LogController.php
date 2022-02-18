@@ -13,6 +13,8 @@ use App\Annotation\View;
 use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Service\AdminSettingService;
+use App\Exception\ErrorException;
+use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -32,19 +34,74 @@ class LogController extends AdminAbstractController
     protected $setting;
 
     /**
-     * @GetMapping(path="setting/info")
+     * @Inject()
+     * @var ConfigInterface
      */
-    function siteInfo()
-    {
-        $setting = $this->setting->getLogSetting();
+    protected $config;
 
-        return $this->returnSuccessJson(compact('setting'));
+
+    /**
+     * @PostMapping(path="index/delete/{file_name}")
+     */
+    function deleteLog($file_name = '')
+    {
+        //为了安全起见，会把文件名含有/的符号替换掉。
+        $file_name = str_replace('/', '', trim($file_name));
+        $request_log_config = $this->config->get('logger.request', []);
+        $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
+        $file_dir = str_replace('request.log', '', $log_filename);
+        if (!file_exists($file_dir . $file_name)) {
+            throw new ErrorException('抱歉，找不到该文件');
+        }
+
+        return unlink($file_dir . $file_name) ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
     /**
-     * @PostMapping(path="setting")
+     * @GetMapping(path="index/download/{file_name}")
      */
-    function siteSave()
+    function download($file_name = '')
+    {
+        $file_name = str_replace('/', '', trim($file_name));
+        $request_log_config = $this->config->get('logger.request', []);
+        $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
+        $file_dir = str_replace('request.log', '', $log_filename);
+        if (!file_exists($file_dir . $file_name)) {
+            throw new ErrorException('抱歉，找不到该文件');
+        }
+
+        return $this->response->download($file_dir . $file_name, $file_name);
+    }
+
+    /**
+     * @GetMapping(path="index/setting/info")
+     */
+    function settingInfo()
+    {
+        $request_log_config = $this->config->get('logger.request', []);
+        $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
+        $file_dir = str_replace('request.log', '', $log_filename);
+        $scan_list = scandir($file_dir, 1);
+        $file_list = [];
+        foreach ($scan_list as $file) {
+            if ($file !== '.' && $file !== '..') {
+                $file_path = $file_dir . $file;
+                $file_list[] = [
+                    'file_name' => $file,
+                    'file_path' => $file_path,
+                    'file_size' => sprintf('%0.2fKB', filesize($file_path) / 1024)
+                ];
+            }
+        }
+        $setting = $this->setting->getLogSetting();
+
+        return $this->returnSuccessJson(compact('setting', 'file_list'));
+    }
+
+    /**
+     * @PostMapping(path="index/setting")
+     */
+    function settingSave()
     {
         $setting = $this->request->post('setting', []);
         $res = $this->setting->setLogSetting($setting);
