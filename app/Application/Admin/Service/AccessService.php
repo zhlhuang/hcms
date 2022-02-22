@@ -156,9 +156,12 @@ class AccessService
      */
     private function getRoleAccessList(int $role_id): array
     {
-        return array_merge(AdminRoleAccess::where('role_id', $role_id)
+        $role_access_list = array_merge($this->not_auth, AdminRoleAccess::where('role_id', $role_id)
             ->pluck('access_uri')
-            ->toArray(), $this->not_auth);
+            ->toArray());
+        sort($role_access_list);
+
+        return $role_access_list;
     }
 
     /**
@@ -224,10 +227,14 @@ class AccessService
             return true;
         }
         $role_access_list = $this->getRoleAccessList($role_id);
+        //TODO 这里返回的权限列表已经是排序过的，下面的权限匹配可以考虑使用二分查找
+        foreach ($role_access_list as $item) {
+            if (Str::is($item, $path) || Str::is($item . '/*', $path)) {
+                return true;
+            }
+        }
 
-        return !empty(array_filter($role_access_list, function ($item) use ($path) {
-            return Str::is($item, $path) || Str::is($item . '/*', $path);
-        }));
+        return false;
     }
 
     /**

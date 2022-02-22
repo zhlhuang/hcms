@@ -90,7 +90,10 @@ class AdminRole extends Model
             foreach ($access_list as $access_id) {
                 $access_uri = Access::where('access_id', $access_id)
                     ->value('uri');
-                if ($access_uri) {
+                //检测当前登录管理员是否拥有该权限，防止前端传了当前角色没授权的权限
+                $check_access = AccessService::getInstance()
+                    ->checkAccess($access_uri);
+                if ($access_uri && $check_access) {
                     $role_access = AdminRoleAccess::firstOrCreate([
                         'role_id' => $role->role_id,
                         'access_id' => $access_id,

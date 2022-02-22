@@ -66,6 +66,11 @@ window.__vueCommon = {
                         if (!res.status) {
                             this.$message.error(res.msg)
                         }
+                        if (res.code === 501) {
+                            setTimeout(function () {
+                                location.href = "/admin/index/index"
+                            }, 1500)
+                        }
                         setTimeout(() => {
                             resolve(res);
                         }, 300)
@@ -94,6 +99,11 @@ window.__vueCommon = {
                     success: (res) => {
                         if (!res.status) {
                             this.$message.error(res.msg)
+                        }
+                        if (res.code === 501) {
+                            setTimeout(function () {
+                                location.href = "/admin/index/index"
+                            }, 1500)
                         }
                         setTimeout(function () {
                             resolve(res);

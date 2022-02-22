@@ -12,6 +12,7 @@ namespace App\Application\Admin\Middleware;
 
 use App\Application\Admin\Service\AccessService;
 use App\Application\Admin\Service\AdminSettingService;
+use App\Exception\ErrorException;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Exception\NotFoundHttpException;
 use Hyperf\Logger\LoggerFactory;
@@ -21,6 +22,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Qbhy\HyperfAuth\AuthManager;
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
+use function PHPUnit\Framework\throwException;
 
 class AdminMiddleware implements MiddlewareInterface
 {
@@ -55,9 +57,20 @@ class AdminMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        //TODO 如果是其他调用方式，例如API的post请求、ajax 可以返回json格式
+        $xmlhttprequest_header = $request->getHeader('X-Requested-With');
+        $xmlhttprequest = strtolower($xmlhttprequest_header[0] ?? '');
         if (!$this->auth->guard('session')
             ->check()) {
+            if ($xmlhttprequest === 'xmlhttprequest') {
+                //ajax 可以返回json格式
+                return $this->response->json([
+                    'status' => false,
+                    'code' => 501,
+                    'data' => [],
+                    'msg' => '未登录'
+                ]);
+            }
+
             return $this->response->redirect('/admin/passport/login');
         }
         /**

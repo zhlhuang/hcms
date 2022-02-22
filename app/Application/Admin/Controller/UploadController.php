@@ -15,6 +15,7 @@ use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\UploadFile;
 use App\Application\Admin\Model\UploadFileGroup;
 use App\Application\Admin\Service\AdminSettingService;
+use App\Application\Admin\Service\AdminUserService;
 use App\Application\Admin\Service\UploadService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -114,7 +115,9 @@ class UploadController extends AdminAbstractController
         $group_id = (int)$this->request->input('group_id', 0);
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
         $upload_service = new UploadService($file, $file_type);
-        $upload_file = $upload_service->setUserId($this->getAdminUserId())
+        $admin_user_id = AdminUserService::getInstance()
+            ->getAdminUserId();
+        $upload_file = $upload_service->setUserId($admin_user_id)
             ->setUserType('admin')
             ->setGroupId($group_id)
             ->save();

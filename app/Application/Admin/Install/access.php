@@ -79,7 +79,7 @@ return [
                         'is_menu' => 0,
                     ],
                     [
-                        'access_name' => '删除角色',
+                        'access_name' => '删除管理员',
                         'uri' => 'admin/user/delete',
                         'sort' => 100,
                         'is_menu' => 0,

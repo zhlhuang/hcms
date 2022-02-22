@@ -36,6 +36,15 @@ class CreateAdminUserTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        \Hyperf\DbConnection\Db::table('admin_user')
+            ->insert([
+                'username' => 'admin',
+                'password' => 'f8c7402e1ebdbc8ad37caae249710bad',
+                'role_id' => 0,
+                'real_name' => '系统管理员',
+                'created_at' => date('Y-m-d H:i:s', time()),
+                'updated_at' => date('Y-m-d H:i:s', time()),
+            ]);
     }
 
     /**
