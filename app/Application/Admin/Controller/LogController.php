@@ -81,6 +81,9 @@ class LogController extends AdminAbstractController
         $request_log_config = $this->config->get('logger.request', []);
         $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
         $file_dir = str_replace('request.log', '', $log_filename);
+        if (!is_dir($file_dir)) {
+            mkdir($file_dir, 0700, true);
+        }
         $scan_list = scandir($file_dir, 1);
         $file_list = [];
         foreach ($scan_list as $file) {

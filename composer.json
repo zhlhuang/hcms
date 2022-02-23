@@ -9,10 +9,10 @@
     "microservice",
     "middleware"
   ],
-  "description": "Hcms is a project development management system based on Hyperf framework. Under the support of Hyperf's efficient and flexible characteristics, it builds a project development management system with rapid development and module reuse.",
+  "description": "Hcms is a project development management system based on Hyperf framework. Under the support of Hyperf's hyperspeed and flexibility characteristics, it builds a project development management system with rapid development and module reuse.",
   "license": "Apache-2.0",
   "require": {
-    "php": ">=7.3",
+    "php": ">=7.4",
     "96qbhy/hyperf-auth": "^2.6",
     "hyperf/async-queue": "^2.2",
     "hyperf/cache": "^2.2",

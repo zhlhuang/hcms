@@ -135,6 +135,9 @@ class CacheController extends AdminAbstractController
         } else {
             //如果是文件存储
             $dir = BASE_PATH . '/runtime/caches/';
+            if (!is_dir($dir)) {
+                mkdir($dir, 0700, true);
+            }
             $file_list = scandir($dir);
             foreach ($file_list as $file) {
                 if ($file != '.' && $file != '..') {
