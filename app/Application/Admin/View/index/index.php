@@ -98,12 +98,13 @@
                     >
                         <div class="chebox"></div>
                         {{item.name}}
+                        <i class="el-icon-refresh-left" @click.stop="refreshTag(index)"></i>
                         <i class="el-icon-close" @click.stop="closeTag(index)"></i>
                     </div>
                 </div>
             </div>
             <ul class="contextmenu" ref="contextmenu">
-                <li @click="refreshTag(tempIndex)">刷新</li>
+<!--                <li @click="refreshTag(tempIndex)">刷新</li>-->
                 <li @click="closeTag(tempIndex)">关闭本页</li>
                 <li @click="closeOtherTag(tempIndex)">关闭其他</li>
                 <li @click="closeAllTag">关闭所有</li>
@@ -421,11 +422,28 @@
         line-height: 15px;
         font-size: 12px;
         border-radius: 50%;
-        margin-left: 8px;
+        margin-left: 2px;
         transition: .3s;
     }
 
     .tag-item .el-icon-close:hover {
+        background-color: #b4bccc;
+        color: #fff;
+    }
+
+
+    .tag-item .el-icon-refresh-left {
+        width: 15px;
+        height: 15px;
+        text-align: center;
+        line-height: 15px;
+        font-size: 12px;
+        border-radius: 50%;
+        margin-left: 8px;
+        transition: .3s;
+    }
+
+    .tag-item .el-icon-refresh-left:hover {
         background-color: #b4bccc;
         color: #fff;
     }

@@ -12,5 +12,5 @@ declare(strict_types=1);
  */
 return [
     //如果不需要队列处理，可以注释下面代码
-    \App\Process\AsyncQueueConsumer::class
+    \Hyperf\AsyncQueue\Process\ConsumerProcess::class
 ];

@@ -19,16 +19,11 @@ class AdminSettingService extends AbstractSettingService
      *
      * @param string $key
      * @param mixed  $default
-     * @return array|mixed|string
+     * @return mixed
      */
     public function getUploadSetting(string $key = '', $default = '')
     {
-        $upload_setting = $this->getSettings('upload');
-        if ($key !== '') {
-            return $upload_setting[$key] ?? $default;
-        }
-
-        return $upload_setting;
+        return $this->getSettings('upload', $key, $default);
     }
 
     /**
@@ -47,16 +42,11 @@ class AdminSettingService extends AbstractSettingService
      *
      * @param string $key
      * @param mixed  $default
-     * @return array|mixed|string
+     * @return mixed
      */
     public function getSiteSetting(string $key = '', $default = '')
     {
-        $site_setting = $this->getSettings('site');
-        if ($key !== '') {
-            return $site_setting[$key] ?? $default;
-        }
-
-        return $site_setting;
+        return $this->getSettings('site', $key, $default);
     }
 
     /**
@@ -75,16 +65,11 @@ class AdminSettingService extends AbstractSettingService
      *
      * @param string $key
      * @param mixed  $default
-     * @return array|mixed|string
+     * @return mixed
      */
     public function getLogSetting(string $key = '', $default = '')
     {
-        $setting = $this->getSettings('log');
-        if ($key !== '') {
-            return $setting[$key] ?? $default;
-        }
-
-        return $setting;
+        return $this->getSettings('log', $key, $default);
     }
 
     /**

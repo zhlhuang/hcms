@@ -7,13 +7,13 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\View;
 use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Model\AdminUser;
+use Hyperf\Contract\SessionInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use Intervention\Image\ImageManagerStatic as Image;
-use Psr\SimpleCache\CacheInterface;
 
 /**
  * @Controller(prefix="admin/passport")
@@ -21,12 +21,11 @@ use Psr\SimpleCache\CacheInterface;
 class PassportController extends AdminAbstractController
 {
 
-
     /**
      * @Inject()
-     * @var CacheInterface
+     * @var SessionInterface
      */
-    protected $cache;
+    protected $session;
 
     /**
      * @RequestMapping(path="logout")
@@ -64,7 +63,7 @@ class PassportController extends AdminAbstractController
             return $this->returnErrorJson($validator->errors()
                 ->first());
         }
-        $cache_code = $this->cache->get('valid_' . $time);
+        $cache_code = $this->session->get('valid_' . $time);
         if ($valid_code != $cache_code) {
             return $this->returnErrorJson('验证码错误');
         }
@@ -109,7 +108,7 @@ class PassportController extends AdminAbstractController
             $font->align('left');
             $font->valign('center');
         });
-        $this->cache->set('valid_' . $time, $code, 300);
+        $this->session->set('valid_' . $time, $code);
 
         return $this->response->withHeader('Content-Type', 'image/png')
             ->raw($image->encode('png'));

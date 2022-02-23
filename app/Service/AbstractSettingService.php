@@ -19,10 +19,21 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 abstract class AbstractSettingService
 {
-    public function getSettings(string $group = ''): array
+    /**
+     * @param string $group
+     * @param string $key
+     * @param mixed  $default
+     * @return mixed
+     */
+    public function getSettings(string $group = '', string $key = '', $default = '')
     {
-        return SettingService::getInstance()
+        $settings = SettingService::getInstance()
             ->getSettings($group);
+        if ($key !== '') {
+            return $settings[$key] ?? $default;
+        }
+
+        return $settings;
     }
 
     public function saveSetting(array $setting_data, string $group = ''): bool

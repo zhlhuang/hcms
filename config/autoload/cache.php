@@ -12,8 +12,8 @@ declare(strict_types=1);
  */
 return [
     'default' => [
-//        'driver' => Hyperf\Cache\Driver\RedisDriver::class,
-        'driver' => Hyperf\Cache\Driver\FileSystemDriver::class,
+        'driver' => Hyperf\Cache\Driver\RedisDriver::class,
+//        'driver' => Hyperf\Cache\Driver\FileSystemDriver::class,
         'packer' => Hyperf\Utils\Packer\PhpSerializerPacker::class,
         'prefix' => 'c:',
     ],

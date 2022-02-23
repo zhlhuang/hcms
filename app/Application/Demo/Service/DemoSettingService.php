@@ -15,12 +15,7 @@ class DemoSettingService extends AbstractSettingService
 {
     public function getDemoSetting(string $key = '', $default = '')
     {
-        $setting = $this->getSettings('demo');
-        if ($key !== '') {
-            return $setting[$key] ?? $default;
-        }
-
-        return $setting;
+        return $this->getSettings('demo', $key, $default);
     }
 
     public function setDemoSetting($setting): bool

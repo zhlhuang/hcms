@@ -12,7 +12,6 @@ namespace App\Application\Admin\Middleware;
 
 use App\Application\Admin\Service\AccessService;
 use App\Application\Admin\Service\AdminSettingService;
-use App\Exception\ErrorException;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Exception\NotFoundHttpException;
 use Hyperf\Logger\LoggerFactory;
@@ -22,7 +21,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Qbhy\HyperfAuth\AuthManager;
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
-use function PHPUnit\Framework\throwException;
 
 class AdminMiddleware implements MiddlewareInterface
 {
