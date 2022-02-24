@@ -12,9 +12,9 @@ namespace App\Application\Admin\Lib;
 
 class RenderParam
 {
-    public $template = '';
-    protected $data = [];
-    protected $common_data = [];
+    public string $template = '';
+    protected array $data = [];
+    protected array $common_data = [];
 
 
     public function __construct(array $data = [])

@@ -30,9 +30,8 @@ class SettingController extends AdminAbstractController
 
     /**
      * @Inject()
-     * @var AdminSettingService
      */
-    protected $setting;
+    protected AdminSettingService $setting;
 
     /**
      * @GetMapping(path="site/info")

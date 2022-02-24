@@ -31,9 +31,8 @@ class DemoController extends AdminAbstractController
 
     /**
      * @Inject()
-     * @var DemoSettingService
      */
-    protected $demo_setting;
+    protected DemoSettingService $demo_setting;
 
     /**
      * 示例队列消息生成

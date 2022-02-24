@@ -7,6 +7,12 @@
         </div>
         <div>
             <div style="margin-bottom: 10px;">
+                <el-radio-group size="small" @change="getInfo" v-model="log_type">
+                    <el-radio-button label="request">操作日志</el-radio-button>
+                    <el-radio-button label="error">错误日志</el-radio-button>
+                </el-radio-group>
+            </div>
+            <div v-if="log_type==='request'" style="margin-bottom: 10px;">
                 <el-alert
                         :closable="false"
                         title="记录后台操作日志"
@@ -14,7 +20,7 @@
                         type="success">
                 </el-alert>
             </div>
-            <el-form size="small" label-width="80px">
+            <el-form v-if="log_type==='request'" size="small" label-width="80px">
                 <el-form-item label="日志记录">
                     <el-switch
                             @change="submitEvent"
@@ -69,6 +75,7 @@
         new Vue({
             el: ".page-container",
             data: {
+                log_type: 'request',
                 file_list: [],
                 setting: {
                     is_open: 1,
@@ -82,7 +89,7 @@
                     location.href = "{:url('admin/log/index/download')}" + "/" + file_name
                 },
                 getInfo() {
-                    this.httpGet("{:url('admin/log/index/setting/info')}", {}).then(res => {
+                    this.httpGet("{:url('admin/log/index/setting/info')}", {log_type: this.log_type}).then(res => {
                         if (res.status) {
                             let {setting = {}, file_list = []} = res.data
                             this.file_list = file_list

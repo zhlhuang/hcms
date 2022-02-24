@@ -20,14 +20,13 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 class SettingService
 {
 
-    protected $setting_list;
-    protected $group_setting;
+    protected array $setting_list;
+    protected array $group_setting;
 
     /**
      * @Inject()
-     * @var EventDispatcherInterface
      */
-    protected $dispatcher;
+    protected EventDispatcherInterface $dispatcher;
 
     private function __construct()
     {

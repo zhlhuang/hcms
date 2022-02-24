@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace App\Exception\Handler;
 
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Exception\NotFoundException;
 use Hyperf\ExceptionHandler\ExceptionHandler;
@@ -22,49 +21,28 @@ use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Codec\Json;
 use Hyperf\View\RenderInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
 class HttpExceptionHandler extends ExceptionHandler
 {
     /**
-     * @var StdoutLoggerInterface
+     * @Inject()
      */
-    protected $logger;
+    protected ConfigInterface $config;
 
     /**
      * @Inject()
-     * @var ContainerInterface
      */
-    protected $container;
+    protected RequestInterface $request;
 
     /**
      * @Inject()
-     * @var ConfigInterface
      */
-    protected $config;
+    protected RenderInterface $render;
 
-    /**
-     * @Inject()
-     * @var RequestInterface
-     */
-    protected $request;
-
-    /**
-     * @Inject()
-     * @var RenderInterface
-     */
-    protected $render;
-
-    public function __construct(StdoutLoggerInterface $logger)
+    public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
-        $this->logger = $logger;
-    }
-
-    public function handle(Throwable $throwable, ResponseInterface $response)
-    {
-
         $description = $throwable->getMessage();
         $app_env = $this->config->get('app_env', 'dev');
         if ($app_env === 'dev') {

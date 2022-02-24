@@ -16,15 +16,9 @@ use Symfony\Component\Console\Input\InputOption;
 #[Command]
 class HcmsModel extends HyperfCommand
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct()
     {
-        $this->container = $container;
-
         parent::__construct('Hcms:model');
     }
 

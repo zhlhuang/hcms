@@ -6,6 +6,8 @@
  * Time: 16:01.
  */
 
+declare(strict_types=1);
+
 namespace App\Application\Admin\Service;
 
 use App\Application\Admin\Model\UploadFile;

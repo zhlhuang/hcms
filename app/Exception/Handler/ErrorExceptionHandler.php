@@ -6,64 +6,58 @@ namespace App\Exception\Handler;
 
 use App\Exception\ErrorException;
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\Logger\LoggerFactory;
 use Hyperf\Utils\Codec\Json;
 use Hyperf\View\RenderInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class ErrorExceptionHandler extends ExceptionHandler
 {
-    /**
-     * @var StdoutLoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * @Inject()
-     * @var ContainerInterface
      */
-    protected $container;
+    protected ConfigInterface $config;
 
     /**
      * @Inject()
-     * @var ConfigInterface
      */
-    protected $config;
-
-    /**
-     * @Inject()
-     * @var RequestInterface
-     */
-    protected $request;
+    protected RequestInterface $request;
 
     /**
      * @inject()
-     * @var RenderInterface
      */
-    protected $render;
+    protected RenderInterface $render;
 
-    public function __construct(StdoutLoggerInterface $logger)
+    public function __construct(LoggerFactory $loggerFactory)
     {
-        $this->logger = $logger;
+        $this->logger = $loggerFactory->get('Exception', 'error');
     }
 
-    public function handle(Throwable $throwable, ResponseInterface $response)
+    public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
         $description = $throwable->getMessage();
         $app_env = $this->config->get('app_env', 'dev');
+
+        $error_detail = sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile());
+        $content = $throwable->getTraceAsString();
         if ($app_env === 'dev') {
-            $location = sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile());
-            $content = $throwable->getTraceAsString();
+            $location = $error_detail;
         } else {
             $location = '';
             $content = '';
         }
+        //记录错误日志
+        $this->logger->error($error_detail);
+        $this->logger->error($throwable->getTraceAsString());
+
         $xmlhttprequest = strtolower($this->request->header('X-Requested-With') ?: '');
         $this->stopPropagation();
         if ($xmlhttprequest === 'xmlhttprequest' || $this->request->isMethod('POST')) {

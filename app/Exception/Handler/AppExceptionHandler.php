@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * This file is part of Hyperf.
  *
@@ -9,32 +7,41 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+declare(strict_types=1);
 
 namespace App\Exception\Handler;
 
 use Hyperf\Contract\StdoutLoggerInterface;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
+use Hyperf\Logger\LoggerFactory;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 class AppExceptionHandler extends ExceptionHandler
 {
+    protected LoggerInterface $logger;
     /**
-     * @var StdoutLoggerInterface
+     * @Inject()
      */
-    protected $logger;
+    protected StdoutLoggerInterface $stdout_loger;
 
-    public function __construct(StdoutLoggerInterface $logger)
+    public function __construct(LoggerFactory $loggerFactory)
     {
-        $this->logger = $logger;
+        $this->logger = $loggerFactory->get('AppException', 'error');
     }
 
-    public function handle(Throwable $throwable, ResponseInterface $response)
+    public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
         $this->logger->error(sprintf('AppExceptionHandler :: %s %s[%s] in %s', get_class($throwable),
             $throwable->getMessage(), $throwable->getLine(), $throwable->getTraceAsString()));
         $this->logger->error($throwable->getTraceAsString());
+
+        $this->stdout_loger->error(sprintf('AppExceptionHandler :: %s %s[%s] in %s', get_class($throwable),
+            $throwable->getMessage(), $throwable->getLine(), $throwable->getTraceAsString()));
+        $this->stdout_loger->error($throwable->getTraceAsString());
 
         return $response->withHeader('Server', 'Hyperf')
             ->withStatus(500)

@@ -8,7 +8,6 @@ use App\Application\Admin\Model\Access;
 use App\Application\Admin\Model\Setting;
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Command\Annotation\Command;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
@@ -17,15 +16,8 @@ use Symfony\Component\Console\Input\InputArgument;
 #[Command]
 class HcmsInstall extends HyperfCommand
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct()
     {
-        $this->container = $container;
-
         parent::__construct('Hcms:install');
     }
 

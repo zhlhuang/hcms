@@ -33,9 +33,8 @@ class UploadController extends AdminAbstractController
 
     /**
      * @Inject()
-     * @var AdminSettingService
      */
-    protected $setting;
+    protected AdminSettingService $setting;
 
     /**
      * 删除文件

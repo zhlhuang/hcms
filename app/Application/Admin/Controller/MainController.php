@@ -22,9 +22,8 @@ class MainController extends AdminAbstractController
 {
     /**
      * @Inject()
-     * @var Redis
      */
-    protected $redis;
+    protected Redis $redis;
 
     /**
      * @View()

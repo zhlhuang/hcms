@@ -4,54 +4,64 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
-use App\Application\Admin\Service\AdminUserService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Validation\Contract\ValidatorFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Qbhy\HyperfAuth\AuthManager;
+use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 abstract class AdminAbstractController
 {
     /**
      * @Inject()
-     * @var AuthManager
      */
-    protected $auth;
+    protected AuthManager $auth;
 
     /**
      * @Inject()
-     * @var ValidatorFactoryInterface
      */
-    protected $validationFactory;
+    protected ValidatorFactoryInterface $validationFactory;
     /**
      * @Inject
-     * @var ContainerInterface
      */
-    protected $container;
+    protected ContainerInterface $container;
 
     /**
      * @Inject
-     * @var RequestInterface
      */
-    protected $request;
+    protected RequestInterface $request;
 
     /**
      * @Inject
-     * @var ResponseInterface
      */
-    protected $response;
+    protected ResponseInterface $response;
 
-    protected function returnSuccessJson(array $data = [], $msg = '', int $code = 200, $status = true)
-    {
+    /**
+     * @param array  $data
+     * @param string $msg
+     * @param int    $code
+     * @param bool   $status
+     * @return PsrResponseInterface
+     */
+    protected function returnSuccessJson(
+        array $data = [],
+        string $msg = '',
+        int $code = 200,
+        bool $status = true
+    ): PsrResponseInterface {
         !$msg && $msg = $this->request->isMethod('GET') ? '请求成功' : '操作成功';
 
         return $this->response->json(compact('data', 'msg', 'status', 'code'));
     }
 
-    protected function returnErrorJson(string $msg = '操作失败', int $code = 500, array $data = [], bool $status = false)
-    {
+    protected function returnErrorJson(
+        string $msg = '操作失败',
+        int $code = 500,
+        array $data = [],
+        bool $status = false
+    ): PsrResponseInterface {
         return $this->response->json(compact('data', 'msg', 'status', 'code'));
     }
 }

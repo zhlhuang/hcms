@@ -19,6 +19,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
 use Qbhy\HyperfAuth\AuthManager;
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 
@@ -26,26 +27,20 @@ class AdminMiddleware implements MiddlewareInterface
 {
     /**
      * @Inject()
-     * @var AuthManager
      */
-    protected $auth;
+    protected AuthManager $auth;
 
     /**
      * @Inject()
-     * @var HttpResponse
      */
-    protected $response;
+    protected HttpResponse $response;
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * @Inject()
-     * @var AdminSettingService
      */
-    protected $setting;
+    protected AdminSettingService $setting;
 
     public function __construct(LoggerFactory $loggerFactory)
     {

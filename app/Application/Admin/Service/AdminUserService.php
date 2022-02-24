@@ -12,8 +12,8 @@ namespace App\Application\Admin\Service;
 
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminUser;
+use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\Utils\Context;
 use Qbhy\HyperfAuth\AuthManager;
 
 class AdminUserService
@@ -21,14 +21,10 @@ class AdminUserService
 
     /**
      * @Inject()
-     * @var AuthManager
      */
-    protected $auth;
+    protected AuthManager $auth;
 
-    /**
-     * @var ?AdminUser
-     */
-    protected $admin_user;
+    protected ?AdminUser $admin_user = null;
 
     private function __construct() { }
 

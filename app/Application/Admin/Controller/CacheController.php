@@ -29,14 +29,12 @@ class CacheController extends AdminAbstractController
 {
     /**
      * @Inject()
-     * @var ConfigInterface
      */
-    protected $config;
+    protected ConfigInterface $config;
     /**
      * @Inject()
-     * @var Redis
      */
-    protected $redis;
+    protected Redis $redis;
 
 
     /**

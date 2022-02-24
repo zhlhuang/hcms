@@ -1,12 +1,6 @@
 # Default Dockerfile
-#
-# @link     https://www.hyperf.io
-# @document https://hyperf.wiki
-# @contact  group@hyperf.io
-# @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
 
-FROM hyperf/hyperf:8.0-alpine-v3.12-swoole
-LABEL maintainer="Hyperf Developers <group@hyperf.io>" version="1.0" license="MIT" app.name="Hyperf"
+FROM hyperf/hyperf:7.4-alpine-v3.12-swoole
 
 ##
 # ---------- env settings ----------
@@ -25,7 +19,7 @@ RUN set -ex \
     && php -m \
     && php --ri swoole \
     #  ---------- some config ----------
-    && cd /etc/php8 \
+    && cd /etc/php7 \
     # - config PHP
     && { \
         echo "upload_max_filesize=128M"; \
@@ -47,7 +41,7 @@ WORKDIR /opt/www
 # RUN composer install --no-dev --no-scripts
 
 COPY . /opt/www
-RUN print "\n" | composer install -o && php bin/hyperf.php
+RUN composer install --no-dev -o && php bin/hyperf.php
 
 EXPOSE 9501
 

@@ -44,4 +44,20 @@ return [
             ],
         ],
     ],
+    'error' => [
+        'handler' => [
+            'class' => Monolog\Handler\RotatingFileHandler::class,
+            'constructor' => [
+                'filename' => BASE_PATH . '/runtime/logs/error/error.log',
+                'level' => Monolog\Logger::DEBUG,
+            ],
+        ],
+        'formatter' => [
+            'class' => Monolog\Formatter\LineFormatter::class,
+            'constructor' => [
+                'batchMode' => Monolog\Formatter\JsonFormatter::BATCH_MODE_NEWLINES,
+                'appendNewline' => true,
+            ],
+        ],
+    ],
 ];

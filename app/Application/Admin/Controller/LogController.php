@@ -29,15 +29,13 @@ class LogController extends AdminAbstractController
 {
     /**
      * @Inject()
-     * @var AdminSettingService
      */
-    protected $setting;
+    protected AdminSettingService $setting;
 
     /**
      * @Inject()
-     * @var ConfigInterface
      */
-    protected $config;
+    protected ConfigInterface $config;
 
 
     /**
@@ -78,9 +76,10 @@ class LogController extends AdminAbstractController
      */
     function settingInfo()
     {
-        $request_log_config = $this->config->get('logger.request', []);
+        $log_type = $this->request->input('log_type', 'request');
+        $request_log_config = $this->config->get('logger.' . $log_type, []);
         $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
-        $file_dir = str_replace('request.log', '', $log_filename);
+        $file_dir = str_replace($log_type . '.log', '', $log_filename);
         if (!is_dir($file_dir)) {
             mkdir($file_dir, 0700, true);
         }

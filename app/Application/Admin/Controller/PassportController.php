@@ -23,9 +23,8 @@ class PassportController extends AdminAbstractController
 
     /**
      * @Inject()
-     * @var SessionInterface
      */
-    protected $session;
+    protected SessionInterface $session;
 
     /**
      * @RequestMapping(path="logout")

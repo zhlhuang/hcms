@@ -13,9 +13,9 @@ namespace App\Application\Admin\Service;
 use App\Application\Admin\Model\Access;
 use App\Application\Admin\Model\AdminRoleAccess;
 use Hyperf\Cache\Annotation\Cacheable;
+use Hyperf\Context\Context;
 use Hyperf\Database\Model\Relations\Relation;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\Utils\Context;
 use Hyperf\Utils\Str;
 use Hyperf\Cache\Listener\DeleteListenerEvent;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -24,14 +24,13 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 class AccessService
 {
 
-    protected $all_access = [];
-    protected $menu_list = [];
+    protected array $all_access = [];
+    protected array $menu_list = [];
 
     /**
      * @Inject()
-     * @var EventDispatcherInterface
      */
-    protected $dispatcher;
+    protected EventDispatcherInterface $dispatcher;
 
     /**
      * 不需要校验的权限集合

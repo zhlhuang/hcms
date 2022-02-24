@@ -17,16 +17,15 @@ use Hyperf\HttpMessage\Upload\UploadedFile;
 
 abstract class AbstractUploadDriver
 {
-    protected $file;
-    protected $upload_file;
+    protected UploadedFile $file;
+    protected UploadFile $upload_file;
     protected $config;
 
 
     /**
      * @Inject()
-     * @var AdminSettingService
      */
-    protected $setting;
+    protected AdminSettingService $setting;
 
     public function __construct(UploadedFile $file, string $file_type = 'image')
     {
@@ -127,6 +126,7 @@ abstract class AbstractUploadDriver
 
     /**
      * @param int $user_id
+     * @return $this
      */
     public function setUserId(int $user_id): self
     {
@@ -137,6 +137,7 @@ abstract class AbstractUploadDriver
 
     /**
      * @param string $user_type
+     * @return $this
      */
     public function setUserType(string $user_type): self
     {
@@ -147,6 +148,7 @@ abstract class AbstractUploadDriver
 
     /**
      * @param int $group_id
+     * @return $this
      */
     public function setGroupId(int $group_id): self
     {

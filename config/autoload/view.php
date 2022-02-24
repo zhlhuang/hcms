@@ -18,7 +18,7 @@ return [
     'engine' => \Hyperf\View\Engine\ThinkEngine::class,
     'mode' => Mode::SYNC,
     'config' => [
-        'view_suffix' => 'php',
+        'view_suffix' => 'html',
         'view_path' => BASE_PATH . "/app/Application/",
         'cache_path' => BASE_PATH . '/runtime/view/',
         'layout_on' => true,
