@@ -41,7 +41,7 @@ REDIS_DB=0
 php bin/hyperf.php hcms:install admin
 ```
 
-#启动
+# 启动
 ```shell
 composer start
 
@@ -49,7 +49,7 @@ composer start
 composer watch
 ```
 
-#访问
+# 访问
 访问 `http://127.0.0.1:9501/admin/index/index`
 
 默认管理的账号是  admin、密码是 123123
