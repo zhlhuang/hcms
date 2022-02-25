@@ -37,8 +37,8 @@ class UploadController extends AdminAbstractController
     protected AdminSettingService $setting;
 
     /**
-     * 删除文件
-     * @PostMapping(path="file/move")
+     * 移动文件
+     * @PostMapping(path="/component/upload/file/move")
      */
     function fileMove()
     {
@@ -57,7 +57,7 @@ class UploadController extends AdminAbstractController
 
     /**
      * 删除文件
-     * @PostMapping(path="file/delete")
+     * @PostMapping(path="/component/upload/file/delete")
      */
     function fileDelete()
     {
@@ -73,7 +73,7 @@ class UploadController extends AdminAbstractController
 
     /**
      * 文件列表
-     * @GetMapping(path="file/lists")
+     * @GetMapping(path="/component/upload/file/lists")
      */
     function fileList()
     {
@@ -106,7 +106,7 @@ class UploadController extends AdminAbstractController
 
     /**
      * 上传文件
-     * @RequestMapping(path="file")
+     * @RequestMapping(path="/component/upload/file")
      */
     function fileUpload()
     {
@@ -126,7 +126,7 @@ class UploadController extends AdminAbstractController
 
     /**
      * 删除分组
-     * @PostMapping(path="group/delete")
+     * @PostMapping(path="/component/upload/group/delete")
      */
     function groupDelete()
     {
@@ -143,7 +143,7 @@ class UploadController extends AdminAbstractController
 
     /**
      * 分组列表
-     * @GetMapping(path="group/lists")
+     * @GetMapping(path="/component/upload/group/lists")
      */
     function groupList()
     {
@@ -159,7 +159,7 @@ class UploadController extends AdminAbstractController
 
     /**
      * 新增/编辑分组
-     * @PostMapping(path="group")
+     * @PostMapping(path="/component/upload/group")
      */
     function groupEdit()
     {

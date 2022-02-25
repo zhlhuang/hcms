@@ -9,5 +9,5 @@ return [
     /**
      *  不需要进行校验的权限
      */
-    'not_auth' => ['admin/index/index', 'admin/upload/file', 'admin/upload/group']
+    'not_auth' => ['admin/index/index', 'component']
 ];
