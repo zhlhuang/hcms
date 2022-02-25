@@ -24,7 +24,7 @@ class HcmsInstall extends HyperfCommand
     public function configure()
     {
         parent::configure();
-        $this->setDescription('This is Hcms');
+        $this->setDescription('This is Hcms install module');
         //安装指令
 
         $this->addArgument('module', InputArgument::REQUIRED, '安装模块');

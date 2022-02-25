@@ -25,7 +25,7 @@ class HcmsModel extends HyperfCommand
     public function configure()
     {
         parent::configure();
-        $this->setDescription('This is Hcms Model');
+        $this->setDescription('This is Hcms create module model file');
         //安装指令
         $this->addArgument('module', InputArgument::REQUIRED, '执行的模块');
         $this->addArgument('table_name', InputArgument::REQUIRED, '创建model的表名');
