@@ -33,19 +33,23 @@ class HcmsInstall extends HyperfCommand
     public function handle()
     {
         if (config('app_env', 'dev') !== 'dev') {
-            $this->output->error('This command should be executed in develop env ');
+            $this->output->error('命令行执行必须在开发环境，当前环境是：' . config('app_env', 'dev'));
 
             return;
         }
         $module_name = ucfirst(strtolower($this->input->getArgument('module')));
         $module_dir = "app/Application/{$module_name}/";
+        //通过远程下载模块
+        $this->downloadFromRemote($module_dir, $module_name);
         //不存在该模块
         if (!is_dir($module_dir)) {
-            $this->output->error("module {$module_name} is not exist");
+            $this->output->writeln("<error>模块 {$module_name} 不存在<error>");
 
             return;
         }
         try {
+            $this->output->writeln('正在安装模块...');
+            sleep(2);
             $module_install_dir = $module_dir . "Install/";
 
             //执行数据库部署
@@ -64,7 +68,7 @@ class HcmsInstall extends HyperfCommand
                 }
                 //创建权限
                 $this->createAccess($access_list);
-                $this->output->info('create access finished');
+                $this->output->writeln('<info>创建菜单/权限完成<info>');
             }
 
             $setting_file = $module_install_dir . '/setting.php';
@@ -75,10 +79,56 @@ class HcmsInstall extends HyperfCommand
                 }
                 //创建权限
                 $this->createSetting($setting_list);
-                $this->output->info('create setting finished');
+                $this->output->writeln('<info>创建配置完成<info>');
             }
         } catch (\Exception $exception) {
             $this->output->error($exception->getMessage());
+        }
+    }
+
+    /**
+     * 执行远程获取模块
+     *
+     * @param $module_dir
+     * @param $module_name
+     */
+    private function downloadFromRemote($module_dir, $module_name)
+    {
+        if (is_dir($module_dir)) {
+            $is_remote = 0;
+        } else {
+            $is_remote = (int)$this->output->ask('是否请求远程获取模块？[是:1,否:0] ?', '0');
+        }
+        if ($is_remote === 1) {
+            //github下载地址
+            $download_url = "https://github.com/hcms-module/" . (strtolower($module_name)) . "/archive/master.zip";
+            $this->output->writeln("<info>正在下载 {$download_url}...<info>");
+            try {
+                file_put_contents(__DIR__ . "/{$module_name}.zip", file_get_contents($download_url));
+            } catch (\Exception $exception) {
+                $this->output->writeln("<error>下载失败，有可能是网络原因，可以稍后再试！</error>");
+
+                return;
+            }
+            $zip_file = __DIR__ . "/{$module_name}.zip";
+            if (file_exists($zip_file)) {
+                $zip = new \ZipArchive();
+                $zip->open($zip_file);
+                $zip->extractTo(__DIR__ . '/../Application');
+                $unzip_name = $zip->statIndex(0)['name'] ?? '';
+                $zip->close();
+                $unzip_dir = __DIR__ . "/../Application/" . $unzip_name;
+                rename($unzip_dir, $module_dir);
+                if (is_dir($module_dir)) {
+                    $this->output->writeln('模块下载成功');
+                } else {
+                    $this->output->writeln('<error>模块解压失败<error>');
+                }
+                //模块处理成功，删除下载文件
+                unlink($zip_file);
+            } else {
+                $this->output->writeln("<error>下载模块失败，你可以自己访问{$download_url}下载<error>");
+            }
         }
     }
 
