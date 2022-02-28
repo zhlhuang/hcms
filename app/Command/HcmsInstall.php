@@ -105,7 +105,7 @@ class HcmsInstall extends HyperfCommand
             $this->output->writeln("<info>正在下载 {$download_url}...<info>");
             try {
                 file_put_contents(__DIR__ . "/{$module_name}.zip", file_get_contents($download_url));
-            } catch (\Exception $exception) {
+            } catch (\Throwable $exception) {
                 $this->output->writeln("<error>下载失败，有可能是网络原因，可以稍后再试！</error>");
 
                 return;

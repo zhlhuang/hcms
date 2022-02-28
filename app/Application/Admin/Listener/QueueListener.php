@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Listener;
 
+use App\Application\Admin\Lib\QueueMessageParam;
 use App\Application\Admin\Model\QueueList;
 use Hyperf\AsyncQueue\Event\AfterHandle;
 use Hyperf\AsyncQueue\Event\BeforeHandle;
@@ -38,18 +39,20 @@ class QueueListener implements ListenerInterface
         /**
          * @var Event $event
          */
-        $class_name = $event->message->job()->class;
-        $method = $event->message->job()->method;
-        $params = $event->message->job()->params;
+        $message_param = new QueueMessageParam($event->message);
+        $class_name = $message_param->getClassName();
+        $method = $message_param->getMethod();
+        $params = $message_param->getParams();
+        $params_md5 = $message_param->getParamsMd5();
 
         $queue_list = QueueList::firstOrCreate([
             'class_name' => $class_name,
             'method' => $method,
-            'params_md5' => md5(json_encode($params))
+            'params_md5' => $params_md5
         ]);
         if ($event instanceof BeforeHandle) {
             //消息执行之前
-            $queue_list->params = json_encode($params);
+            $queue_list->params = $params;
             $queue_list->status = QueueList::STATUS_PENDING;
         }
         if ($event instanceof AfterHandle) {

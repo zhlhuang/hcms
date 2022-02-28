@@ -28,7 +28,7 @@ class HcmsCreate extends HyperfCommand
         $this->setDescription('This is Hcms create module');
         //安装指令
         $this->addArgument('module', InputArgument::REQUIRED, '创建模块名称');
-        $this->addOption('migration', 'm', InputOption::VALUE_OPTIONAL, '创建迁移表名称');
+        $this->addOption('migration', 'm', InputOption::VALUE_OPTIONAL, '创建迁移表名称', '');
     }
 
     public function handle()

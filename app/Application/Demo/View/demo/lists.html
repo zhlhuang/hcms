@@ -104,7 +104,7 @@
                             address: '上海市普陀区金沙江路 1516 弄'
                         }]
                     })
-                    // this.httpGet('/admin/access/index/lists', {
+                    // this.httpGet('{:url("admin/access/index/lists")}', {
                     //     page: this.current_page,
                     //     ...this.where
                     // }).then(res => {
@@ -113,8 +113,8 @@
                     // })
                 },
                 deleteEvent({setting_id}) {
-                    this.$confirm("是否确认删除该记录？", '提示', {setting_id}).then(() => {
-                        // this.httpPost("{:url('admin/setting/delete')}", {}).then(res => {
+                    this.$confirm("是否确认删除该记录？", '提示').then(() => {
+                        // this.httpPost("{:url('admin/setting/delete')}", {setting_id}).then(res => {
                         //     if (res.status) {
                         //         this.$message.success(res.msg)
                         //     }

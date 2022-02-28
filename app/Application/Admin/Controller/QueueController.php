@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
+use App\Application\Admin\Lib\QueueMessageParam;
 use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\QueueList;
@@ -50,11 +51,16 @@ class QueueController extends AdminAbstractController
                      * @var Message $message
                      */
                     $message = unserialize($serialize);
+                    $message_param = new QueueMessageParam($message);
+                    $class_name = $message_param->getClassName();
+                    $method = $message_param->getMethod();
+                    $params = $message_param->getParams();
+                    $params_md5 = $message_param->getParamsMd5();
                     $lists[] = [
-                        'class_name' => $message->job()->class,
-                        'method' => $message->job()->method,
-                        'params' => json_encode($message->job()->params),
-                        'params_md5' => md5(json_encode($message->job()->params)),
+                        'class_name' => $class_name,
+                        'method' => $method,
+                        'params' => $params,
+                        'params_md5' => $params_md5,
                         'max_attempts' => $message->job()
                             ->getMaxAttempts(),
                         'attempts' => $message->getAttempts(),
@@ -70,11 +76,16 @@ class QueueController extends AdminAbstractController
                      * @var Message $message
                      */
                     $message = unserialize($serialize);
+                    $message_param = new QueueMessageParam($message);
+                    $class_name = $message_param->getClassName();
+                    $method = $message_param->getMethod();
+                    $params = $message_param->getParams();
+                    $params_md5 = $message_param->getParamsMd5();
                     $lists[] = [
-                        'class_name' => $message->job()->class,
-                        'method' => $message->job()->method,
-                        'params' => json_encode($message->job()->params),
-                        'params_md5' => md5(json_encode($message->job()->params)),
+                        'class_name' => $class_name,
+                        'method' => $method,
+                        'params' => $params,
+                        'params_md5' => $params_md5,
                         'max_attempts' => $message->job()
                             ->getMaxAttempts(),
                         'attempts' => $message->getAttempts(),

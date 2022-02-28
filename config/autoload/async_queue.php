@@ -15,7 +15,7 @@ return [
         ],
         'channel' => 'queue',
         'timeout' => 2,
-        'retry_seconds' => [1, 5, 10, 20],
+        'retry_seconds' => [5, 300, 600, 3600, 10800, 18000, 86400],//5秒、5分钟、10分钟、1小时、3小时,5小时,24小时
         'handle_timeout' => 10,
         'processes' => 1,
         'concurrent' => [
