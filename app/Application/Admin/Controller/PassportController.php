@@ -7,6 +7,7 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\View;
 use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Model\AdminUser;
+use App\Application\Admin\Service\AdminSettingService;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -20,6 +21,11 @@ use Intervention\Image\ImageManagerStatic as Image;
  */
 class PassportController extends AdminAbstractController
 {
+
+    /**
+     * @Inject()
+     */
+    protected AdminSettingService $admin_setting;
 
     /**
      * @Inject()
@@ -87,7 +93,9 @@ class PassportController extends AdminAbstractController
      */
     public function login()
     {
-        return RenderParam::display();
+        return RenderParam::display('login', [
+            'site_name' => $this->admin_setting->getSiteSetting('site_name', 'Hcms')
+        ]);
     }
 
 

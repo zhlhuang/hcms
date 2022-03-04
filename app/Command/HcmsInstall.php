@@ -48,17 +48,16 @@ class HcmsInstall extends HyperfCommand
             return;
         }
         try {
+            $module_install_dir = $module_dir . "Install/";
+            $this->output->writeln('安装检查...');
+
+            if (!$this->check($module_install_dir)) {
+                return;
+            }
+
             $this->output->writeln('正在安装模块...');
             sleep(2);
-            $module_install_dir = $module_dir . "Install/";
-
-            //执行数据库部署
-            $migrate_path = $module_install_dir . "Migration";
-            $this->output->info("migrate " . $migrate_path);
-            $this->call('migrate', [
-                '--path' => $migrate_path
-            ]);
-
+            $this->migrate($module_install_dir);
             //执行权限菜单接口
             $access_file = $module_install_dir . '/access.php';
             if (file_exists($access_file)) {
@@ -84,6 +83,89 @@ class HcmsInstall extends HyperfCommand
         } catch (\Exception $exception) {
             $this->output->error($exception->getMessage());
         }
+    }
+
+    private function migrate($module_install_dir)
+    {
+        //执行数据库部署
+        $migrate_path = $module_install_dir . "Migration";
+        $this->output->info("migrate " . $migrate_path);
+        $this->call('migrate', [
+            '--path' => $migrate_path
+        ]);
+    }
+
+    /**
+     * 安装检查
+     *
+     * @param $module_install_dir
+     * @return bool
+     */
+    private function check($module_install_dir): bool
+    {
+        $config_file = $module_install_dir . '/config.php';
+        if (!file_exists($module_install_dir . '/config.php')) {
+            return true;
+        }
+        $config_list = include_once $config_file;
+        $require = $config_list['require'] ?? [];
+        //依赖检测
+        if (!empty($require['module'])) {
+            $app_path = BASE_PATH . '/app/Application/';
+            $install_module_list = scandir($app_path);
+            foreach ($require['module'] as $value) {
+                $module_name = ucfirst($value);
+                if (!in_array($module_name, $install_module_list)) {
+                    $this->output->writeln("<error>所需模块{$module_name}未安装 ×</error>");
+
+                    return false;
+                }
+            }
+        }
+
+        $this->output->writeln('<info>依赖模块 √<info>');
+        //版本检测
+        if (!empty($require['hcms_version'])) {
+            $need_version = $require['hcms_version'];
+            //检测hcms版本
+            $hcms_version = config('version.hcms_version', '1.0.0');
+            $need_version_array = explode('.', $need_version);
+            $hcms_version_array = explode('.', $hcms_version);
+            $result = false;
+            foreach ($hcms_version_array as $key => $value) {
+                if (intval($value) > intval($need_version_array[$key])) {
+                    $result = true;
+                    break;
+                } elseif ($value == $need_version_array[$key]) {
+                    $result = true;
+                } else {
+                    $result = false;
+                    break;
+                }
+            }
+            if ($result) {
+                $this->output->writeln("需要版本{$need_version}现在版本{$hcms_version} √");
+            } else {
+                $this->output->writeln("<error>需要版本{$need_version}现在版本{$hcms_version} ×<error>");
+
+                return false;
+            }
+        }
+        //检查composer 依赖安装
+        $composer = json_decode(file_get_contents(BASE_PATH . '/composer.json'), true);
+        if (!empty($require['composer'])) {
+            $composer_require = $composer['require'] ?? [];
+            foreach ($require['composer'] as $name => $version) {
+                if (empty($composer_require[$name])) {
+                    $this->output->writeln("<error>需要执行 \" composer require  {$name} {$version} \" 安装</error>");
+
+                    return false;
+                }
+            }
+        }
+        $this->output->writeln('<info>composer依赖 √<info>');
+
+        return true;
     }
 
     /**
@@ -122,7 +204,7 @@ class HcmsInstall extends HyperfCommand
                 if (is_dir($module_dir)) {
                     $this->output->writeln('模块下载成功');
                 } else {
-                    $this->output->writeln('<error>模块解压失败<error>');
+                    $this->output->writeln("<error>解压模块失败，你可以自己访问{$download_url}下载<error>");
                 }
                 //模块处理成功，删除下载文件
                 unlink($zip_file);
