@@ -55,8 +55,10 @@ class HcmsCreate extends HyperfCommand
                 if (mkdir($install_dir . '/Migration', 0700, true)) {
                     $setting_stub = file_get_contents(__DIR__ . '/stub/setting.stub');
                     $access_stub = file_get_contents(__DIR__ . '/stub/access.stub');
+                    $config_stub = file_get_contents(__DIR__ . '/stub/config.stub');
                     file_put_contents($install_dir . 'access.php', $access_stub);
                     file_put_contents($install_dir . 'setting.php', $setting_stub);
+                    file_put_contents($install_dir . 'config.php', $config_stub);
                 }
             }
 

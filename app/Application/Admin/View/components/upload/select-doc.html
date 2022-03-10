@@ -3,7 +3,7 @@
 <script type="text/x-template" id="select-doc">
     <div class="select-file">
         <div style="max-height: 400px;">
-            <el-dialog title="选择文档" @close="$emit('close')" width="668px" :visible.sync="dialogVisible">
+            <el-dialog :modal-append-to-body="false" title="选择文档" @close="$emit('close')" width="668px" :visible.sync="dialogVisible">
                 <div>
                     <el-row>
                         <el-col :span="6">
