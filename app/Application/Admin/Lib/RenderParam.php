@@ -13,6 +13,7 @@ namespace App\Application\Admin\Lib;
 class RenderParam
 {
     public string $template = '';
+    public bool $layout = true;
     protected array $data = [];
     protected array $common_data = [];
 
@@ -56,5 +57,16 @@ class RenderParam
     public function setCommonData(array $common_data): void
     {
         $this->common_data = $common_data;
+    }
+
+    /**
+     * @param bool $layout
+     * @return $this
+     */
+    public function setLayout(bool $layout): self
+    {
+        $this->layout = $layout;
+
+        return $this;
     }
 }

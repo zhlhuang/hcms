@@ -12,6 +12,7 @@ namespace App\Aspect;
 
 use App\Annotation\View;
 use App\Application\Admin\Lib\RenderParam;
+use App\Application\Admin\Lib\ThinkEngine;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Annotation\Inject;
@@ -58,6 +59,8 @@ class ViewAspect extends AbstractAspect
         if ($res instanceof RenderParam) {
             $template = $res->template ?: $template; //拿出指定的模板
             $data = $res->getData();
+            $engine = $this->container->get(ThinkEngine::class);
+            $engine->setLayout($res->layout);
         } else {
             $data = $res;
         }

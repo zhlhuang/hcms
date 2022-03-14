@@ -15,7 +15,7 @@ use Hyperf\View\Engine\NoneEngine;
 use Hyperf\View\Mode;
 
 return [
-    'engine' => \Hyperf\View\Engine\ThinkEngine::class,
+    'engine' => \App\Application\Admin\Lib\ThinkEngine::class,
     'mode' => Mode::SYNC,
     'config' => [
         'view_suffix' => 'html',
