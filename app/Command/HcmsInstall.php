@@ -184,7 +184,7 @@ class HcmsInstall extends HyperfCommand
         if ($is_remote === 1) {
             //github下载地址
             $download_url = "https://github.com/hcms-module/" . (strtolower($module_name)) . "/archive/master.zip";
-            $this->output->writeln("<info>正在下载 {$download_url}...<info>");
+            $this->output->writeln("<info>正在下载 {$download_url} ...<info>");
             try {
                 file_put_contents(__DIR__ . "/{$module_name}.zip", file_get_contents($download_url));
             } catch (\Throwable $exception) {
@@ -204,12 +204,12 @@ class HcmsInstall extends HyperfCommand
                 if (is_dir($module_dir)) {
                     $this->output->writeln('模块下载成功');
                 } else {
-                    $this->output->writeln("<error>解压模块失败，你可以自己访问{$download_url}下载<error>");
+                    $this->output->writeln("<error>解压模块失败，你可以自己访问 {$download_url} 下载<error>");
                 }
                 //模块处理成功，删除下载文件
                 unlink($zip_file);
             } else {
-                $this->output->writeln("<error>下载模块失败，你可以自己访问{$download_url}下载<error>");
+                $this->output->writeln("<error>下载模块失败，你可以自己访问 {$download_url} 下载<error>");
             }
         }
     }

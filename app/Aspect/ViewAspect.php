@@ -53,17 +53,23 @@ class ViewAspect extends AbstractAspect
         if ($res instanceof ResponseInterface) {
             return $res;
         }
-
         //获取template名称，默认是控制的方法名称
         $template = $proceedingJoinPoint->getReflectMethod()->name;
-        if ($res instanceof RenderParam) {
-            $template = $res->template ?: $template; //拿出指定的模板
-            $data = $res->getData();
-            $engine = $this->container->get(ThinkEngine::class);
-            $engine->setLayout($res->layout);
-        } else {
-            $data = $res;
+
+        /**
+         * @var ?View $view_annotation
+         */
+        $view_annotation = $proceedingJoinPoint->getAnnotationMetadata()->method['App\Annotation\View'] ?? null;
+        //根据注解传参获取模板
+        $view_annotation && $view_annotation->template && $template = $view_annotation->template;
+        if (!($res instanceof RenderParam)) {
+            $res = RenderParam::display($template, $res ?: []);
         }
+        $template = $res->template ?: $template; //拿出指定的模板
+        $data = $res->getData();
+        $engine = $this->container->get(ThinkEngine::class);
+        $engine->setLayout($res->layout);
+
         $class = $proceedingJoinPoint->getReflectMethod()->class;
         //解析调用Controller的命名空间。
         list($module_name, $controller) = (explode('\\Controller\\', str_replace(['App\\Application\\'], '', $class)));

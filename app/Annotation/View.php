@@ -16,4 +16,5 @@ use Hyperf\Di\Annotation\AbstractAnnotation;
  */
 class View extends AbstractAnnotation
 {
+    public string $template = '';
 }

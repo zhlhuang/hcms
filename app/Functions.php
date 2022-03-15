@@ -10,13 +10,19 @@ declare(strict_types=1);
 
 use App\Application\Admin\Service\AdminSettingService;
 
+use Hyperf\Context\Context;
+use Hyperf\HttpMessage\Server\Request;
+use Psr\Http\Message\ServerRequestInterface;
+
 /**
  * @param $uri
  * @param $params
  * @return string
  */
-function url($uri, $params = null): string
+function url($uri, $params = null, $with_domain = false): string
 {
+
+
     $site_dir = (new AdminSettingService)->getSiteSetting('site_dir', '/');
     $url = $site_dir . $uri;
     if (!empty($params)) {
@@ -31,6 +37,20 @@ function url($uri, $params = null): string
             //字符串参数，直接拼接
             $url .= '?' . $params;
         }
+    }
+    if ($with_domain) {
+        $request = Context::get(ServerRequestInterface::class);
+        $domain = '';
+        if ($request instanceof Request) {
+            $scheme = $request->getUri()
+                ->getScheme();
+            $host = $request->getUri()
+                ->getHost();
+            $port = $request->getUri()
+                ->getPort();
+            $domain = $scheme . '://' . $host . ($port ? (":" . $port) : '');
+        }
+        $url = $domain . $url;
     }
 
     return $url;
