@@ -27,24 +27,24 @@ use Psr\Http\Message\ResponseInterface;
  */
 class ViewAspect extends AbstractAspect
 {
+    public $priority = 99;
     public $annotations = [
         View::class
     ];
 
-    protected $container;
-    protected $config;
+    /**
+     * @Inject()
+     */
+    protected ContainerInterface $container;
+    /**
+     * @Inject()
+     */
+    protected ConfigInterface $config;
 
     /**
      * @Inject()
-     * @var RenderInterface
      */
-    protected $render;
-
-    public function __construct(ContainerInterface $container, ConfigInterface $config)
-    {
-        $this->container = $container;
-        $this->config = $config;
-    }
+    protected RenderInterface $render;
 
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {

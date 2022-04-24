@@ -16,7 +16,7 @@ use Hyperf\HttpMessage\Upload\UploadedFile;
 
 class AliyunMirrorUploadDriver extends AbstractUploadDriver
 {
-    public function save(): UploadFile
+    public function save(array $data = []): UploadFile
     {
         return $this->saveLocal();
     }

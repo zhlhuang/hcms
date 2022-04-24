@@ -60,6 +60,7 @@
                                         :limit="max_upload"
                                         multiple
                                         drag
+                                        :http-request="httpRequestEvent"
                                         :before-upload="beforeUploadEvent"
                                         :action="upload_url"
                                         :accept="file_accept"

@@ -4,6 +4,7 @@ declare (strict_types=1);
 
 namespace App\Application\Admin\Model;
 
+use App\Application\Admin\Service\UploadService;
 use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\DbConnection\Model\Model;
 
@@ -61,13 +62,57 @@ class UploadFile extends Model
     const UPLOAD_DRIVE_LOCAL = 'local';
     const UPLOAD_DRIVE_ALIYUN_MIRROR = 'aliyun_mirror';
     const UPLOAD_DRIVE_TENCENT_MIRROR = 'tencent_mirror';
+    const UPLOAD_DRIVE_QCLOUD = 'qcloud';
 
     static function getDriverList()
     {
         return [
             ['value' => self::UPLOAD_DRIVE_LOCAL, 'name' => '本地上传'],
-            ['value' => self::UPLOAD_DRIVE_ALIYUN_MIRROR, 'name' => '阿里云OSS镜像'],
-            ['value' => self::UPLOAD_DRIVE_TENCENT_MIRROR, 'name' => '腾讯云COS镜像'],
+//            ['value' => self::UPLOAD_DRIVE_ALIYUN_MIRROR, 'name' => '阿里云OSS镜像'],
+//            ['value' => self::UPLOAD_DRIVE_TENCENT_MIRROR, 'name' => '腾讯云COS镜像'],
+            ['value' => self::UPLOAD_DRIVE_QCLOUD, 'name' => '腾讯云COS'],
         ];
+    }
+
+    public function getFileUrlAttribute($value): string
+    {
+        try {
+            if ($this->file_drive != self::UPLOAD_DRIVE_LOCAL) {
+                $s = new UploadService();
+
+                return $s->getObjectUrl($value);
+            }
+
+            return $value;
+        } catch (\Exception $exception) {
+            return $value;
+        }
+    }
+
+    public function getFileThumbAttribute($value): string
+    {
+        try {
+            if ($this->file_drive != self::UPLOAD_DRIVE_LOCAL) {
+                $s = new UploadService();
+
+                return $s->getObjectThumb($this, $value);
+            }
+
+            return $value;
+        } catch (\Exception $exception) {
+            return $value;
+        }
+    }
+
+    /**
+     * 获取未被修改过的值
+     *
+     * @param $key
+     * @param $default
+     * @return mixed|string
+     */
+    public function getOriginalValue($key, $default = '')
+    {
+        return $this->attributes[$key] ?? $default;
     }
 }

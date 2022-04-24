@@ -89,6 +89,7 @@ class UploadController extends AdminAbstractController
         $lists = UploadFile::where($where)
             ->orderBy('file_id', 'DESC')
             ->select([
+                'file_drive',
                 'file_id',
                 'file_name',
                 'file_path',
@@ -102,6 +103,26 @@ class UploadController extends AdminAbstractController
             ->paginate();
 
         return $this->returnSuccessJson(compact('lists'));
+    }
+
+    /**
+     * 上传文件
+     * @RequestMapping(path="/component/upload/save")
+     */
+    function fileSave()
+    {
+        $post_data = $this->request->post();
+        $group_id = (int)$this->request->input('group_id', 0);
+        $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
+        $upload_service = new UploadService(null, $file_type);
+        $admin_user_id = AdminUserService::getInstance()
+            ->getAdminUserId();
+        $upload_file = $upload_service->setUserId($admin_user_id)
+            ->setUserType('admin')
+            ->setGroupId($group_id)
+            ->save($post_data);
+
+        return $this->returnSuccessJson(compact('upload_file'));
     }
 
     /**
@@ -154,7 +175,17 @@ class UploadController extends AdminAbstractController
         $group_list = UploadFileGroup::where($where)
             ->get();
 
-        return $this->returnSuccessJson(compact('group_list'));
+        $upload_drive = $this->setting->getUploadSetting('upload_drive', UploadFile::UPLOAD_DRIVE_LOCAL);
+
+        $upload_service = new UploadService();
+        try {
+            $upload_form = $upload_service->getUploadForm();
+        } catch (\Throwable $exception) {
+            $upload_form = [];
+            $upload_drive = UploadFile::UPLOAD_DRIVE_LOCAL;
+        }
+
+        return $this->returnSuccessJson(compact('group_list', 'upload_drive', 'upload_form'));
     }
 
     /**

@@ -2,11 +2,13 @@
     window.__vue_upload_mixin = {
         data() {
             return {
+                upload_drive: '',
                 dialogVisible: false,
                 move_group_id: -1,
                 upload_url: "{:url('component/upload/file')}",
                 group_list: [],
                 now_group: -1,
+                form_data: {}
             }
         },
         mounted() {
@@ -32,7 +34,8 @@
             uploadData() {
                 return {
                     group_id: this.now_group > 0 ? this.now_group : 0,
-                    file_type: this.file_type
+                    file_type: this.file_type,
+                    ...this.form_data
                 }
             }
         },
@@ -99,24 +102,150 @@
             handleUploadChange() {
             },
             handleUploadError(e) {
+                let message = e.message
                 this.$loading(
                     {target: '.el-dialog__body'}
                 ).close();
-                this.$message.error('上传请求错误，你留意你上传文件的大小或格式')
+                if (this.upload_drive === 'qcloud') {
+                    //获取腾讯云上传失败信息，返回错误内容
+                    let reg = new RegExp('<Message>' + '(.*?)' + '</Message>');
+                    message = message.match(reg)[1] || '上传请求错误，你留意你上传文件的大小、格式或配置信息。'
+                }
+                this.$message.error(message ? message : '上传请求错误，你留意你上传文件的大小或格式。')
             },
-            handleUploadSuccess(res) {
-                console.log('handleUploadSuccess', res)
-                this.$loading(
-                    {target: '.el-dialog__body'}
-                ).close();
-                if (res.status) {
-                    this.GetList()
+            httpRequestError(action, option, xhr) {
+                let msg;
+                if (xhr.response) {
+                    msg = `${xhr.response.error || xhr.response}`;
+                } else if (xhr.responseText) {
+                    msg = `${xhr.responseText}`;
                 } else {
-                    this.$message.error(res.msg)
+                    msg = `fail to post ${action} ${xhr.status}`;
+                }
+
+                const err = new Error(msg);
+                err.status = xhr.status;
+                err.method = 'post';
+                err.url = action;
+                return err;
+            },
+            httpRequestGetHeader(xhr) {
+                console.log('xhr', xhr)
+                console.log('headerText', xhr.getResponseHeader('Location'))
+                let headerText = xhr.getAllResponseHeaders()
+                console.log('headerText', headerText)
+                let headers = {}
+                headerText.split(`\r\n`).forEach(item => {
+                    let [k, v] = item.split(': ')
+                    if (k) {
+                        headers[k] = v
+                    }
+                })
+                return headers
+            },
+            //重写上传事件
+            httpRequestGetBody(xhr) {
+                const text = xhr.responseText || xhr.response;
+                if (!text) {
+                    return text;
+                }
+
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    return text;
+                }
+            },
+            httpRequestEvent(option) {
+                if (typeof XMLHttpRequest === 'undefined') {
+                    return;
+                }
+                const xhr = new XMLHttpRequest();
+                const action = option.action;
+                if (xhr.upload) {
+                    xhr.upload.onprogress = function progress(e) {
+                        if (e.total > 0) {
+                            e.percent = e.loaded / e.total * 100;
+                        }
+                        option.onProgress(e);
+                    };
+                }
+
+                const formData = new FormData();
+                if (this.upload_drive === 'qcloud') {
+                    //如果是腾讯云上传，构建key
+                    let ext = option.file.name.split('.').pop()
+                    let rand = Math.ceil(Math.random() * 1000000)
+                    formData.append('key', new Date().getTime() + '' + rand + "." + ext)
+                }
+                if (option.data) {
+                    Object.keys(option.data).forEach(key => {
+                        formData.append(key, option.data[key]);
+                    });
+                }
+
+                formData.append(option.filename, option.file, option.file.name);
+
+                xhr.onerror = function error(e) {
+                    option.onError(e);
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status < 200 || xhr.status >= 300) {
+                        return option.onError(this.httpRequestError(action, option, xhr));
+                    }
+
+                    option.onSuccess({
+                        body: this.httpRequestGetBody(xhr),
+                        header: this.httpRequestGetHeader(xhr)
+                    });
+                };
+
+                xhr.open('post', action, true);
+
+                if (option.withCredentials && 'withCredentials' in xhr) {
+                    xhr.withCredentials = true;
+                }
+
+                const headers = option.headers || {};
+
+                for (let item in headers) {
+                    if (headers.hasOwnProperty(item) && headers[item] !== null) {
+                        xhr.setRequestHeader(item, headers[item]);
+                    }
+                }
+                xhr.send(formData);
+                return xhr;
+            },
+            handleUploadSuccess({body = '', header}, file) {
+                console.log('handleUploadSuccess', body, header, file)
+                if (this.upload_drive === 'qcloud') {
+                    //如果是腾讯云上传，获取返回结果header location
+                    if (body === '') {
+                        //上传成功，返回body为空
+                        let file_url = header.location
+                        let request_data = {
+                            ...this.uploadData, file_url,
+                            file_drive: this.upload_drive,
+                            file_name: file.name,
+                            file_size: file.size,
+                            file_ext: file.name.split('.').pop()
+                        }
+                        this.httpPost("{:url('component/upload/save')}", request_data).then(() => {
+                            this.$loading({target: '.el-dialog__body'}).close();
+                            this.GetList()
+                        })
+                    }
+                } else {
+                    this.$loading({target: '.el-dialog__body'}).close();
+                    if (body.status) {
+                        this.GetList()
+                    } else {
+                        this.$message.error(body.msg)
+                    }
                 }
             },
             handleUploadProgress(e) {
-                console.log('handleUploadProgress', e)
                 let percent = parseInt(e.percent)
                 let show_text = '上传中' + percent + '%'
                 if (percent === 100) {
@@ -130,25 +259,44 @@
                         text: show_text
                     })
                 }
-            },
-            beforeUploadEvent() {
-            },
+            }
+            ,
+            beforeUploadEvent(file) {
+                // console.log('file', file)
+                // return new Promise((r, j) => {
+                //     //设置上传文件名称
+                //     let ext = file.name.split('.').pop()
+                //     let rand = Math.ceil(Math.random() * 1000000)
+                //     this.upload_key = new Date().getTime() + rand + "." + ext
+                //     setTimeout(() => {
+                //         r(true)
+                //     }, 500)
+                // })
+            }
+            ,
             selectGroup(group_id) {
                 this.now_group = group_id
                 this.current_page = 1
                 this.GetList()
-            },
+            }
+            ,
             getGroupList() {
                 this.httpGet("{:url('component/upload/group/lists')}", {
                     file_type: this.file_type,
                 }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
-                        let {group_list = []} = res.data
+                        let {group_list = [], upload_form = {}, upload_drive = ''} = res.data
                         this.group_list = group_list
+                        this.upload_drive = upload_drive
                         this.GetList()
+                        if (upload_drive === 'qcloud' && upload_form.post_url) {
+                            this.upload_url = upload_form.post_url
+                            this.form_data = upload_form.form_data
+                        }
                     }
                 })
-            },
+            }
+            ,
             handleGroup(c, {group_id, group_name}) {
                 console.log(c, {group_id, group_name})
                 if (c === 'edit') {
@@ -157,7 +305,8 @@
                 if (c === 'delete') {
                     this.deleteGroup(group_id)
                 }
-            },
+            }
+            ,
             deleteGroup(group_id) {
                 this.$confirm('是否确认删除该分组？', '提示').then(() => {
                     return this.httpPost("{:url('component/upload/group/delete')}", {
@@ -170,7 +319,8 @@
                     }
                 }).catch(err => {
                 })
-            },
+            }
+            ,
             editGroup(inputValue = '', group_id = 0) {
                 var that = this;
                 that.$prompt('请输入分组名称', (group_id > 0 ? '编辑' : '新增') + '分组', {
@@ -198,7 +348,8 @@
                     }
                 }).catch(err => {
                 });
-            },
+            }
+            ,
         }
     }
 </script>

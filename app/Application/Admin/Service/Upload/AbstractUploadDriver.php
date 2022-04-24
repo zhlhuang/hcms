@@ -17,7 +17,7 @@ use Hyperf\HttpMessage\Upload\UploadedFile;
 
 abstract class AbstractUploadDriver
 {
-    protected UploadedFile $file;
+    protected ?UploadedFile $file;
     protected UploadFile $upload_file;
     protected $config;
 
@@ -27,27 +27,28 @@ abstract class AbstractUploadDriver
      */
     protected AdminSettingService $setting;
 
-    public function __construct(UploadedFile $file, string $file_type = 'image')
+    public function __construct(UploadedFile $file = null, string $file_type = 'image')
     {
         $this->file = $file;
+
         $this->config = $this->setting->getUploadSetting();
         $this->upload_file = new UploadFile();
         $this->upload_file->file_drive = $this->config['upload_drive'] ?? '';
-        $this->upload_file->file_name = $this->file->getClientFilename();
         $this->upload_file->file_type = $file_type;
-        $this->upload_file->file_ext = $this->file->getExtension();
-        $this->upload_file->file_size = ceil($this->file->getSize() / 1024);//转化成KB单位
-        //检查上传文件是否合法
-        $this->uploadValid();
+        if ($this->file) {
+            $this->upload_file->file_name = $this->file->getClientFilename();
+            $this->upload_file->file_ext = $this->file->getExtension();
+            $this->upload_file->file_size = $this->file->getSize();//转化成KB单位
+        }
     }
 
     /**
      * 保存图片
      *
+     * @param array $data
      * @return UploadFile
-     * @throws ErrorException
      */
-    public abstract function save(): UploadFile;
+    public abstract function save(array $data = []): UploadFile;
 
     /**
      * 获取图片的缩略图 不同驱动可以回去不同文件缩略图
@@ -64,6 +65,9 @@ abstract class AbstractUploadDriver
      */
     protected function saveLocal(): UploadFile
     {
+        //检查上传文件是否合法
+        $this->uploadValid();
+
         $upload_file_dir = $this->getPathDir();
         $dir_path = BASE_PATH . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR;
         $file_name = time() . '.' . $this->file->getExtension();
@@ -97,12 +101,12 @@ abstract class AbstractUploadDriver
         //设置为空不做校验
         if ($upload_allow_ext !== '') {
             $upload_allow_ext_array = explode('|', $upload_allow_ext);
-            if (!in_array($this->file->getExtension(), $upload_allow_ext_array)) {
+            if (!in_array($this->upload_file->file_ext, $upload_allow_ext_array)) {
                 throw new ErrorException('不支持上传该文件');
             }
         }
 
-        if ($upload_file_size > 0 && $this->upload_file->file_size > $upload_file_size) {
+        if ($upload_file_size > 0 && $this->upload_file->file_size > ($upload_file_size * 1024)) {
             throw new ErrorException("文件上传不能大于{$upload_file_size}KB");
         }
     }
