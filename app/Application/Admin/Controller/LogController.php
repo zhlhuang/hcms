@@ -45,9 +45,10 @@ class LogController extends AdminAbstractController
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
         $file_name = str_replace('/', '', trim($file_name));
-        $request_log_config = $this->config->get('logger.request', []);
+        $file_type = explode('-', $file_name)[0] ?? 'request';
+        $request_log_config = $this->config->get("logger.{$file_type}", []);
         $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
-        $file_dir = str_replace('request.log', '', $log_filename);
+        $file_dir = str_replace("{$file_type}.log", '', $log_filename);
         if (!file_exists($file_dir . $file_name)) {
             throw new ErrorException('抱歉，找不到该文件');
         }
@@ -61,9 +62,10 @@ class LogController extends AdminAbstractController
     function download($file_name = '')
     {
         $file_name = str_replace('/', '', trim($file_name));
-        $request_log_config = $this->config->get('logger.request', []);
+        $file_type = explode('-', $file_name)[0] ?? 'request';
+        $request_log_config = $this->config->get("logger.{$file_type}", []);
         $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
-        $file_dir = str_replace('request.log', '', $log_filename);
+        $file_dir = str_replace("{$file_type}.log", '', $log_filename);
         if (!file_exists($file_dir . $file_name)) {
             throw new ErrorException('抱歉，找不到该文件');
         }
