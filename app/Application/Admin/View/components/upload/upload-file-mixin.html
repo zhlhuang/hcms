@@ -8,7 +8,8 @@
                 upload_url: "{:url('component/upload/file')}",
                 group_list: [],
                 now_group: -1,
-                form_data: {}
+                form_data: {},
+                upload_setting: {}
             }
         },
         mounted() {
@@ -262,16 +263,22 @@
             }
             ,
             beforeUploadEvent(file) {
-                // console.log('file', file)
-                // return new Promise((r, j) => {
-                //     //设置上传文件名称
-                //     let ext = file.name.split('.').pop()
-                //     let rand = Math.ceil(Math.random() * 1000000)
-                //     this.upload_key = new Date().getTime() + rand + "." + ext
-                //     setTimeout(() => {
-                //         r(true)
-                //     }, 500)
-                // })
+                //上传之前校验格式和大小
+                let ext = file.name.split('.').pop()
+                let size = file.size
+                let {upload_allow_ext = [], upload_file_size = 2048} = this.upload_setting
+                if (upload_allow_ext && upload_allow_ext.length > 0) {
+                    let find = upload_allow_ext.findIndex(i => i === ext)
+                    if (find === -1) {
+                        this.$message.error('不允许上传文件格式 ' + ext)
+                        return false
+                    }
+                }
+                if (upload_file_size < (Math.ceil(size / 1024))) {
+                    this.$message.error('超过上传限制 ' + upload_file_size + 'K')
+                    return false
+                }
+                return true
             }
             ,
             selectGroup(group_id) {
@@ -285,9 +292,10 @@
                     file_type: this.file_type,
                 }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
-                        let {group_list = [], upload_form = {}, upload_drive = ''} = res.data
+                        let {group_list = [], upload_form = {}, upload_drive = '', upload_setting = {}} = res.data
                         this.group_list = group_list
                         this.upload_drive = upload_drive
+                        this.upload_setting = upload_setting
                         this.GetList()
                         if (upload_drive === 'qcloud' && upload_form.post_url) {
                             this.upload_url = upload_form.post_url

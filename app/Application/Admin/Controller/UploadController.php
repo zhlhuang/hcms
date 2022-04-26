@@ -175,8 +175,10 @@ class UploadController extends AdminAbstractController
         $group_list = UploadFileGroup::where($where)
             ->get();
 
+        $upload_file_size = $this->setting->getUploadSetting('upload_file_size', 2048);
+        $upload_allow_ext = explode("|", $this->setting->getUploadSetting('upload_allow_ext', ''));
         $upload_drive = $this->setting->getUploadSetting('upload_drive', UploadFile::UPLOAD_DRIVE_LOCAL);
-
+        $upload_setting = compact('upload_allow_ext', 'upload_file_size');
         $upload_service = new UploadService();
         try {
             $upload_form = $upload_service->getUploadForm();
@@ -185,7 +187,7 @@ class UploadController extends AdminAbstractController
             $upload_drive = UploadFile::UPLOAD_DRIVE_LOCAL;
         }
 
-        return $this->returnSuccessJson(compact('group_list', 'upload_drive', 'upload_form'));
+        return $this->returnSuccessJson(compact('upload_setting', 'group_list', 'upload_drive', 'upload_form'));
     }
 
     /**

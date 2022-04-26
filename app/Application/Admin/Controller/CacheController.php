@@ -44,7 +44,7 @@ class CacheController extends AdminAbstractController
     function cacheDetail($cache_key = '')
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
-        $cache_key = str_replace('/', '', trim($cache_key));
+        $cache_key = str_replace(['../', './'], '', trim(urldecode($cache_key)));
 
         $cache_config = $this->config->get('cache.default');
         $is_redis_drive = $cache_config['driver'] == 'Hyperf\Cache\Driver\RedisDriver';
@@ -78,7 +78,7 @@ class CacheController extends AdminAbstractController
     function cacheDelete($cache_key = '')
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
-        $cache_key = str_replace('/', '', trim($cache_key));
+        $cache_key = str_replace(['../', './'], '', trim(urldecode($cache_key)));
         $cache_config = $this->config->get('cache.default');
         $is_redis_drive = $cache_config['driver'] == 'Hyperf\Cache\Driver\RedisDriver';
         if ($is_redis_drive) {

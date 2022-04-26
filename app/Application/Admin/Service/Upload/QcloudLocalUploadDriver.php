@@ -16,7 +16,7 @@ use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Utils\Codec\Json;
 use Qcloud\Cos\Client;
 
-class QcloudUploadDriver extends AbstractUploadDriver
+class QcloudLocalUploadDriver extends AbstractUploadDriver implements NonLocalUploadDriver
 {
     private $secret_id;
     private $secret_key;

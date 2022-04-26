@@ -98,7 +98,7 @@
                 },
                 detailEvent({cache_key}) {
                     this.detail = ''
-                    this.httpGet("{:url('admin/cache/index/detail')}/" + cache_key, {}).then(res => {
+                    this.httpGet("{:url('admin/cache/index/detail')}/" + encodeURIComponent(cache_key), {}).then(res => {
                         if (res.status) {
                             this.detail_visible = true
                             let {detail = "", format_detail = ''} = res.data
@@ -108,7 +108,7 @@
                 },
                 deleteEvent({cache_key}) {
                     this.$confirm("是否确认删除该记录？", '提示').then(() => {
-                        this.httpPost("{:url('admin/cache/index/delete')}/" + cache_key, {}).then(res => {
+                        this.httpPost("{:url('admin/cache/index/delete')}/" + encodeURIComponent(cache_key), {}).then(res => {
                             if (res.status) {
                                 this.$message.success(res.msg)
                                 this.getInfo()
