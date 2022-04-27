@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Access;
 use App\Application\Admin\Model\AdminRole;
@@ -128,7 +127,7 @@ class RoleController extends AdminAbstractController
     {
         $role_id = (int)$this->request->input('role_id', 0);
 
-        return RenderParam::display('edit', ['title' => $role_id > 0 ? '编辑角色' : '新增角色']);
+        return ['title' => $role_id > 0 ? '编辑角色' : '新增角色'];
     }
 
     /**
@@ -154,8 +153,5 @@ class RoleController extends AdminAbstractController
      * @View()
      * @GetMapping(path="index")
      */
-    function index()
-    {
-        return RenderParam::display();
-    }
+    function index() { }
 }

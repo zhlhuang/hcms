@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminUser;
@@ -116,7 +115,7 @@ class UserController extends AdminAbstractController
     {
         $admin_user_id = (int)$this->request->input('admin_user_id', 0);
 
-        return RenderParam::display('edit', ['title' => $admin_user_id > 0 ? '编辑管理员' : '新增管理员']);
+        return ['title' => $admin_user_id > 0 ? '编辑管理员' : '新增管理员'];
     }
 
     /**
@@ -173,8 +172,5 @@ class UserController extends AdminAbstractController
      * @View()
      * @GetMapping(path="index")
      */
-    function index()
-    {
-        return RenderParam::display();
-    }
+    function index() { }
 }

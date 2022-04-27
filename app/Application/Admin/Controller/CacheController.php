@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use Hyperf\Cache\Collector\FileStorage;
 use Hyperf\Contract\ConfigInterface;
@@ -151,8 +150,5 @@ class CacheController extends AdminAbstractController
      * @View()
      * @GetMapping(path="index")
      */
-    function index()
-    {
-        return RenderParam::display();
-    }
+    function index() { }
 }

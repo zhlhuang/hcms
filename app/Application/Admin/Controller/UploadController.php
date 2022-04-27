@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\UploadFile;
 use App\Application\Admin\Model\UploadFileGroup;
@@ -269,18 +268,12 @@ class UploadController extends AdminAbstractController
      * @View()
      * @GetMapping(path="setting")
      */
-    function setting()
-    {
-        return RenderParam::display();
-    }
+    function setting() { }
 
     /**
      * 文件列表页面
      * @View()
      * @GetMapping(path="index")
      */
-    function index()
-    {
-        return RenderParam::display();
-    }
+    function index() { }
 }

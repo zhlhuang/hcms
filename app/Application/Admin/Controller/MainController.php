@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -27,15 +26,6 @@ class MainController extends AdminAbstractController
 
     /**
      * @View()
-     * @GetMapping(path="demo")
-     */
-    function demo()
-    {
-        return RenderParam::display('index', ['msg' => 'demo']);
-    }
-
-    /**
-     * @View()
      * @GetMapping(path="index")
      */
     function index()
@@ -50,7 +40,8 @@ class MainController extends AdminAbstractController
         } catch (\Exception $exception) {
             $redis_version = $exception->getMessage();
         }
-        $info = [
+
+        return [
             'os' => PHP_OS,
             'php_sapi' => php_sapi_name(),
             'php_version' => PHP_VERSION,
@@ -61,7 +52,5 @@ class MainController extends AdminAbstractController
             'max_execution_time' => ini_get('max_execution_time') . '秒',
             'free_space' => round((@disk_free_space(".") / (1024 * 1024)), 2) . 'M',
         ];
-
-        return RenderParam::display('index', $info);
     }
 }

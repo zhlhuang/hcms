@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Model\Access;
 use App\Application\Admin\Service\AccessService;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -102,7 +101,7 @@ class AccessController extends AdminAbstractController
     {
         $access_id = (int)$this->request->input('access_id', 0);
 
-        return RenderParam::display('edit', ['title' => $access_id > 0 ? '编辑菜单与权限' : '新增菜单与权限']);
+        return ['title' => $access_id > 0 ? '编辑菜单与权限' : '新增菜单与权限'];
     }
 
     /**
@@ -136,8 +135,5 @@ class AccessController extends AdminAbstractController
      * @View()
      * @GetMapping(path="index")
      */
-    function index()
-    {
-        return RenderParam::display();
-    }
+    function index() { }
 }

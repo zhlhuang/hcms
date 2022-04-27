@@ -117,8 +117,5 @@ class LogController extends AdminAbstractController
      * @View()
      * @GetMapping(path="index")
      */
-    function index()
-    {
-        return RenderParam::display();
-    }
+    function index() { }
 }

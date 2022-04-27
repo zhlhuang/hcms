@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Service\AccessService;
 use App\Application\Admin\Service\AdminUserService;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -38,8 +37,5 @@ class IndexController extends AdminAbstractController
      * @View()
      * @GetMapping(path="index")
      */
-    function index()
-    {
-        return RenderParam::display();
-    }
+    function index() { }
 }

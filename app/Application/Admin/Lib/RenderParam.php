@@ -10,18 +10,26 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Lib;
 
+use App\Application\Admin\Service\AdminSettingService;
+use Hyperf\Di\Annotation\Inject;
+
 class RenderParam
 {
     public string $template = '';
     public bool $layout = true;
     protected array $data = [];
     protected array $common_data = [];
+    /**
+     * @Inject()
+     */
+    protected AdminSettingService $service;
 
 
     public function __construct(array $data = [])
     {
         $this->data = $data;
         $this->common_data = [
+            'site_name' => $this->service->getSiteSetting('site_name', 'Hcms'),
             'version' => config('version.version'),
             'env' => env('APP_ENV')
         ];

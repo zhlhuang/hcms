@@ -71,14 +71,16 @@ class ViewAspect extends AbstractAspect
         $engine->setLayout($res->layout);
 
         $class = $proceedingJoinPoint->getReflectMethod()->class;
-        //解析调用Controller的命名空间。
-        list($module_name, $controller) = (explode('\\Controller\\', str_replace(['App\\Application\\'], '', $class)));
-        $controller = strtolower(str_replace("Controller", '', $controller)); //控制器名称
+
+        //解析模块和Controller的名称。
+        preg_match_all("/App\\\Application\\\\(.+?)\\\\Controller\\\\(.+?)Controller/", $class, $res__);
+        $module_name = $res__[1][0] ?? '';
+        $controller = $res__[2][0] ?? '';
+        $controller = strtolower($controller); //控制器名称
         $module_name = ucfirst($module_name); //模块名称
-        $controller = str_replace("\\", "/", $controller);
 
         // 根据模块和Controller名称，解析出template名称
-        $template = "{$module_name}/View/{$controller}/" . $template;
+        $template = "{$module_name}/View/{$controller}/{$template}";
 
         return $this->render->render($template, $data);
     }

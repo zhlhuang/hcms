@@ -12,7 +12,6 @@ namespace App\Application\Demo\Controller;
 
 use App\Annotation\View;
 use App\Application\Admin\Controller\AdminAbstractController;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Demo\Service\DemoSettingService;
 use App\Application\Demo\Service\QueueService;
 use Hyperf\Di\Annotation\Inject;
@@ -80,19 +79,13 @@ class DemoController extends AdminAbstractController
      * @View()
      * @GetMapping(path="setting")
      */
-    function setting()
-    {
-        return RenderParam::display();
-    }
+    function setting() { }
 
     /**
      * @View()
      * @GetMapping(path="queue")
      */
-    function queue()
-    {
-        return RenderParam::display();
-    }
+    function queue() { }
 
     /**
      * @View()
@@ -100,17 +93,14 @@ class DemoController extends AdminAbstractController
      */
     function edit()
     {
-        return RenderParam::display('edit', ['title' => '编辑示例页面']);
+        return ['title' => '编辑示例页面'];
     }
 
     /**
      * @View()
      * @GetMapping(path="lists")
      */
-    function lists()
-    {
-        return RenderParam::display();
-    }
+    function lists() { }
 
     /**
      * @View()
@@ -118,6 +108,6 @@ class DemoController extends AdminAbstractController
      */
     function index()
     {
-        return RenderParam::display('view', ['msg' => $this->request->input('msg', '')]);
+        return ['msg' => $this->request->input('msg', '')];
     }
 }

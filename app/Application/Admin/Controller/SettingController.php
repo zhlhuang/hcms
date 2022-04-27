@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Setting;
 use App\Application\Admin\Service\AdminSettingService;
@@ -130,10 +129,7 @@ class SettingController extends AdminAbstractController
      * @View()
      * @GetMapping(path="site")
      */
-    function site()
-    {
-        return RenderParam::display();
-    }
+    function site() { }
 
     /**
      * @View()
@@ -143,7 +139,7 @@ class SettingController extends AdminAbstractController
     {
         $setting_id = (int)$this->request->input('setting_id', 0);
 
-        return RenderParam::display('edit', ['title' => $setting_id > 0 ? '编辑配置' : '新增配置']);
+        return ['title' => $setting_id > 0 ? '编辑配置' : '新增配置'];
     }
 
 
@@ -151,8 +147,5 @@ class SettingController extends AdminAbstractController
      * @View()
      * @GetMapping(path="index")
      */
-    function index()
-    {
-        return RenderParam::display();
-    }
+    function index() { }
 }

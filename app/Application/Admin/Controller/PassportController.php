@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Model\AdminUser;
 use App\Application\Admin\Service\AdminSettingService;
 use Hyperf\Contract\SessionInterface;
@@ -93,9 +92,9 @@ class PassportController extends AdminAbstractController
      */
     public function login()
     {
-        return RenderParam::display('login', [
+        return [
             'site_name' => $this->admin_setting->getSiteSetting('site_name', 'Hcms')
-        ]);
+        ];
     }
 
 

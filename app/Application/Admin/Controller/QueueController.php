@@ -11,7 +11,6 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
 use App\Application\Admin\Lib\QueueMessageParam;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\QueueList;
 use Hyperf\AsyncQueue\Message;
@@ -135,18 +134,12 @@ class QueueController extends AdminAbstractController
      * @View()
      * @GetMapping(path="status")
      */
-    function status()
-    {
-        return RenderParam::display();
-    }
+    function status() { }
 
     /**
      * 执行记录页面
      * @View()
      * @GetMapping(path="index")
      */
-    function index()
-    {
-        return RenderParam::display();
-    }
+    function index() { }
 }
