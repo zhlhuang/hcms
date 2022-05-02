@@ -11,10 +11,10 @@ namespace App\Service;
 use App\Application\Admin\Model\Setting;
 use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Cache\Listener\DeleteListenerEvent;
+use Hyperf\Context\Context;
 use Hyperf\Database\Model\Model;
 use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\Utils\Context;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 class SettingService

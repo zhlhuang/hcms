@@ -11,6 +11,7 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 
 /**
  * @Middleware(AdminMiddleware::class)
@@ -38,4 +39,11 @@ class IndexController extends AdminAbstractController
      * @GetMapping(path="index")
      */
     function index() { }
+
+    /**
+     * 根据项目实际情况需要修改该路由
+     * @View(template="index")
+     * @RequestMapping(path="/")
+     */
+    function root() { }
 }
