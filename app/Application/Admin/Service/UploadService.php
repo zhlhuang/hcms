@@ -12,10 +12,8 @@ namespace App\Application\Admin\Service;
 
 use App\Application\Admin\Model\UploadFile;
 use App\Application\Admin\Service\Upload\AbstractUploadDriver;
-use App\Application\Admin\Service\Upload\AliyunMirrorUploadDriver;
 use App\Application\Admin\Service\Upload\LocalUploadDriver;
-use App\Application\Admin\Service\Upload\QcloudLocalUploadDriver;
-use App\Application\Admin\Service\Upload\TencentMirrorUploadDriver;
+use App\Application\Admin\Service\Upload\QcloudUploadDriver;
 use App\Exception\ErrorException;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Upload\UploadedFile;
@@ -37,11 +35,9 @@ class UploadService
      */
     protected AdminSettingService $setting;
 
-    protected $driver_list = [
+    protected array $driver_list = [
         UploadFile::UPLOAD_DRIVE_LOCAL => LocalUploadDriver::class,
-        UploadFile::UPLOAD_DRIVE_ALIYUN_MIRROR => AliyunMirrorUploadDriver::class,
-        UploadFile::UPLOAD_DRIVE_TENCENT_MIRROR => TencentMirrorUploadDriver::class,
-        UploadFile::UPLOAD_DRIVE_QCLOUD => QcloudLocalUploadDriver::class,
+        UploadFile::UPLOAD_DRIVE_QCLOUD => QcloudUploadDriver::class,
     ];
 
     public function __call($name, $arguments)

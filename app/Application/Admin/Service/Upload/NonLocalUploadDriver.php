@@ -14,6 +14,13 @@ use App\Application\Admin\Model\UploadFile;
 interface NonLocalUploadDriver
 {
     /**
+     * 第三方直传所需资料
+     *
+     * @return array
+     */
+    function getUploadForm(): array;
+
+    /**
      * 非本地存储，用户获取文件路径
      *
      * @param $file_url
@@ -24,7 +31,8 @@ interface NonLocalUploadDriver
     /**
      * 非本地存储，用户获取文件路径
      *
-     * @param $file_url
+     * @param UploadFile $upload_file
+     * @param            $file_thumb
      * @return string
      */
     function getObjectThumb(UploadFile $upload_file, $file_thumb): string;

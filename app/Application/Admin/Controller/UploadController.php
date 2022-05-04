@@ -180,6 +180,7 @@ class UploadController extends AdminAbstractController
         $upload_setting = compact('upload_allow_ext', 'upload_file_size');
         $upload_service = new UploadService();
         try {
+            //获取第三方直传所需的form配置
             $upload_form = $upload_service->getUploadForm();
         } catch (\Throwable $exception) {
             $upload_form = [];

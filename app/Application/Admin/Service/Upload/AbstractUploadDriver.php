@@ -38,7 +38,7 @@ abstract class AbstractUploadDriver
         if ($this->file) {
             $this->upload_file->file_name = $this->file->getClientFilename();
             $this->upload_file->file_ext = $this->file->getExtension();
-            $this->upload_file->file_size = $this->file->getSize();//转化成KB单位
+            $this->upload_file->file_size = $this->file->getSize();
         }
     }
 
@@ -56,37 +56,6 @@ abstract class AbstractUploadDriver
      * @return string
      */
     abstract protected function getFileThumb(): string;
-
-    /**
-     * 将文件保存本地，一般对于云服务的对象存储，采用镜像服务就可以存储在本地
-     *
-     * @return UploadFile
-     * @throws \Exception
-     */
-    protected function saveLocal(): UploadFile
-    {
-        //检查上传文件是否合法
-        $this->uploadValid();
-
-        $upload_file_dir = $this->getPathDir();
-        $dir_path = BASE_PATH . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR;
-        $file_name = time() . '.' . $this->file->getExtension();
-        if (!is_dir($dir_path)) {
-            mkdir($dir_path, 0700, true);
-        }
-        $file_path = $dir_path . $file_name;
-        $file_url = ($this->config['upload_domain'] ?? "/") . $upload_file_dir . DIRECTORY_SEPARATOR . $file_name;
-        $this->file->moveTo($file_path);
-
-        $this->upload_file->file_url = $file_url;
-        $this->upload_file->file_thumb = $this->getFileThumb();
-        $this->upload_file->file_path = $file_path;
-        if (!$this->upload_file->save()) {
-            throw new \Exception('保存文件上传信息失败');
-        }
-
-        return $this->upload_file;
-    }
 
     /**
      * 上传文件校验
@@ -111,22 +80,6 @@ abstract class AbstractUploadDriver
         }
     }
 
-    /**
-     * 获取存储的目录
-     *
-     * @return string
-     */
-    protected function getPathDir(): string
-    {
-        $path_dir = '';
-        $upload_file_dir = $this->config['upload_file_dir'] ?? '';
-        if ($upload_file_dir != '/' && $upload_file_dir !== '') {
-            $path_dir .= $upload_file_dir . DIRECTORY_SEPARATOR;
-        }
-        $path_dir .= $this->upload_file->file_type . DIRECTORY_SEPARATOR . date('Ym');
-
-        return $path_dir;
-    }
 
     /**
      * @param int $user_id

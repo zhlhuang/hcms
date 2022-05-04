@@ -84,7 +84,7 @@ class UploadFile extends Model
             }
 
             return $value;
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             return $value;
         }
     }
@@ -99,7 +99,7 @@ class UploadFile extends Model
             }
 
             return $value;
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             return $value;
         }
     }

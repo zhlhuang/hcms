@@ -15,7 +15,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 
 /**
- * 指定到模块的静态文件。
+ * 指定到模块的静态文件，为了方便安装的模块可以自带静态文件
  * @Controller(prefix="assets")
  */
 class AssetsController

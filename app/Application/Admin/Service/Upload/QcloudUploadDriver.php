@@ -16,7 +16,7 @@ use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Utils\Codec\Json;
 use Qcloud\Cos\Client;
 
-class QcloudLocalUploadDriver extends AbstractUploadDriver implements NonLocalUploadDriver
+class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadDriver
 {
     private $secret_id;
     private $secret_key;
@@ -53,7 +53,7 @@ class QcloudLocalUploadDriver extends AbstractUploadDriver implements NonLocalUp
         //保存文件信息
         $this->upload_file->file_name = $data['file_name'] ?? '';
         $this->upload_file->file_ext = $data['file_ext'] ?? '';
-        $this->upload_file->file_size = $data['file_size'] ?? 0;//转化成KB单位
+        $this->upload_file->file_size = $data['file_size'] ?? 0;
         $this->upload_file->file_url = $data['file_url'] ?? '';
         $this->upload_file->file_thumb = $this->getFileThumb();
         $this->uploadValid();
@@ -66,10 +66,10 @@ class QcloudLocalUploadDriver extends AbstractUploadDriver implements NonLocalUp
 
     public function getObjectThumb(UploadFile $upload_file, $file_thumb): string
     {
+        //如果是开启私有读，则需要构建临时访问地址
         if ($this->is_private === 0) {
             return $file_thumb;
         }
-
 
         $file_thumb = str_replace("?", '', $file_thumb);
 
@@ -78,6 +78,7 @@ class QcloudLocalUploadDriver extends AbstractUploadDriver implements NonLocalUp
 
     public function getObjectUrl($file_url): string
     {
+        //如果是开启私有读，则需要构建临时访问地址
         if ($this->is_private === 0) {
             return $file_url;
         }
@@ -128,7 +129,7 @@ class QcloudLocalUploadDriver extends AbstractUploadDriver implements NonLocalUp
     }
 
     /**
-     * 设置存储桶的跨域请求
+     * 设置存储桶的跨域请求，设置缓存防止每次都调用
      * @Cacheable(prefix="qcloud",ttl=864000,listener="qcloud-bucket-cors")
      */
     private function putBucketCors($cache_key = ''): bool
