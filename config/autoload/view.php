@@ -11,11 +11,11 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-use Hyperf\View\Engine\NoneEngine;
+use App\Application\Admin\Lib\ThinkEngine;
 use Hyperf\View\Mode;
 
 return [
-    'engine' => \App\Application\Admin\Lib\ThinkEngine::class,
+    'engine' => ThinkEngine::class,
     'mode' => Mode::SYNC,
     'config' => [
         'view_suffix' => 'html',
