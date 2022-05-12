@@ -11,6 +11,7 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use App\Controller\AbstractController;
 use Hyperf\Cache\Collector\FileStorage;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Inject;
@@ -24,7 +25,7 @@ use Hyperf\Redis\Redis;
  * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="admin/cache")
  */
-class CacheController extends AdminAbstractController
+class CacheController extends AbstractController
 {
     /**
      * @Inject()

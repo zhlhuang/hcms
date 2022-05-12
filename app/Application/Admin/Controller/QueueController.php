@@ -13,6 +13,7 @@ use App\Annotation\View;
 use App\Application\Admin\Lib\QueueMessageParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\QueueList;
+use App\Controller\AbstractController;
 use Hyperf\AsyncQueue\Message;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -25,7 +26,7 @@ use Psr\Container\ContainerInterface;
  * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="admin/queue")
  */
-class QueueController extends AdminAbstractController
+class QueueController extends AbstractController
 {
 
     /**

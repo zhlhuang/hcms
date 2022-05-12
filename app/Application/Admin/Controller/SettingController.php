@@ -13,6 +13,7 @@ use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Setting;
 use App\Application\Admin\Service\AdminSettingService;
+use App\Controller\AbstractController;
 use App\Service\SettingService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -24,7 +25,7 @@ use Hyperf\HttpServer\Annotation\PostMapping;
  * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="admin/setting")
  */
-class SettingController extends AdminAbstractController
+class SettingController extends AbstractController
 {
 
     /**

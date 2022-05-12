@@ -7,6 +7,7 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\View;
 use App\Application\Admin\Model\AdminUser;
 use App\Application\Admin\Service\AdminSettingService;
+use App\Controller\AbstractController;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -14,12 +15,17 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use Intervention\Image\ImageManagerStatic as Image;
+use Qbhy\HyperfAuth\AuthManager;
 
 /**
  * @Controller(prefix="admin/passport")
  */
-class PassportController extends AdminAbstractController
+class PassportController extends AbstractController
 {
+    /**
+     * @Inject()
+     */
+    protected AuthManager $auth;
 
     /**
      * @Inject()

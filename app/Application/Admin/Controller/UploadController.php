@@ -16,6 +16,7 @@ use App\Application\Admin\Model\UploadFileGroup;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Application\Admin\Service\AdminUserService;
 use App\Application\Admin\Service\UploadService;
+use App\Controller\AbstractController;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -27,7 +28,7 @@ use Hyperf\HttpServer\Annotation\RequestMapping;
  * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="admin/upload")
  */
-class UploadController extends AdminAbstractController
+class UploadController extends AbstractController
 {
 
     /**

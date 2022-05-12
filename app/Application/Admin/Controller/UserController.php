@@ -14,6 +14,7 @@ use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminUser;
 use App\Application\Admin\Service\AdminUserService;
+use App\Controller\AbstractController;
 use Hyperf\Database\Model\Model;
 use Hyperf\Database\Model\Relations\Relation;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -25,7 +26,7 @@ use Hyperf\HttpServer\Annotation\PostMapping;
  * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="admin/user")
  */
-class UserController extends AdminAbstractController
+class UserController extends AbstractController
 {
     /**
      * @PostMapping(path="delete")

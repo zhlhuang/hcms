@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
+use App\Controller\AbstractController;
 use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -17,7 +18,7 @@ use Hyperf\Redis\Redis;
  * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="admin/main")
  */
-class MainController extends AdminAbstractController
+class MainController extends AbstractController
 {
     /**
      * @Inject()

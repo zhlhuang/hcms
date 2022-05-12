@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace App\Application\Admin\Controller;
 
 use App\Annotation\View;
-use App\Application\Admin\Lib\RenderParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Service\AdminSettingService;
+use App\Controller\AbstractController;
 use App\Exception\ErrorException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Inject;
@@ -25,7 +25,7 @@ use Hyperf\HttpServer\Annotation\PostMapping;
  * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="admin/log")
  */
-class LogController extends AdminAbstractController
+class LogController extends AbstractController
 {
     /**
      * @Inject()

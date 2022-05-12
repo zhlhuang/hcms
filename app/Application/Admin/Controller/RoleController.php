@@ -17,6 +17,7 @@ use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminRoleAccess;
 use App\Application\Admin\Service\AccessService;
 use App\Application\Admin\Service\AdminUserService;
+use App\Controller\AbstractController;
 use Hyperf\Database\Model\Relations\Relation;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -27,7 +28,7 @@ use Hyperf\HttpServer\Annotation\PostMapping;
  * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="admin/role")
  */
-class RoleController extends AdminAbstractController
+class RoleController extends AbstractController
 {
 
     /**

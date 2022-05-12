@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\{Module}\Controller;
 
-use App\Application\Admin\Controller\AdminAbstractController;
+use App\Controller\AbstractController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 
 /**
  * @Controller(prefix="/{module}/{controller}")
  */
-class {Controller}Controller extends AdminAbstractController
+class {Controller}Controller extends AbstractController
 {
 
     /**

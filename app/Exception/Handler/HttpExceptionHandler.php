@@ -20,6 +20,7 @@ use Hyperf\HttpMessage\Exception\HttpException;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Codec\Json;
+use Hyperf\View\Exception\RenderException;
 use Hyperf\View\RenderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
@@ -72,6 +73,6 @@ class HttpExceptionHandler extends ExceptionHandler
 
     public function isValid(Throwable $throwable): bool
     {
-        return $throwable instanceof NotFoundException || $throwable instanceof HttpException;
+        return $throwable instanceof NotFoundException || $throwable instanceof HttpException || $throwable instanceof RenderException;
     }
 }

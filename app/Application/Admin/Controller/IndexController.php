@@ -7,6 +7,7 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\View;
 use App\Application\Admin\Service\AccessService;
 use App\Application\Admin\Service\AdminUserService;
+use App\Controller\AbstractController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
@@ -17,7 +18,7 @@ use Hyperf\HttpServer\Annotation\RequestMapping;
  * @Middleware(AdminMiddleware::class)
  * @Controller(prefix="/admin/index")
  */
-class IndexController extends AdminAbstractController
+class IndexController extends AbstractController
 {
 
     /**
