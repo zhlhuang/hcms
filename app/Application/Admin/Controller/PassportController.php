@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Model\AdminUser;
 use App\Application\Admin\Service\AdminSettingService;
@@ -38,6 +39,7 @@ class PassportController extends AbstractController
     protected SessionInterface $session;
 
     /**
+     * @Api()
      * @RequestMapping(path="logout")
      */
     function logout()
@@ -49,6 +51,7 @@ class PassportController extends AbstractController
     }
 
     /**
+     * @Api()
      * @PostMapping(path="login")
      */
     function doLogin()

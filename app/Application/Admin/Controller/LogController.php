@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Service\AdminSettingService;
@@ -39,6 +40,7 @@ class LogController extends AbstractController
 
 
     /**
+     * @Api()
      * @PostMapping(path="index/delete/{file_name}")
      */
     function deleteLog($file_name = '')
@@ -74,6 +76,7 @@ class LogController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="index/setting/info")
      */
     function settingInfo()
@@ -103,6 +106,7 @@ class LogController extends AbstractController
     }
 
     /**
+     * @Api()
      * @PostMapping(path="index/setting")
      */
     function settingSave()

@@ -16,6 +16,7 @@ return [
             //处理路由解析问题
             App\Exception\Handler\HttpExceptionHandler::class,
             App\Exception\Handler\ErrorExceptionHandler::class,
+            App\Exception\Handler\ApiErrorExceptionHandler::class,
             App\Exception\Handler\AppExceptionHandler::class,
         ],
     ],

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Access;
@@ -32,6 +33,7 @@ class RoleController extends AbstractController
 {
 
     /**
+     * @Api()
      * @PostMapping(path="delete")
      */
     function delete()
@@ -53,6 +55,7 @@ class RoleController extends AbstractController
 
 
     /**
+     * @Api()
      * @PostMapping(path="edit")
      */
     function submitEdit()
@@ -84,6 +87,7 @@ class RoleController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="edit/info")
      */
     function editInfo()
@@ -101,7 +105,7 @@ class RoleController extends AbstractController
         $role = AdminRole::where('role_id', $this->request->input('role_id', 0))
             ->first() ?: [];
         //获取所有父类权限
-        $parent_access_ids = Access::distinct(true)
+        $parent_access_ids = Access::distinct()
             ->pluck('parent_access_id');
         //获得只有叶子节点的权限
         $role_access_ids = AdminRoleAccess::where('role_id', $role_id)
@@ -133,6 +137,7 @@ class RoleController extends AbstractController
 
     /**
      * 角色列表
+     * @Api()
      * @GetMapping(path="index/lists")
      */
     function lists()

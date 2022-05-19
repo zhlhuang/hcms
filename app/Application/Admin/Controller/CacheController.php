@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Controller\AbstractController;
@@ -39,6 +40,7 @@ class CacheController extends AbstractController
 
     /**
      * 获取缓存详情
+     * @Api()
      * @GetMapping(path="index/detail/{cache_key}")
      */
     function cacheDetail($cache_key = '')
@@ -73,6 +75,7 @@ class CacheController extends AbstractController
 
     /**
      * 删除缓存
+     * @Api()
      * @PostMapping(path="index/delete/{cache_key}")
      */
     function cacheDelete($cache_key = '')
@@ -100,6 +103,7 @@ class CacheController extends AbstractController
 
     /**
      * 获取当前缓存信息、数据
+     * @Api()
      * @GetMapping(path="index/info")
      */
     function info()

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Setting;
@@ -34,6 +35,7 @@ class SettingController extends AbstractController
     protected AdminSettingService $setting;
 
     /**
+     * @Api()
      * @GetMapping(path="site/info")
      */
     function siteInfo()
@@ -44,6 +46,7 @@ class SettingController extends AbstractController
     }
 
     /**
+     * @Api()
      * @PostMapping(path="site")
      */
     function siteSave()
@@ -55,6 +58,7 @@ class SettingController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="index/lists")
      */
     function lists()
@@ -80,6 +84,7 @@ class SettingController extends AbstractController
     }
 
     /**
+     * @Api()
      * @PostMapping(path="edit")
      */
     function editSubmit()
@@ -116,6 +121,7 @@ class SettingController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="edit/info")
      */
     function editInfo()

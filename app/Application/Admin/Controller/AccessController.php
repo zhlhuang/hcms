@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Model\Access;
 use App\Application\Admin\Service\AccessService;
@@ -22,6 +23,7 @@ class AccessController extends AbstractController
 {
 
     /**
+     * @Api()
      * @PostMapping(path="delete")
      */
     function delete()
@@ -42,6 +44,7 @@ class AccessController extends AbstractController
     }
 
     /**
+     * @Api()
      * @PostMapping(path="edit")
      */
     function submitEdit()
@@ -78,6 +81,7 @@ class AccessController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="edit/info")
      */
     function editInfo()
@@ -106,6 +110,7 @@ class AccessController extends AbstractController
     }
 
     /**
+     * @Api()
      * @PostMapping(path="index/sort")
      */
     function sort()
@@ -122,6 +127,7 @@ class AccessController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="index/lists")
      */
     function lists()

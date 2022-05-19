@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace App\Application\Demo\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Controller\AdminAbstractController;
 use App\Application\Demo\Service\DemoSettingService;
@@ -35,6 +36,7 @@ class DemoController extends AdminAbstractController
 
     /**
      * 示例队列消息生成
+     * @Api()
      * @PostMapping(path="queue")
      */
     function setQueueMessage()
@@ -55,6 +57,7 @@ class DemoController extends AdminAbstractController
     }
 
     /**
+     * @Api()
      * @PostMapping(path="setting")
      */
     function settingSave()
@@ -66,6 +69,7 @@ class DemoController extends AdminAbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="setting/info")
      */
     function settingInfo()

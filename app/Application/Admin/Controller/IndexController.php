@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Service\AccessService;
 use App\Application\Admin\Service\AdminUserService;
@@ -22,6 +23,7 @@ class IndexController extends AbstractController
 {
 
     /**
+     * @Api()
      * @GetMapping(path="index/lists")
      */
     function lists()

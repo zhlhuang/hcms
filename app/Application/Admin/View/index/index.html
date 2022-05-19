@@ -716,7 +716,6 @@
                         let {menu_list = [], admin_user = {}} = res.data
                         this.navData = menu_list
                         this.admin_user = admin_user
-                        console.log(this.navData)
                         PermissionInLoading.close()
                         this.goUrl([this.navData[0].access_name], this.navData[0])
                     }

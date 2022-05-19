@@ -206,7 +206,6 @@ class AccessService
             return $this->getAllAccess();
         } else {
             $role_access_list = $this->getRoleAccessList($role_id);
-            var_dump($role_access_list);
 
             return $this->filterRoleAccess($this->getAllAccess(), $role_access_list);
         }

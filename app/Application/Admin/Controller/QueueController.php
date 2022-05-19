@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Lib\QueueMessageParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
@@ -30,6 +31,7 @@ class QueueController extends AbstractController
 {
 
     /**
+     * @Api()
      * @GetMapping(path="status/lists")
      */
     function statusLists(ContainerInterface $container, ConfigInterface $config)
@@ -106,6 +108,7 @@ class QueueController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="index/lists")
      */
     function lists()

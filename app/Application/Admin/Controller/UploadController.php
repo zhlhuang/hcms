@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\UploadFile;
@@ -38,6 +39,7 @@ class UploadController extends AbstractController
 
     /**
      * 移动文件
+     * @Api()
      * @PostMapping(path="/component/upload/file/move")
      */
     function fileMove()
@@ -57,6 +59,7 @@ class UploadController extends AbstractController
 
     /**
      * 删除文件
+     * @Api()
      * @PostMapping(path="/component/upload/file/delete")
      */
     function fileDelete()
@@ -73,6 +76,7 @@ class UploadController extends AbstractController
 
     /**
      * 文件列表
+     * @Api()
      * @GetMapping(path="/component/upload/file/lists")
      */
     function fileList()
@@ -107,6 +111,7 @@ class UploadController extends AbstractController
 
     /**
      * 上传文件
+     * @Api()
      * @RequestMapping(path="/component/upload/save")
      */
     function fileSave()
@@ -127,6 +132,7 @@ class UploadController extends AbstractController
 
     /**
      * 上传文件
+     * @Api()
      * @RequestMapping(path="/component/upload/file")
      */
     function fileUpload()
@@ -147,6 +153,7 @@ class UploadController extends AbstractController
 
     /**
      * 删除分组
+     * @Api()
      * @PostMapping(path="/component/upload/group/delete")
      */
     function groupDelete()
@@ -164,6 +171,7 @@ class UploadController extends AbstractController
 
     /**
      * 分组列表
+     * @Api()
      * @GetMapping(path="/component/upload/group/lists")
      */
     function groupList()
@@ -193,6 +201,7 @@ class UploadController extends AbstractController
 
     /**
      * 新增/编辑分组
+     * @Api()
      * @PostMapping(path="/component/upload/group")
      */
     function groupEdit()
@@ -222,6 +231,7 @@ class UploadController extends AbstractController
 
     /**
      * 上传配置
+     * @Api()
      * @GetMapping(path="setting/info")
      */
     function settingInfo()
@@ -234,6 +244,7 @@ class UploadController extends AbstractController
 
     /**
      * 修改上传配置
+     * @Api()
      * @PostMapping(path="setting")
      */
     function settingSubmit()
@@ -245,6 +256,7 @@ class UploadController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="index/lists")
      */
     function lists()

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Controller;
 
+use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\AdminRole;
@@ -29,6 +30,7 @@ use Hyperf\HttpServer\Annotation\PostMapping;
 class UserController extends AbstractController
 {
     /**
+     * @Api()
      * @PostMapping(path="delete")
      */
     function delete()
@@ -45,6 +47,7 @@ class UserController extends AbstractController
 
 
     /**
+     * @Api()
      * @PostMapping(path="edit")
      */
     function submitEdit()
@@ -84,6 +87,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="edit/info")
      */
     function editInfo()
@@ -120,6 +124,7 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Api()
      * @GetMapping(path="index/lists")
      */
     function lists()
