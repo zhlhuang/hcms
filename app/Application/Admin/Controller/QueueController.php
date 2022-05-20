@@ -101,7 +101,7 @@ class QueueController extends AbstractController
                 'timeout_count' => $redis->lLen($channel . ':timeout'),
             ];
 
-            return $this->returnSuccessJson(compact('lists', 'count_list'));
+            return compact('lists', 'count_list');
         } catch (\Exception $exception) {
             return $this->returnErrorJson($exception->getMessage());
         }

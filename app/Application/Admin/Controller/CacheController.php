@@ -70,7 +70,7 @@ class CacheController extends AbstractController
 
         $format_detail = json_encode($format_detail);
 
-        return $this->returnSuccessJson(compact('detail', 'format_detail'));
+        return compact('detail', 'format_detail');
     }
 
     /**
@@ -148,7 +148,7 @@ class CacheController extends AbstractController
             }
         }
 
-        return $this->returnSuccessJson(compact('config_info', 'keys'));
+        return compact('config_info', 'keys');
     }
 
     /**

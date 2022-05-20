@@ -120,8 +120,7 @@ class RoleController extends AbstractController
         $access_list = AccessService::getInstance()
             ->getAccessByRoleId($parent_role_id);
 
-        return $this->returnSuccessJson(compact('role_list', 'role', 'access_list', 'role_access_ids',
-            'admin_role_id'));
+        return compact('role_list', 'role', 'access_list', 'role_access_ids', 'admin_role_id');
     }
 
     /**
@@ -152,7 +151,7 @@ class RoleController extends AbstractController
             ->select()
             ->get();
 
-        return $this->returnSuccessJson(compact('lists'));
+        return compact('lists');
     }
 
     /**

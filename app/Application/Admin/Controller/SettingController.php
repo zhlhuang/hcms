@@ -42,7 +42,7 @@ class SettingController extends AbstractController
     {
         $setting = $this->setting->getSiteSetting();
 
-        return $this->returnSuccessJson(compact('setting'));
+        return compact('setting');
     }
 
     /**
@@ -80,7 +80,7 @@ class SettingController extends AbstractController
             ->pluck('setting_group')
             ->toArray();
 
-        return self::returnSuccessJson(compact('lists', 'setting_group'));
+        return compact('lists', 'setting_group');
     }
 
     /**
@@ -129,7 +129,7 @@ class SettingController extends AbstractController
         $setting_id = (int)$this->request->input('setting_id', 0);
         $setting = Setting::find($setting_id) ?: [];
 
-        return self::returnSuccessJson(compact('setting'));
+        return compact('setting');
     }
 
     /**

@@ -34,7 +34,7 @@ class IndexController extends AbstractController
         $admin_user = AdminUserService::getInstance()
             ->getAdminUser();
 
-        return $this->returnSuccessJson(compact('menu_list', 'admin_user'));
+        return compact('menu_list', 'admin_user');
     }
 
     /**

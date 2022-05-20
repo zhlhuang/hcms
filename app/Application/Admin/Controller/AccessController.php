@@ -95,7 +95,7 @@ class AccessController extends AbstractController
         $access = Access::where('access_id', $this->request->input('access_id', 0))
             ->first() ?: [];
 
-        return $this->returnSuccessJson(compact('access_list', 'access'));
+        return compact('access_list', 'access');
     }
 
     /**
@@ -135,7 +135,7 @@ class AccessController extends AbstractController
         $lists = AccessService::getInstance()
             ->getAccessByRoleId();
 
-        return $this->returnSuccessJson(compact('lists'));
+        return compact('lists');
     }
 
     /**

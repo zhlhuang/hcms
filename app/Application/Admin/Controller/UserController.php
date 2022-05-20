@@ -109,7 +109,7 @@ class UserController extends AbstractController
             ->select(['admin_user_id', 'role_id', 'real_name', 'username'])
             ->first() ?: [];
 
-        return $this->returnSuccessJson(compact('role_list', 'admin_user'));
+        return compact('role_list', 'admin_user');
     }
 
     /**
@@ -171,7 +171,7 @@ class UserController extends AbstractController
             ->select()
             ->get();
 
-        return $this->returnSuccessJson(compact('lists', 'role_list'));
+        return compact('lists', 'role_list');
     }
 
     /**

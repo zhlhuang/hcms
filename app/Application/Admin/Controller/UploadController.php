@@ -106,7 +106,7 @@ class UploadController extends AbstractController
             ])
             ->paginate();
 
-        return $this->returnSuccessJson(compact('lists'));
+        return compact('lists');
     }
 
     /**
@@ -127,7 +127,7 @@ class UploadController extends AbstractController
             ->setGroupId($group_id)
             ->save($post_data);
 
-        return $this->returnSuccessJson(compact('upload_file'));
+        return compact('upload_file');
     }
 
     /**
@@ -148,7 +148,7 @@ class UploadController extends AbstractController
             ->setGroupId($group_id)
             ->save();
 
-        return $this->returnSuccessJson(compact('upload_file'));
+        return compact('upload_file');
     }
 
     /**
@@ -196,7 +196,7 @@ class UploadController extends AbstractController
             $upload_drive = UploadFile::UPLOAD_DRIVE_LOCAL;
         }
 
-        return $this->returnSuccessJson(compact('upload_setting', 'group_list', 'upload_drive', 'upload_form'));
+        return compact('upload_setting', 'group_list', 'upload_drive', 'upload_form');
     }
 
     /**
@@ -239,7 +239,7 @@ class UploadController extends AbstractController
         $setting = $this->setting->getUploadSetting();
         $driver_list = UploadFile::getDriverList();
 
-        return self::returnSuccessJson(compact('driver_list', 'setting'));
+        return compact('driver_list', 'setting');
     }
 
     /**
@@ -274,7 +274,7 @@ class UploadController extends AbstractController
             ->orderBy('file_id', 'DESC')
             ->paginate();
 
-        return $this->returnSuccessJson(compact('lists'));
+        return compact('lists');
     }
 
     /**

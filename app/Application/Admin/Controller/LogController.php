@@ -102,7 +102,7 @@ class LogController extends AbstractController
         }
         $setting = $this->setting->getLogSetting();
 
-        return $this->returnSuccessJson(compact('setting', 'file_list'));
+        return compact('setting', 'file_list');
     }
 
     /**

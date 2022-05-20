@@ -47,7 +47,7 @@ class PassportController extends AbstractController
         $this->auth->guard('session')
             ->logout();
 
-        return $this->returnSuccessJson();
+        return [];
     }
 
     /**

@@ -53,7 +53,7 @@ class DemoController extends AdminAbstractController
             $q->setErrorMessage(['id' => uniqid(), 'msg' => 'error']);
         }
 
-        return $this->returnSuccessJson(compact('type'));
+        return compact('type');
     }
 
     /**
@@ -76,7 +76,7 @@ class DemoController extends AdminAbstractController
     {
         $setting = $this->demo_setting->getDemoSetting();
 
-        return $this->returnSuccessJson(compact('setting'));
+        return compact('setting');
     }
 
     /**

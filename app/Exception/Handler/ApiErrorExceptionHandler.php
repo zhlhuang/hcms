@@ -43,15 +43,14 @@ class ApiErrorExceptionHandler extends ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
-        $description = $throwable->getMessage();
         $app_env = $this->config->get('app_env', 'dev');
         $error_detail = sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile());
         $content = $throwable->getTrace();
         if ($app_env === 'dev') {
             $location = $error_detail;
+            $data = compact('location', 'content');
         } else {
-            $location = '';
-            $content = '';
+            $data = [];
         }
         //记录错误日志
         $this->logger->error($error_detail);
@@ -61,7 +60,7 @@ class ApiErrorExceptionHandler extends ExceptionHandler
         $result = Json::encode([
             'status' => false,
             'code' => $throwable->getCode(),
-            'data' => compact('description', 'location', 'content'),
+            'data' => $data,
             'msg' => $throwable->getMessage()
         ]);
 
