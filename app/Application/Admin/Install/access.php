@@ -20,7 +20,7 @@ return [
     [
         'parent_access_id' => 0,
         'access_name' => '设置',
-        'uri' => 'admin/setting/none',
+        'uri' => 'admin/none',
         'params' => '',
         'sort' => 100,
         'is_menu' => 1,
