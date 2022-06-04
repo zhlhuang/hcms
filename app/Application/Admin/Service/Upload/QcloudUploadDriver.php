@@ -55,6 +55,7 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
         $this->upload_file->file_ext = $data['file_ext'] ?? '';
         $this->upload_file->file_size = $data['file_size'] ?? 0;
         $this->upload_file->file_url = $data['file_url'] ?? '';
+        $this->upload_file->acl = $data['acl'] ?? 'default';
         $this->upload_file->file_thumb = $this->getFileThumb();
         $this->uploadValid();
         if (!$this->upload_file->save()) {
@@ -94,9 +95,10 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
     /**
      * 获取COS上传需要的信息
      *
+     * @param string $acl default 继承权限、 public-read 公共读
      * @return array
      */
-    public function getUploadForm(): array
+    public function getUploadForm(string $acl = 'default'): array
     {
         //获取签名保护
         $this->putBucketCors(md5($this->secret_id . $this->secret_key . $this->region . $this->bucket));
@@ -118,6 +120,7 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
 
         $form_data = [
             'policy' => base64_encode(Json::encode($policy, 1)),
+            'x-cos-acl' => $acl,
             'q-sign-algorithm' => 'sha1',
             'q-ak' => $this->secret_id,
             'q-key-time' => $q_sign_time,
@@ -125,7 +128,7 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
         ];
         $post_url = sprintf("https://%s.cos.%s.myqcloud.com", $this->bucket, $this->region);
 
-        return compact('post_url', 'form_data');
+        return compact('post_url', 'form_data', 'acl');
     }
 
     /**

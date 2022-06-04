@@ -83,7 +83,10 @@ class UploadController extends AbstractController
     {
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
         $group_id = (int)$this->request->input('group_id', -1);
+        $acl = $this->request->input('acl', UploadFile::ACL_DEFAULT);
         $where = [
+            ['upload_user_type', '=', UploadFile::USER_TYPE_ADMIN],//默认只显示管理后台上传
+            ['acl', '=', $acl],
             ['file_type', '=', $file_type]
         ];
         if ($group_id !== -1) {
@@ -102,7 +105,8 @@ class UploadController extends AbstractController
                 'file_url',
                 'file_thumb',
                 'group_id',
-                'file_ext'
+                'file_ext',
+                'acl'
             ])
             ->paginate();
 
@@ -190,7 +194,8 @@ class UploadController extends AbstractController
         $upload_service = new UploadService();
         try {
             //获取第三方直传所需的form配置
-            $upload_form = $upload_service->getUploadForm();
+            $acl = $this->request->input('acl', 'default');
+            $upload_form = $upload_service->getUploadForm($acl);
         } catch (\Throwable $exception) {
             $upload_form = [];
             $upload_drive = UploadFile::UPLOAD_DRIVE_LOCAL;

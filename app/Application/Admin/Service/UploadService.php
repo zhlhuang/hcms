@@ -23,7 +23,7 @@ use Hyperf\HttpMessage\Upload\UploadedFile;
  * @method AbstractUploadDriver setUserType(string $user_type)
  * @method AbstractUploadDriver setGroupId(int $group_id)
  * @method UploadFile save(array $data = [])
- * @method array getUploadForm()
+ * @method array getUploadForm($acl = 'default')
  * @method string getObjectUrl(string $file_url)
  */
 class UploadService

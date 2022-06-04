@@ -12,8 +12,6 @@ use Hyperf\DbConnection\Model\Model;
  * @property int            $file_id
  * @property string         $file_drive
  * @property int            $group_id
- * @property string         $file_url
- * @property string         $file_thumb
  * @property string         $file_path
  * @property string         $file_name
  * @property string         $file_type
@@ -21,9 +19,12 @@ use Hyperf\DbConnection\Model\Model;
  * @property int            $file_size
  * @property int            $upload_user_id
  * @property string         $upload_user_type
+ * @property string         $acl
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string         $deleted_at
+ * @property string         $file_thumb
+ * @property string         $file_url
  */
 class UploadFile extends Model
 {
@@ -58,18 +59,22 @@ class UploadFile extends Model
     const FILE_TYPE_IMAGE = 'image';
     const FILE_TYPE_VIDEO = 'video';
     const FILE_TYPE_DOC = 'doc';
-
     const UPLOAD_DRIVE_LOCAL = 'local';
     const UPLOAD_DRIVE_ALIYUN_MIRROR = 'aliyun_mirror';
     const UPLOAD_DRIVE_TENCENT_MIRROR = 'tencent_mirror';
     const UPLOAD_DRIVE_QCLOUD = 'qcloud';
 
+    const ACL_DEFAULT = 'default';
+    const ACL_PUBLIC = 'public-read';
+
+    const USER_TYPE_ADMIN = 'admin';
+
     static function getDriverList()
     {
         return [
             ['value' => self::UPLOAD_DRIVE_LOCAL, 'name' => '本地上传'],
-//            ['value' => self::UPLOAD_DRIVE_ALIYUN_MIRROR, 'name' => '阿里云OSS镜像'],
-//            ['value' => self::UPLOAD_DRIVE_TENCENT_MIRROR, 'name' => '腾讯云COS镜像'],
+            //            ['value' => self::UPLOAD_DRIVE_ALIYUN_MIRROR, 'name' => '阿里云OSS镜像'],
+            //            ['value' => self::UPLOAD_DRIVE_TENCENT_MIRROR, 'name' => '腾讯云COS镜像'],
             ['value' => self::UPLOAD_DRIVE_QCLOUD, 'name' => '腾讯云COS'],
         ];
     }
@@ -77,7 +82,7 @@ class UploadFile extends Model
     public function getFileUrlAttribute($value): string
     {
         try {
-            if ($this->file_drive != self::UPLOAD_DRIVE_LOCAL) {
+            if ($this->file_drive != self::UPLOAD_DRIVE_LOCAL && $this->acl === self::ACL_DEFAULT) {
                 $s = new UploadService();
 
                 return $s->getObjectUrl($value);
@@ -92,7 +97,7 @@ class UploadFile extends Model
     public function getFileThumbAttribute($value): string
     {
         try {
-            if ($this->file_drive != self::UPLOAD_DRIVE_LOCAL) {
+            if ($this->file_drive != self::UPLOAD_DRIVE_LOCAL && $this->acl === self::ACL_DEFAULT) {
                 $s = new UploadService();
 
                 return $s->getObjectThumb($this, $value);

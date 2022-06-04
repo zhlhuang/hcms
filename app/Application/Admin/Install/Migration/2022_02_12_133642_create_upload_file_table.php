@@ -58,6 +58,10 @@ class CreateUploadFileTable extends Migration
                 ->nullable(false)
                 ->default('')
                 ->comment('上传用户类型、admin管理员、user用户');
+            $table->string('acl', 32)
+                ->nullable(false)
+                ->default('default')
+                ->comment('文件访问类型');
             $table->timestamps();
             $table->softDeletes();
         });

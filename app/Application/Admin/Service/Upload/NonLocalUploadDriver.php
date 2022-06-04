@@ -16,9 +16,10 @@ interface NonLocalUploadDriver
     /**
      * 第三方直传所需资料
      *
+     * @param string $acl
      * @return array
      */
-    function getUploadForm(): array;
+    function getUploadForm(string $acl = 'default'): array;
 
     /**
      * 非本地存储，用户获取文件路径

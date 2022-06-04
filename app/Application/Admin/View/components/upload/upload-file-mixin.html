@@ -9,8 +9,15 @@
                 group_list: [],
                 now_group: -1,
                 form_data: {},
-                upload_setting: {}
+                upload_setting: {},
+                acl: 'default'
             }
+        },
+        props: {
+            public_read: {
+                type: Boolean,
+                default: false
+            },
         },
         mounted() {
             // this.getGroupList()
@@ -36,6 +43,7 @@
                 return {
                     group_id: this.now_group > 0 ? this.now_group : 0,
                     file_type: this.file_type,
+                    acl: this.acl,
                     ...this.form_data
                 }
             }
@@ -46,6 +54,7 @@
                     page: this.current_page,
                     file_type: this.file_type,
                     group_id: this.now_group,
+                    acl: this.acl,
                 }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
                         let {lists = []} = res.data
@@ -76,7 +85,7 @@
                 this.$confirm('确认删除？', {
                     type: 'warning'
                 }).then(() => {
-                    console.log('clickDeleteSelected', this.selected_file_ids)
+                    // console.log('clickDeleteSelected', this.selected_file_ids)
                     return this.httpPost("{:url('component/upload/file/delete')}", {selected_file_ids: this.selected_file_ids})
                 }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
@@ -131,10 +140,10 @@
                 return err;
             },
             httpRequestGetHeader(xhr) {
-                console.log('xhr', xhr)
-                console.log('headerText', xhr.getResponseHeader('Location'))
+                // console.log('xhr', xhr)
+                // console.log('headerText', xhr.getResponseHeader('Location'))
                 let headerText = xhr.getAllResponseHeaders()
-                console.log('headerText', headerText)
+                // console.log('headerText', headerText)
                 let headers = {}
                 headerText.split(`\r\n`).forEach(item => {
                     let [k, v] = item.split(': ')
@@ -219,7 +228,7 @@
                 return xhr;
             },
             handleUploadSuccess({body = '', header}, file) {
-                console.log('handleUploadSuccess', body, header, file)
+                // console.log('handleUploadSuccess', body, header, file)
                 if (this.upload_drive === 'qcloud') {
                     //如果是腾讯云上传，获取返回结果header location
                     if (body === '') {
@@ -290,23 +299,25 @@
             getGroupList() {
                 this.httpGet("{:url('component/upload/group/lists')}", {
                     file_type: this.file_type,
+                    acl: this.public_read ? 'public-read' : 'default'
                 }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
                         let {group_list = [], upload_form = {}, upload_drive = '', upload_setting = {}} = res.data
                         this.group_list = group_list
                         this.upload_drive = upload_drive
                         this.upload_setting = upload_setting
-                        this.GetList()
                         if (upload_drive === 'qcloud' && upload_form.post_url) {
                             this.upload_url = upload_form.post_url
                             this.form_data = upload_form.form_data
+                            this.acl = upload_form.acl
                         }
+                        this.GetList()
                     }
                 })
             }
             ,
             handleGroup(c, {group_id, group_name}) {
-                console.log(c, {group_id, group_name})
+                // console.log(c, {group_id, group_name})
                 if (c === 'edit') {
                     this.editGroup(group_name, group_id)
                 }
