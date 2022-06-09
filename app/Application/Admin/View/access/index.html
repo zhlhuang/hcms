@@ -1,12 +1,14 @@
 <div class="page-container" v-cloak>
     <el-card>
-        <div slot="header" class="breadcrumb">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>菜单与权限</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>菜单与权限</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
         <div>
-            <el-form size="small" :inline="true">
+            <el-form :inline="true">
                 <el-form-item>
                     <el-link href="{:url('admin/access/edit')}">
                         <el-button type="primary">添加</el-button>
@@ -56,7 +58,7 @@
                 <el-table-column
                         align="center"
                         prop="is_menu"
-                        min-width="60"
+                        min-width="70"
                         label="类型">
                     <template #default="{row}">
                         <el-tag v-if="row.is_menu==1" type="primary">菜单</el-tag>
@@ -79,10 +81,10 @@
                         label="操作">
                     <template #default="{row}">
                         <el-link :href="'{:url('admin/access/edit')}?access_id='+row.access_id">
-                            <el-button size="small" type="primary">编辑</el-button>
+                            <el-button type="primary">编辑</el-button>
                         </el-link>
                         <el-link>
-                            <el-button @click="deleteEvent(row.access_id)" size="small" type="danger">删除</el-button>
+                            <el-button @click="deleteEvent(row.access_id)" type="danger">删除</el-button>
                         </el-link>
                     </template>
                 </el-table-column>
