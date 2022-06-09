@@ -7,9 +7,10 @@
             </el-breadcrumb>
         </div>
         <div>
-            <el-form size="small" label-width="80px">
+            <el-form label-width="80px">
                 <el-form-item label="上级权限">
                     <el-cascader
+                            placeholder="请选择上级权限"
                             v-model="cascader_value"
                             filterable
                             :options="access_list"
@@ -35,21 +36,21 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="是否菜单">
-                    <el-radio-group v-model="form.is_menu" size="small">
+                    <el-radio-group v-model="form.is_menu">
                         <el-radio :label="1">菜单</el-radio>
                         <el-radio :label="0">仅权限</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item v-if="form.is_menu===1" label="菜单图标">
-                    <span v-if="form.menu_icon" style="margin-right: 10px;font-size: 20px;">
-                        <i :class="form.menu_icon"></i>
+                    <span v-if="form.menu_icon" style="margin-right: 10px;">
+                        <i :class="'iconfont '+form.menu_icon" style="font-size: 20px;"></i>
                     </span>
-                    <el-button @click="show_icon=true" type="default" size="small">
+                    <el-button @click="show_icon=true" type="default">
                         选择图标
                     </el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="submitEvent" type="primary" size="small">
+                    <el-button @click="submitEvent" type="primary">
                         提交
                     </el-button>
                 </el-form-item>
@@ -60,133 +61,139 @@
     <!-- 选择图标弹窗 -->
     <el-dialog
             title="选择图标"
-            :visible.sync="show_icon"
-            width="500px">
+            v-model="show_icon"
+            width="800px">
         <div style="max-height: 300px;overflow:scroll;">
             <el-row>
                 <el-col v-for="(item,index) in icon_list" :key="index" :span="4">
                     <div @click="confirmIconEvent(item)" class="icon-item">
-                        <i :class="item"></i>
+                        <i :class="'iconfont '+item"></i>
+                        <div style="font-size: 12px;color: #999999;line-height: 18px;">{{item}}</div>
                     </div>
                 </el-col>
             </el-row>
         </div>
-        <div slot="footer" class="dialog-footer">
-            <el-button size="small" @click="show_icon = false">取 消</el-button>
-        </div>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="show_icon = false">取 消</el-button>
+            </div>
+        </template>
     </el-dialog>
 </div>
 
 <script>
-    $(function () {
-        new Vue({
-            el: ".page-container",
-            data: {
+    const App = {
+        data() {
+            return {
                 cascader_value: [],
                 access_list: [],
                 show_icon: false,
-                icon_list_string: 'el-icon-delete-solid,el-icon-delete,el-icon-s-tools,el-icon-setting,el-icon-user-solid,el-icon-user,el-icon-phone,el-icon-phone-outline,el-icon-more,el-icon-more-outline,el-icon-star-on,el-icon-star-off,el-icon-s-goods,el-icon-goods,el-icon-warning,el-icon-warning-outline,el-icon-question,el-icon-info,el-icon-remove,el-icon-circle-plus,el-icon-success,el-icon-error,el-icon-zoom-in,el-icon-zoom-out,el-icon-remove-outline,el-icon-circle-plus-outline,el-icon-circle-check,el-icon-circle-close,el-icon-s-help,el-icon-help,el-icon-minus,el-icon-plus,el-icon-check,el-icon-close,el-icon-picture,el-icon-picture-outline,el-icon-picture-outline-round,el-icon-upload,el-icon-upload2,el-icon-download,el-icon-camera-solid,el-icon-camera,el-icon-video-camera-solid,el-icon-video-camera,el-icon-message-solid,el-icon-bell,el-icon-s-cooperation,el-icon-s-order,el-icon-s-platform,el-icon-s-fold,el-icon-s-unfold,el-icon-s-operation,el-icon-s-promotion,el-icon-s-home,el-icon-s-release,el-icon-s-ticket,el-icon-s-management,el-icon-s-open,el-icon-s-shop,el-icon-s-marketing,el-icon-s-flag,el-icon-s-comment,el-icon-s-finance,el-icon-s-claim,el-icon-s-custom,el-icon-s-opportunity,el-icon-s-data,el-icon-s-check,el-icon-s-grid,el-icon-menu,el-icon-share,el-icon-d-caret,el-icon-caret-left,el-icon-caret-right,el-icon-caret-bottom,el-icon-caret-top,el-icon-bottom-left,el-icon-bottom-right,el-icon-back,el-icon-right,el-icon-bottom,el-icon-top,el-icon-top-left,el-icon-top-right,el-icon-arrow-left,el-icon-arrow-right,el-icon-arrow-down,el-icon-arrow-up,el-icon-d-arrow-left,el-icon-d-arrow-right,el-icon-video-pause,el-icon-video-play,el-icon-refresh,el-icon-refresh-right,el-icon-refresh-left,el-icon-finished,el-icon-sort,el-icon-sort-up,el-icon-sort-down,el-icon-rank,el-icon-loading,el-icon-view,el-icon-c-scale-to-original,el-icon-date,el-icon-edit,el-icon-edit-outline,el-icon-folder,el-icon-folder-opened,el-icon-folder-add,el-icon-folder-remove,el-icon-folder-delete,el-icon-folder-checked,el-icon-tickets,el-icon-document-remove,el-icon-document-delete,el-icon-document-copy,el-icon-document-checked,el-icon-document,el-icon-document-add,el-icon-printer,el-icon-paperclip,el-icon-takeaway-box,el-icon-search,el-icon-monitor,el-icon-attract,el-icon-mobile,el-icon-scissors,el-icon-umbrella,el-icon-headset,el-icon-brush,el-icon-mouse,el-icon-coordinate,el-icon-magic-stick,el-icon-reading,el-icon-data-line,el-icon-data-board,el-icon-pie-chart,el-icon-data-analysis,el-icon-collection-tag,el-icon-film,el-icon-suitcase,el-icon-suitcase-1,el-icon-receiving,el-icon-collection,el-icon-files,el-icon-notebook-1,el-icon-notebook-2,el-icon-toilet-paper,el-icon-office-building,el-icon-school,el-icon-table-lamp,el-icon-house,el-icon-no-smoking,el-icon-smoking,el-icon-shopping-cart-full,el-icon-shopping-cart-1,el-icon-shopping-cart-2,el-icon-shopping-bag-1,el-icon-shopping-bag-2,el-icon-sold-out,el-icon-sell,el-icon-present,el-icon-box,el-icon-bank-card,el-icon-money,el-icon-coin,el-icon-wallet,el-icon-discount,el-icon-price-tag,el-icon-news,el-icon-guide,el-icon-male,el-icon-female,el-icon-thumb,el-icon-cpu,el-icon-link,el-icon-connection,el-icon-open,el-icon-turn-off,el-icon-set-up,el-icon-chat-round,el-icon-chat-line-round,el-icon-chat-square,el-icon-chat-dot-round,el-icon-chat-dot-square,el-icon-chat-line-square,el-icon-message,el-icon-postcard,el-icon-position,el-icon-turn-off-microphone,el-icon-microphone,el-icon-close-notification,el-icon-bangzhu,el-icon-time,el-icon-odometer,el-icon-crop,el-icon-aim,el-icon-switch-button,el-icon-full-screen,el-icon-copy-document,el-icon-mic,el-icon-stopwatch,el-icon-medal-1,el-icon-medal,el-icon-trophy,el-icon-trophy-1,el-icon-first-aid-kit,el-icon-discover,el-icon-place,el-icon-location,el-icon-location-outline,el-icon-location-information,el-icon-add-location,el-icon-delete-location,el-icon-map-location,el-icon-alarm-clock,el-icon-timer,el-icon-watch-1,el-icon-watch,el-icon-lock,el-icon-unlock,el-icon-key,el-icon-service,el-icon-mobile-phone,el-icon-bicycle,el-icon-truck,el-icon-ship,el-icon-basketball,el-icon-football,el-icon-soccer,el-icon-baseball,el-icon-wind-power,el-icon-light-rain,el-icon-lightning,el-icon-heavy-rain,el-icon-sunrise,el-icon-sunrise-1,el-icon-sunset,el-icon-sunny,el-icon-cloudy,el-icon-partly-cloudy,el-icon-cloudy-and-sunny,el-icon-moon,el-icon-moon-night,el-icon-dish,el-icon-dish-1,el-icon-food,el-icon-chicken,el-icon-fork-spoon,el-icon-knife-fork,el-icon-burger,el-icon-tableware,el-icon-sugar,el-icon-dessert,el-icon-ice-cream,el-icon-hot-water,el-icon-water-cup,el-icon-coffee-cup,el-icon-cold-drink,el-icon-goblet,el-icon-goblet-full,el-icon-goblet-square,el-icon-goblet-square-full,el-icon-refrigerator,el-icon-grape,el-icon-watermelon,el-icon-cherry,el-icon-apple,el-icon-pear,el-icon-orange,el-icon-coffee,el-icon-ice-tea,el-icon-ice-drink,el-icon-milk-tea,el-icon-potato-strips,el-icon-lollipop,el-icon-ice-cream-square,el-icon-ice-cream-round',
+                icon_list_string: 'line-icon-huatong,line-icon-che,line-icon-dianzan,line-icon-huoche,line-icon-fuli,line-icon-kuaiting,line-icon-jiudian,line-icon-qiche_3,line-icon-tupian,line-icon-motuoche,line-icon-dingwei,line-icon-xiaoche,line-icon-vip,line-icon-huojian_2,line-icon-yunduan,line-icon-lunchuan,line-icon-naozhong,line-icon-feiji_2,line-icon-jiaoliu,line-icon-wajueji,line-icon-shouru,line-icon-malu,line-icon-zhichu,line-icon-zhishengji,line-icon-shijian,line-icon-fanchuan,line-icon-paizhao,line-icon-honglvdeng,line-icon-qiche,line-icon-xinhao,line-icon-shuipiao,line-icon-biaoqing_3,line-icon-dingyue,line-icon-jinzhi,line-icon-kefu_2,line-icon-biaoqing_2,line-icon-tuichudenglu,line-icon-shuben_3,line-icon-pinglun_2,line-icon-zhiwu,line-icon-qianbao,line-icon-tongzhuangshui,line-icon-sousuo_2,line-icon-quanzi_2,line-icon-kanjia,line-icon-zhibiao,line-icon-jiaojuan,line-icon-xingqiu,line-icon-kefu,line-icon-shuju_3,line-icon-bianji_2,line-icon-xiangji_2,line-icon-bianji,line-icon-biji,line-icon-wancheng_2,line-icon-qianbi,line-icon-wode,line-icon-weixiu_2,line-icon-biaoqian,line-icon-fuzhuang,line-icon-fuwu,line-icon-jiqiren,line-icon-zhanghao,line-icon-kapianxingshi,line-icon-youhuiquan,line-icon-shuqian,line-icon-dingdan,line-icon-shandian_2,line-icon-sousuo,line-icon-jiankong,line-icon-fankui,line-icon-nv,line-icon-wancheng_3,line-icon-nan,line-icon-shoucang,line-icon-jingbao,line-icon-wancheng1,line-icon-wendu,line-icon-mima,line-icon-yinger,line-icon-tianjia,line-icon-tangguo,line-icon-chongzhi,line-icon-shuye,line-icon-bangzhu,line-icon-zuanshi,line-icon-shibai1,line-icon-wendu_2,line-icon-tishi,line-icon-shandian,line-icon-shanchu,line-icon-shuben,line-icon-dengpao,line-icon-shixian,line-icon-bianji_3,line-icon-shuju2,line-icon-youhuiquan_2,line-icon-huangguan,line-icon-faming,line-icon-meishu,line-icon-tongji,line-icon-gengduo2,line-icon-jiudian_2,line-icon-yaoqingren2,line-icon-fenlei,line-icon-yaoqingren,line-icon-tuandui,line-icon-tuandui4,line-icon-wenjian,line-icon-tuandui3,line-icon-weixiu,line-icon-wancheng2,line-icon-ziyuan,line-icon-yushou,line-icon-shouye,line-icon-shouhuo,line-icon-wenjian_2,line-icon-weixuanzhong2,line-icon-shezhi,line-icon-xuanzhong2,line-icon-zhuanfa,line-icon-jian,line-icon-youjian,line-icon-dui,line-icon-dingwei1,line-icon-gengduo,line-icon-yinhangka,line-icon-cuo,line-icon-shouye_3,line-icon-gengduo1,line-icon-shoucang_2,line-icon-menpiao,line-icon-shouye_2,line-icon-liebiaoxingshi,line-icon-geren,line-icon-jia,line-icon-zhuanfa_2,line-icon-weixuanzhong,line-icon-weizhi,line-icon-xuanzhong,line-icon-dianpu,line-icon-bianqian,line-icon-saoma,line-icon-gongyi,line-icon-fenlei_3,line-icon-erweima3,line-icon-tianjiahaoyou,line-icon-erweima2,line-icon-fenxiang,line-icon-shalou3,line-icon-liulan,line-icon-shalou2,line-icon-bukejian,line-icon-qingchu2,line-icon-wendang,line-icon-buganxingqu,line-icon-saoma_2,line-icon-bianji6,line-icon-fenlei_2,line-icon-wenjian3,line-icon-dingyue_2,line-icon-fapiao2,line-icon-shuju,line-icon-jiayou2,line-icon-ziyuan_2,line-icon-zhi,line-icon-dingyue_3,line-icon-geren3,line-icon-huiyuan,line-icon-geren2,line-icon-gonggao,line-icon-lajitong2,line-icon-wancheng_4,line-icon-shebei,line-icon-daka,line-icon-fapiao,line-icon-wode_2,line-icon-jiandu,line-icon-shaixuan_2,line-icon-falvsusong,line-icon-daohang,line-icon-geren4,line-icon-shaixuan,line-icon-falvsusong2,line-icon-xiaoshou,line-icon-jubao2,line-icon-qingchu,line-icon-jubao,line-icon-rili,line-icon-huodong_1,line-icon-tuandui_2,line-icon-yaopin_1,line-icon-kuaidiyuan,line-icon-huodong_2,line-icon-shezhi_2,line-icon-jiameng_1,line-icon-jingyin,line-icon-jindian,line-icon-lianjie,line-icon-faxian,line-icon-pinglun_3,line-icon-chongzhijilu,line-icon-gouwu,line-icon-fenlei_4,line-icon-naozhong1,line-icon-jiameng_2,line-icon-tianjia_2,line-icon-jiameng,line-icon-tixing,line-icon-jiezhen,line-icon-anquan,line-icon-shang2,line-icon-yiliao,line-icon-you2,line-icon-yingpin,line-icon-zuo2,line-icon-huopinxinxi,line-icon-xia2,line-icon-shanchuwenjian,line-icon-dianzan2,line-icon-gouwuche,line-icon-gouxuan,line-icon-youxi,line-icon-tianxie,line-icon-bianji_5,line-icon-gouwuche3,line-icon-baocun,line-icon-qiehuanyuyan,line-icon-tianjiawenjian,line-icon-fabu,line-icon-yaopin,line-icon-yaofang,line-icon-riqi,line-icon-shouye_8,line-icon-butixing,line-icon-diancifa,line-icon-dingdanliebiao,line-icon-xiazai_3,line-icon-xiangji,line-icon-jilu_2,line-icon-xuexiao,line-icon-yaodian,line-icon-bianji_4,line-icon-chongwu,line-icon-boda,line-icon-gouwuche_4,line-icon-gouwudai,line-icon-shangpin_2,line-icon-zhuanfa_3,line-icon-shouye_7,line-icon-yinle,line-icon-gouwuche_3,line-icon-huodaofukuan,line-icon-fenlei_5,line-icon-shangpin,line-icon-wode_4,line-icon-dianhua,line-icon-jiesuo,line-icon-dangqianweizhi,line-icon-yuechi,line-icon-shipin,line-icon-yuyin,line-icon-wanchengdingdan,line-icon-guanbiyuyin,line-icon-jifen,line-icon-wupin,line-icon-shequ,line-icon-gouwu_2,line-icon-guanji,line-icon-lianjie_2,line-icon-dayin_2,line-icon-lajitong,line-icon-huowu,line-icon-dayin,line-icon-zhibo,line-icon-tianjiawendang,line-icon-shanchuwendang,line-icon-tianjia_3,line-icon-shanchu_2,line-icon-shang,line-icon-fangda,line-icon-suoxiao,line-icon-xia,line-icon-zuo,line-icon-lianjie1,line-icon-quanping,line-icon-you,line-icon-shuaxin,line-icon-shuaxin_2,line-icon-shuaxin_3,line-icon-jiaoji,line-icon-jiantou_2,line-icon-zhongxinshouquan,line-icon-shangchuan,line-icon-xiazai,line-icon-xiangxia,line-icon-zhuanfa_4,line-icon-dianzan_2,line-icon-xiazai_2,line-icon-dianpu_2,line-icon-xiangshang,line-icon-faming-2,line-icon-Wi-Fi,line-icon-miaosha,line-icon-huizhang,line-icon-dianshi,line-icon-huodong,line-icon-shenfenzheng,line-icon-remen,line-icon-touyingyi,line-icon-miaobiao,line-icon-hongbao,line-icon-wenzhang_2,line-icon-miaobiao_2,line-icon-qianbao_2,line-icon-dingshi,line-icon-fuzhi,line-icon-lanya,line-icon-caijian,line-icon-songhuo,line-icon-erweima_2,line-icon-fenxiao,line-icon-jiandao,line-icon-shezhi_3,line-icon-guanli,line-icon-shouye_4,line-icon-shuben_2,line-icon-dianhua_2,line-icon-huiyuan_2,line-icon-qifei,line-icon-shouye_5,line-icon-erweima,line-icon-daohang_2,line-icon-weizhi_2,line-icon-quanzi,line-icon-qifei_2,line-icon-jifen_2,line-icon-feiji,line-icon-zihangche,line-icon-qiche1,line-icon-zhaoche,line-icon-gongshi,line-icon-lanqiu,line-icon-jiegou,line-icon-shouyi,line-icon-qiche_2,line-icon-shui,line-icon-shezhi_4,line-icon-yanjing-fang,line-icon-shuaka,line-icon-shoushi,line-icon-wenzhang,line-icon-jiayou,line-icon-shoubiao,line-icon-jiqi,line-icon-shuju_2,line-icon-qiandai,line-icon-biaoqing,line-icon-huati,line-icon-jingji,line-icon-yanjing-yuan,line-icon-qushi,line-icon-shangchuan_2,line-icon-shoudiantong,line-icon-kafei,line-icon-canju,line-icon-shalou,line-icon-canyin,line-icon-huojian,line-icon-shouyinji,line-icon-guanjun,line-icon-piaoliuping,line-icon-yinle_2,line-icon-mofa,line-icon-wangye,line-icon-xiaochengxu,line-icon-jiangbei,line-icon-maikefeng,line-icon-shexiangtou,line-icon-weixin,line-icon-lanche,line-icon-yue,line-icon-ditie,line-icon-wancheng,line-icon-lieche,line-icon-shibai,line-icon-gongjiao,line-icon-bofang,line-icon-guanguangche,line-icon-pinglun,line-icon-zihangche_2',
                 form: {
                     is_menu: 1,
                     sort: 100,
                 }
-            },
-            computed: {
-                parent_access_id() {
-                    if (this.cascader_value.length > 0) {
-                        return this.cascader_value[this.cascader_value.length - 1]
-                    } else {
-                        return 0
-                    }
-                },
-                icon_list() {
-                    return this.icon_list_string.split(',')
+            }
+        },
+        computed: {
+            parent_access_id() {
+                if (this.cascader_value.length > 0) {
+                    return this.cascader_value[this.cascader_value.length - 1]
+                } else {
+                    return 0
                 }
             },
-            mounted() {
-                this.getInfo()
-            },
-            methods: {
-                /**
-                 * 获取联动组件的渲染值
-                 * @param parent_access_id
-                 */
-                getCascaderValue(parent_access_id) {
-                    this.access_list.forEach(item => {
-                        if (item.children) {
-                            item.children.forEach(it => {
-                                if (parseInt(it.access_id) === parseInt(parent_access_id)) {
-                                    this.cascader_value = [item.access_id, it.access_id]
-                                    return
-                                }
-                            })
-
-                            if (parseInt(item.access_id) === parseInt(parent_access_id)) {
-                                this.cascader_value = [item.access_id]
+            icon_list() {
+                return this.icon_list_string.split(',')
+            }
+        },
+        mounted() {
+            this.getInfo()
+        },
+        methods: {
+            /**
+             * 获取联动组件的渲染值
+             * @param parent_access_id
+             */
+            getCascaderValue(parent_access_id) {
+                this.access_list.forEach(item => {
+                    if (item.children) {
+                        item.children.forEach(it => {
+                            if (parseInt(it.access_id) === parseInt(parent_access_id)) {
+                                this.cascader_value = [item.access_id, it.access_id]
                                 return
                             }
+                        })
+
+                        if (parseInt(item.access_id) === parseInt(parent_access_id)) {
+                            this.cascader_value = [item.access_id]
+                            return
                         }
-                    })
-                },
-                /**
-                 * 获取编辑所需信息
-                 */
-                getInfo() {
-                    this.httpGet("{:url('admin/access/edit/info')}", {
-                        ...this.getUrlQuery()
-                    }).then(res => {
-                        if (res.status) {
-                            let {access_list = [], access = {}} = res.data
-                            this.access_list = [
-                                {
-                                    access_id: 0,
-                                    access_name: '一级菜单',
-                                    children: []
-                                },
-                                ...access_list
-                            ]
-                            if (access.access_id) {
-                                this.getCascaderValue(access.parent_access_id)
-                                this.form = {
-                                    ...access
-                                }
+                    }
+                })
+            },
+            /**
+             * 获取编辑所需信息
+             */
+            getInfo() {
+                this.httpGet("{:url('admin/access/edit/info')}", {
+                    ...this.getUrlQuery()
+                }).then(res => {
+                    if (res.status) {
+                        let {access_list = [], access = {}} = res.data
+                        this.access_list = [
+                            {
+                                access_id: 0,
+                                access_name: '一级菜单',
+                                children: []
+                            },
+                            ...access_list
+                        ]
+                        if (access.access_id) {
+                            this.getCascaderValue(access.parent_access_id)
+                            this.form = {
+                                ...access
                             }
                         }
-                    })
-                },
-                /**
-                 * 提交信息
-                 */
-                submitEvent() {
-                    this.httpPost("{:url('admin/access/edit')}", {
-                        ...this.form,
-                        parent_access_id: this.parent_access_id
-                    }).then(res => {
-                        if (res.status) {
-                            this.$message.success(res.msg)
-                            location.href = "{:url('admin/access/index')}"
-                        }
-                    })
-                },
-                /**
-                 * 选择icon之后的回调
-                 * @param icon
-                 */
-                confirmIconEvent(icon) {
-                    this.show_icon = false
-                    this.form.menu_icon = icon
-                }
+                    }
+                })
+            },
+            /**
+             * 提交信息
+             */
+            submitEvent() {
+                this.httpPost("{:url('admin/access/edit')}", {
+                    ...this.form,
+                    parent_access_id: this.parent_access_id
+                }).then(res => {
+                    if (res.status) {
+                        this.$message.success(res.msg)
+                        location.href = "{:url('admin/access/index')}"
+                    }
+                })
+            },
+            /**
+             * 选择icon之后的回调
+             * @param icon
+             */
+            confirmIconEvent(icon) {
+                this.show_icon = false
+                this.form.menu_icon = icon
             }
-        })
-    })
+        }
+    }
+
 </script>
 
 <style>
     .icon-item {
         text-align: center;
-        font-size: 20px;
         color: #666666;
         line-height: 50px;
         cursor: pointer;
+    }
+
+    .icon-item .iconfont {
+        font-size: 24px;
     }
 </style>

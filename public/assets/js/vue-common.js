@@ -123,7 +123,7 @@ window.__vueCommon = {
     }
 };
 
-(function (vue) {
-    //引入vue mixin
-    vue.mixin(window.__vueCommon);
-})(window.Vue);
+// (function (vue) {
+//     //引入vue mixin
+//     vue.mixin(window.__vueCommon);
+// })(window.Vue);

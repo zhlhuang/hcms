@@ -10,7 +10,7 @@
                         <span class="login-header-label-active" style="margin-right: 10px;">登录</span>
                     </div>
                 </div>
-                <el-form :model="form">
+                <el-form size="large" v-model="form" label-position="top">
                     <el-form-item prop="username" label="用户名"
                                   :rules="[{ required: true, message: '请输入登录用户名', trigger: 'blur' }]">
                         <el-input placeholder="请输入登录用户名" type="text" v-model="form.username"></el-input>
@@ -24,7 +24,7 @@
                                   :rules="[{ required: true, message: '请输入验证码', trigger: 'blur' }]">
                         <el-input placeholder="请输入验证码" type="text" v-model="form.valid_code"
                         >
-                            <template slot="append">
+                            <template #append>
                                 <el-image v-if="time>0" @click="changeValidEvent" style="width: 80px;height: 30px;"
                                           :src="`/admin/passport/code?time=`+time"></el-image>
                             </template>
@@ -55,55 +55,53 @@
     </div>
 </div>
 <script>
-    $(function () {
-        new Vue({
-            el: "#app",
-            data: {
-                time: 0,
-                form: {
-                    username: "",
-                    password: ""
-                }
-            },
-            mounted() {
-                //如果是在iframe里面，需要跳转到 /admin/passport/login 页面
-                if (window.parent !== window) {
-                    window.parent.location.href = "/admin/passport/login"
-                }
-                this.time = new Date().getTime()
-                window.addEventListener("keydown", this.handleKeyDown, true); //开启监听键盘按下事件
-            },
-            methods: {
-                changeValidEvent() {
-                    this.time = new Date().getTime()
-                },
-                handleKeyDown(e) {
-                    let key = null;
-                    if (window.event === undefined) {
-                        key = e.keyCode;
-                    } else {
-                        key = window.event.keyCode;
-                    }
-                    if (key === 13) {
-                        //触发的事件
-                        this.doLogin();
-                    }
-                },
-                doLogin() {
-                    console.log('doLogin')
-                    this.httpPost(`/admin/passport/login`, {time: this.time, ...this.form}).then(res => {
-                        if (res.status) {
-                            this.$message.success(res.msg)
-                            setTimeout(() => {
-                                location.href = '/admin/index/index'
-                            }, 1000)
-                        }
-                    }).catch(err => {
-                    })
-                }
+    const App = {
+        el: "#app",
+        data: {
+            time: 0,
+            form: {
+                username: "",
+                password: ""
             }
-        })
-    })
+        },
+        mounted() {
+            //如果是在iframe里面，需要跳转到 /admin/passport/login 页面
+            if (window.parent !== window) {
+                window.parent.location.href = "/admin/passport/login"
+            }
+            this.time = new Date().getTime()
+            window.addEventListener("keydown", this.handleKeyDown, true); //开启监听键盘按下事件
+        },
+        methods: {
+            changeValidEvent() {
+                this.time = new Date().getTime()
+            },
+            handleKeyDown(e) {
+                let key = null;
+                if (window.event === undefined) {
+                    key = e.keyCode;
+                } else {
+                    key = window.event.keyCode;
+                }
+                if (key === 13) {
+                    //触发的事件
+                    this.doLogin();
+                }
+            },
+            doLogin() {
+                console.log('doLogin')
+                this.httpPost(`/admin/passport/login`, {time: this.time, ...this.form}).then(res => {
+                    if (res.status) {
+                        this.$message.success(res.msg)
+                        setTimeout(() => {
+                            location.href = '/admin/index/index'
+                        }, 1000)
+                    }
+                }).catch(err => {
+                })
+            }
+        }
+    }
 </script>
 <style>
     .version {
@@ -141,7 +139,7 @@
         background: url(/assets/img/login/login-bg.png) repeat;
     }
 
-    .el-form-item .el-input__inner {
-        width: 100%;
+    .el-input--large {
+        width: 100% !important;
     }
 </style>

@@ -17,7 +17,7 @@
 }
 
 /*默认输入框宽度*/
-.el-form-item .el-input--small {
+.el-form-item .el-input {
     width: 300px;
 }
 
@@ -41,3 +41,6 @@
     cursor: pointer;
 }
 
+.el-form {
+    margin-top: 18px;
+}

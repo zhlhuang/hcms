@@ -7,24 +7,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="renderer" content="webkit"/>
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
-
-    <link rel="stylesheet" href="/assets/element-ui@2.15.6/index.css?v={$version}">
+    <!-- 导入样式 -->
+    <link rel="stylesheet" href="/assets/element-plus/index.css?v={$version}"/>
     <link rel="stylesheet" href="/assets/css/index.css?v={$version}">
+    <link rel="stylesheet" href="/assets/css/iconfont.css?v={$version}">
 
     <script src="/assets/js/jquery.min.js?v={$version}"></script>
     {if $env == 'dev'}
-    <script src="/assets/js/vue.js?v={$version}"></script>
+    <!-- 导入 Vue 3 -->
+    <script src="/assets/vue3/index.js?v={$version}"></script>
+    <script src="/assets/element-plus/index.js?v={$version}"></script>
     {else /}
     <!-- 正式版本使 min -->
-    <script src="/assets/js/vue-min.js?v={$version}"></script>
+    <!-- 导入 Vue 3 -->
+    <script src="/assets/vue3/index.min.js?v={$version}"></script>
+    <script src="/assets/element-plus/index.min.js?v={$version}"></script>
     {/if}
     <script src="/assets/js/vue-common.js?v={$version}"></script>
     <script src="/assets/js/vue-list.js?v={$version}"></script>
-    <script src="/assets/element-ui@2.15.6/index.js?v={$version}"></script>
+    <script src="/assets/element-plus/zh-cn.js?v={$version}"></script>
 </head>
 <body style="background-color: #f8f8f8;height: 100%">
 <div>
     {__CONTENT__}
 </div>
 </body>
+<script>
+    $(function () {
+        const app = Vue.createApp(App)
+        app.use(ElementPlus, {
+            locale: ElementPlusLocaleZhCn,
+        })
+        app.mixin(window.__vueCommon)
+        app.mixin(window.__vueList)
+        app.mount('#app')
+        app.mount('.page-container')
+    })
+</script>
 </html>

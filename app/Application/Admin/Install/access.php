@@ -15,7 +15,7 @@ return [
         'params' => '',
         'sort' => 100,
         'is_menu' => 1,
-        'menu_icon' => 'el-icon-data-analysis',
+        'menu_icon' => 'line-icon-shuju_2',
     ],
     [
         'parent_access_id' => 0,
@@ -24,7 +24,7 @@ return [
         'params' => '',
         'sort' => 100,
         'is_menu' => 1,
-        'menu_icon' => 'el-icon-setting',
+        'menu_icon' => 'line-icon-shezhi_2',
         'children' => [
             [
                 'access_name' => '菜单与权限',
@@ -147,7 +147,7 @@ return [
         'params' => '',
         'sort' => 100,
         'is_menu' => 1,
-        'menu_icon' => 'el-icon-monitor',
+        'menu_icon' => 'line-icon-jifen_2',
         'children' => [
             [
                 'access_name' => '队列',
