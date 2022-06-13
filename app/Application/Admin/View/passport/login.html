@@ -1,4 +1,4 @@
-<div id="app" v-cloak class="login-con">
+<div id="app" v-cloak class="login-con page-container">
     <div class="login-dev loading">
         <el-card>
             <div>
@@ -10,7 +10,7 @@
                         <span class="login-header-label-active" style="margin-right: 10px;">登录</span>
                     </div>
                 </div>
-                <el-form size="large" v-model="form" label-position="top">
+                <el-form size="large" :model="form" label-position="top">
                     <el-form-item prop="username" label="用户名"
                                   :rules="[{ required: true, message: '请输入登录用户名', trigger: 'blur' }]">
                         <el-input placeholder="请输入登录用户名" type="text" v-model="form.username"></el-input>
@@ -57,11 +57,13 @@
 <script>
     const App = {
         el: "#app",
-        data: {
-            time: 0,
-            form: {
-                username: "",
-                password: ""
+        data() {
+            return {
+                time: 0,
+                form: {
+                    username: "",
+                    password: ""
+                }
             }
         },
         mounted() {

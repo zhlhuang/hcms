@@ -3,7 +3,6 @@
         data() {
             return {
                 upload_drive: '',
-                dialogVisible: false,
                 move_group_id: -1,
                 upload_url: "{:url('component/upload/file')}",
                 group_list: [],
@@ -14,13 +13,11 @@
             }
         },
         props: {
-            public_read: {
-                type: Boolean,
-                default: false
-            },
+            show: Boolean,
+            public_read: Boolean,
         },
         mounted() {
-            // this.getGroupList()
+            this.getGroupList()
         },
         computed: {
             selected_file_ids() {
@@ -243,7 +240,9 @@
                         }
                         this.httpPost("{:url('component/upload/save')}", request_data).then(() => {
                             this.$loading({target: '.el-dialog__body'}).close();
-                            this.GetList()
+                            setTimeout(() => {
+                                this.GetList()
+                            }, 300)
                         })
                     }
                 } else {

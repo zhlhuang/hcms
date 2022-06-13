@@ -1,9 +1,13 @@
 <!-- 所有上传组件的公共方法和数据 -->
 {hcmstag:include file="admin@/components/upload/upload-file-mixin"}
 <script type="text/x-template" id="select-ue-video">
-    <div class="select-file">
+
+</script>
+<script>
+    component_list.push('select-ue-video', {
+        template: `<div class="select-file">
         <div style="max-height: 400px;">
-            <el-dialog :modal-append-to-body="false" title="选择视频" @close="$emit('close')" width="668px" :visible.sync="dialogVisible">
+            <el-dialog  title="选择视频" @close="$emit('close')" width="668px" :mode-value="show">
                 <div>
                     <el-row>
                         <el-col :span="6">
@@ -138,38 +142,18 @@
                 </div>
             </el-dialog>
         </div>
-    </div>
-</script>
-<script>
-    $(function () {
-        Vue.component('select-ue-video', {
-            template: '#select-ue-video',
-            mixins: [window.__vue_upload_mixin],
-            props: {
-                show: false,
-            },
-            data() {
-                return {
-                    file_accept: "video/*",
-                    max_upload: 99,
-                    file_type: 'video'
-                }
-            },
-            watch: {
-                show(value) {
-                    if (value) {
-                        //获取分组列表
-                        this.getGroupList();
-                    }
-                    this.dialogVisible = value
-                }
-            },
-            computed: {},
-            methods: {
+    </div>`,
+        mixins: [window.__vue_upload_mixin],
+        data() {
+            return {
+                file_accept: "video/*",
+                max_upload: 99,
+                file_type: 'video'
             }
-        });
+        },
+        computed: {},
+        methods: {}
     })
-
 </script>
 
 <style>

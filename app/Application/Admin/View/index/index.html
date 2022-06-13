@@ -1,6 +1,6 @@
 <link href=/assets/css/reset.css rel=stylesheet>
 
-<div id="app" v-cloak>
+<div id="app" class="page-container" v-cloak>
     <!-- 导航 -->
     <div class="sidebar-container" ref="nav">
         <el-row class="tac">
@@ -127,6 +127,9 @@
 </div>
 
 <style>
+    .page-container {
+        padding: 0 !important;
+    }
     .sidebar-container {
         transition: .23s;
         width: max-content;

@@ -61,7 +61,7 @@
                         min-width="70"
                         label="类型">
                     <template #default="{row}">
-                        <el-tag v-if="row.is_menu==1" type="primary">菜单</el-tag>
+                        <el-tag v-if="row.is_menu==1">菜单</el-tag>
                         <el-tag v-else type="success">权限</el-tag>
                     </template>
                 </el-table-column>

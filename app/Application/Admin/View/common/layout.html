@@ -26,6 +26,10 @@
     <script src="/assets/js/vue-common.js?v={$version}"></script>
     <script src="/assets/js/vue-list.js?v={$version}"></script>
     <script src="/assets/element-plus/zh-cn.js?v={$version}"></script>
+    <script>
+        //用户存放页面中会引入的组件
+        const component_list = []
+    </script>
 </head>
 <body style="background-color: #f8f8f8;height: 100%">
 <div>
@@ -34,14 +38,17 @@
 </body>
 <script>
     $(function () {
-        const app = Vue.createApp(App)
+        let app = Vue.createApp(App)
         app.use(ElementPlus, {
             locale: ElementPlusLocaleZhCn,
         })
         app.mixin(window.__vueCommon)
         app.mixin(window.__vueList)
-        app.mount('#app')
-        app.mount('.page-container')
+        //加载页面中引入的组件
+        component_list.forEach(item => {
+            app.component(item.key, item.c)
+        })
+        app.mount('.page-container', {})
     })
 </script>
 </html>

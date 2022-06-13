@@ -11,15 +11,17 @@
         <div>
             <el-form label-width="80px">
                 <el-form-item label="上级权限">
-                    <el-cascader
-                            placeholder="请选择上级权限"
-                            v-model="cascader_value"
-                            filterable
-                            :options="access_list"
-                            :props="{ checkStrictly: true,value:'access_id',label:'access_name' }"
-                            clearable></el-cascader>
-                    <div class="form-small">
-                        <small>上级菜单，菜单最多三级</small>
+                    <div>
+                        <el-cascader
+                                placeholder="请选择上级权限"
+                                v-model="cascader_value"
+                                filterable
+                                :options="access_list"
+                                :props="{ checkStrictly: true,value:'access_id',label:'access_name' }"
+                                clearable></el-cascader>
+                        <div class="form-small">
+                            <small>上级菜单，菜单最多三级</small>
+                        </div>
                     </div>
                 </el-form-item>
                 <el-form-item label="名称">
@@ -32,9 +34,11 @@
                     <el-input v-model="form.params"></el-input>
                 </el-form-item>
                 <el-form-item label="排序">
-                    <el-input v-model="form.sort" type="number"></el-input>
-                    <div class="form-small">
-                        <small>数值越小，约靠前</small>
+                    <div>
+                        <el-input v-model="form.sort" type="number"></el-input>
+                        <div class="form-small">
+                            <small>数值越小，约靠前</small>
+                        </div>
                     </div>
                 </el-form-item>
                 <el-form-item label="是否菜单">

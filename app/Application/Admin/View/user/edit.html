@@ -1,13 +1,15 @@
 <div class="page-container" v-cloak>
     <el-card>
-        <div slot="header" class="breadcrumb">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><a href="{:url('admin/user/index')}">管理员列表</a></el-breadcrumb-item>
-                <el-breadcrumb-item>{$title}</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item><a href="{:url('admin/user/index')}">管理员列表</a></el-breadcrumb-item>
+                    <el-breadcrumb-item>{$title}</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
         <div>
-            <el-form size="small" label-width="100px">
+            <el-form label-width="100px">
                 <el-form-item label="所属角色">
                     <div>
                         <el-cascader
@@ -22,16 +24,18 @@
                     <el-input v-model="form.real_name"></el-input>
                 </el-form-item>
                 <el-form-item label="用户名">
-                    <el-input v-model="form.username"></el-input>
-                    <div v-if="form.admin_user_id>0" class="form-small">
-                        <small>修改用户名时，必须同时输入密码，否则新的用户名将无法登录！</small>
+                    <div>
+                        <el-input v-model="form.username"></el-input>
+                        <div v-if="form.admin_user_id>0" class="form-small">
+                            <small>修改用户名时，必须同时输入密码，否则新的用户名将无法登录！</small>
+                        </div>
                     </div>
                 </el-form-item>
                 <el-form-item label="密码">
                     <el-input v-model="form.password" placeholder="不输入则不修改，新增必须填写"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="submitEvent" type="primary" size="small">
+                    <el-button @click="submitEvent" type="primary">
                         提交
                     </el-button>
                 </el-form-item>
@@ -41,93 +45,92 @@
 </div>
 
 <script>
-    $(function () {
-        new Vue({
-            el: ".page-container",
-            data: {
+    const App = {
+        data() {
+            return {
                 cascader_value: [],
                 role_list: [],
                 form: {}
-            },
-            mounted() {
-                this.getInfo()
-            },
-            computed: {
-                role_id() {
-                    if (this.cascader_value.length > 0) {
-                        return this.cascader_value[this.cascader_value.length - 1]
-                    } else {
-                        return 0
-                    }
+            }
+        },
+        mounted() {
+            this.getInfo()
+        },
+        computed: {
+            role_id() {
+                if (this.cascader_value.length > 0) {
+                    return this.cascader_value[this.cascader_value.length - 1]
+                } else {
+                    return 0
                 }
-            },
-            methods: {
-                /**
-                 * 获取联动组件的渲染值
-                 * @param role_id
-                 */
-                getCascaderValue(role_id) {
-                    this.role_list.forEach(item => {
-                        if (item.children) {
-                            item.children.forEach(it => {
+            }
+        },
+        methods: {
+            /**
+             * 获取联动组件的渲染值
+             * @param role_id
+             */
+            getCascaderValue(role_id) {
+                this.role_list.forEach(item => {
+                    if (item.children) {
+                        item.children.forEach(it => {
 
-                                it.children.forEach(i => {
-                                    if (parseInt(i.role_id) === parseInt(role_id)) {
-                                        this.cascader_value = [item.role_id, it.role_id, i.role_id]
-                                        return
-                                    }
-                                })
-
-                                if (parseInt(it.role_id) === parseInt(role_id)) {
-                                    this.cascader_value = [item.role_id, it.role_id]
+                            it.children.forEach(i => {
+                                if (parseInt(i.role_id) === parseInt(role_id)) {
+                                    this.cascader_value = [item.role_id, it.role_id, i.role_id]
                                     return
                                 }
                             })
 
-                            if (parseInt(item.role_id) === parseInt(role_id)) {
-                                this.cascader_value = [item.role_id]
+                            if (parseInt(it.role_id) === parseInt(role_id)) {
+                                this.cascader_value = [item.role_id, it.role_id]
                                 return
                             }
-                        }
-                    })
-                },
-                /**
-                 * 获取编辑所需信息
-                 */
-                getInfo() {
-                    this.httpGet("{:url('admin/user/edit/info')}", {
-                        ...this.getUrlQuery()
-                    }).then(res => {
-                        if (res.status) {
-                            let {role_list = [], admin_user = {}} = res.data
-                            this.role_list = role_list
-                            if (admin_user.admin_user_id) {
-                                this.getCascaderValue(admin_user.role_id)
-                                this.form = {
-                                    ...admin_user,
-                                }
-                            }
+                        })
 
+                        if (parseInt(item.role_id) === parseInt(role_id)) {
+                            this.cascader_value = [item.role_id]
+                            return
                         }
-                    })
-                },
-                /**
-                 * 提交信息
-                 */
-                submitEvent() {
-                    this.httpPost("{:url('admin/user/edit')}", {
-                        ...this.form,
-                        role_id: this.role_id
-                    }).then(res => {
-                        if (res.status) {
-                            this.$message.success(res.msg)
-                            location.href = "{:url('admin/user/index')}"
+                    }
+                })
+            },
+            /**
+             * 获取编辑所需信息
+             */
+            getInfo() {
+                this.httpGet("{:url('admin/user/edit/info')}", {
+                    ...this.getUrlQuery()
+                }).then(res => {
+                    if (res.status) {
+                        let {role_list = [], admin_user = {}} = res.data
+                        this.role_list = role_list
+                        if (admin_user.admin_user_id) {
+                            this.getCascaderValue(admin_user.role_id)
+                            this.form = {
+                                ...admin_user,
+                            }
                         }
-                    })
-                },
-            }
-        })
-    })
+
+                    }
+                })
+            },
+            /**
+             * 提交信息
+             */
+            submitEvent() {
+                this.httpPost("{:url('admin/user/edit')}", {
+                    ...this.form,
+                    role_id: this.role_id
+                }).then(res => {
+                    if (res.status) {
+                        this.$message.success(res.msg)
+                        location.href = "{:url('admin/user/index')}"
+                    }
+                })
+            },
+        }
+    }
 </script>
 
 <style>

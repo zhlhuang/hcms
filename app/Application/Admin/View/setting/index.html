@@ -1,12 +1,14 @@
 <div class="page-container" v-cloak>
     <el-card>
-        <div slot="header" class="breadcrumb">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>配置列表</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>配置列表</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
         <div>
-            <el-form size="small" :inline="true">
+            <el-form :inline="true">
                 <el-form-item>
                     <el-input v-model="where.keyword" placeholder="关键字"></el-input>
                 </el-form-item>
@@ -24,7 +26,7 @@
         </div>
         <div>
             <el-table
-                    size="small"
+
                     :data="data_list"
                     style="width: 100%">
                 <el-table-column
@@ -51,7 +53,7 @@
                 <el-table-column
                         prop="setting_group"
                         label="分组"
-                        min-width="100">
+                        min-width="120">
                 </el-table-column>
                 <el-table-column
                         prop="type"
@@ -61,19 +63,19 @@
                 <el-table-column
                         prop="updated_at"
                         label="更新时间"
-                        width="140">
+                        width="160">
                 </el-table-column>
                 <el-table-column
                         fixed="right"
                         align="center"
                         min-width="180"
                         label="操作">
-                    <template slot-scope="{row}">
+                    <template #default="{row}">
                         <el-link :href="`{:url('admin/setting/edit')}?setting_id=`+row.setting_id">
-                            <el-button size="small" type="primary">编辑</el-button>
+                            <el-button type="primary">编辑</el-button>
                         </el-link>
                         <el-link @click="deleteEvent">
-                            <el-button size="small" type="danger">删除</el-button>
+                            <el-button type="danger">删除</el-button>
                         </el-link>
                     </template>
                 </el-table-column>
@@ -94,38 +96,37 @@
 </div>
 
 <script>
-    $(function () {
-        new Vue({
-            el: ".page-container",
-            data: {
+    const App = {
+        data() {
+            return {
                 is_init_list: true,
                 where: {},
                 setting_group: [],
-            },
-            methods: {
-                deleteEvent({setting_id}) {
-                    this.$confirm("是否确认删除该记录？", '提示', {setting_id}).then(() => {
-                        this.httpGet("{:url('admin/setting/delete')}", {}).then(res => {
-                            if (res.status) {
-                                this.$message.success(res.msg)
-                            }
-                        })
-                    })
-                },
-                GetList() {
-                    this.httpGet("{:url('admin/setting/index/lists')}", {
-                        page: this.current_page,
-                        ...this.where
-                    }).then(res => {
-                        let {lists = {}, setting_group = []} = res.data
-                        this.setting_group = setting_group
-                        this.handRes(lists)
-                    })
-                },
-                searchEvent() {
-                    this.GetList()
-                }
             }
-        })
-    })
+        },
+        methods: {
+            deleteEvent({setting_id}) {
+                this.$confirm("是否确认删除该记录？", '提示', {setting_id}).then(() => {
+                    this.httpGet("{:url('admin/setting/delete')}", {}).then(res => {
+                        if (res.status) {
+                            this.$message.success(res.msg)
+                        }
+                    })
+                })
+            },
+            GetList() {
+                this.httpGet("{:url('admin/setting/index/lists')}", {
+                    page: this.current_page,
+                    ...this.where
+                }).then(res => {
+                    let {lists = {}, setting_group = []} = res.data
+                    this.setting_group = setting_group
+                    this.handRes(lists)
+                })
+            },
+            searchEvent() {
+                this.GetList()
+            }
+        }
+    }
 </script>

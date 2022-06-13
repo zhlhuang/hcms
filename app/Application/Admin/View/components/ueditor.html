@@ -15,29 +15,23 @@
 <!-- 上传视频组件,不需要时，可以直接注释 默认不显示  -->
 <!--<link rel="stylesheet" href="/assets/ueditor/cms_uploadVideo/index.css">-->
 <!-- 上传图片组件  -->
-
-<script type="text/x-template" id="ueditor">
-    <div>
+{hcmstag:include file="admin/@/components/upload/select-ue-image"}
+<script>
+    var ueditorInstance = UE.getEditor('editor_content');
+    component_list.push({
+        key: "ueditor",
+        c: {
+            template: `<div>
         <div>
             <div style="line-height: 0;">
-                <textarea id="editor_content" :style="`height: `+height+`px;width: `+width+`px;`"></textarea>
+                <textarea id="editor_content" :style="'height: '+height+'px;width: '+width+'px;'"></textarea>
             </div>
         </div>
         <div>
-            <select-ue-image :public_read="true" :show="show_image" @confirm="confirmImage"
+            <select-ue-image :public_read="true" v-model:show="show_image" @confirm="confirmImage"
                              @close="show_image=false"></select-ue-image>
-            <select-ue-video :public_read="true" :show="show_video" @confirm="confirmVideo"
-                             @close="show_video=false"></select-ue-video>
         </div>
-    </div>
-</script>
-{hcmstag:include file="admin/@/components/upload/select-ue-image"}
-{hcmstag:include file="admin/@/components/upload/select-ue-video"}
-<script>
-    $(function () {
-        var ueditorInstance = UE.getEditor('editor_content');
-        Vue.component('ueditor', {
-            template: '#ueditor',
+    </div>`,
             props: {
                 init: {
                     type: [String],
@@ -124,7 +118,6 @@
                 // });
                 this.init && ueditorInstance.setContent(this.init)
             }
-        });
-
+        }
     })
 </script>

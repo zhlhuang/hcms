@@ -1,10 +1,12 @@
 <div class="page-container" v-cloak>
     <el-card>
-        <div slot="header" class="breadcrumb">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>demo</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>demo</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
         <div>
             hello demo {$msg}
         </div>
@@ -12,9 +14,5 @@
 </div>
 
 <script>
-    $(function () {
-        new Vue({
-            el: ".page-container"
-        })
-    })
+    const App = {}
 </script>
