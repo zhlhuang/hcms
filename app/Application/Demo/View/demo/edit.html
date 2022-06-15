@@ -12,12 +12,14 @@
             <el-form label-width="80px">
                 <el-form-item label="上级菜单">
                     <div>
-                        <el-select v-model="form.parent_access_id">
-                            <el-option :value="0" label="一级菜单"></el-option>
-                        </el-select>
-                    </div>
-                    <div class="form-small">
-                        <small>上级菜单，菜单最多三级</small>
+                        <div>
+                            <el-select v-model="form.parent_access_id">
+                                <el-option :value="0" label="一级菜单"></el-option>
+                            </el-select>
+                        </div>
+                        <div class="form-small">
+                            <small>上级菜单，菜单最多三级</small>
+                        </div>
                     </div>
                 </el-form-item>
                 <el-form-item label="名称">
@@ -32,9 +34,11 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="排序">
-                    <el-input v-model="form.sort" type="number"></el-input>
-                    <div class="form-small">
-                        <small>数值越小，约靠前</small>
+                    <div>
+                        <el-input v-model="form.sort" type="number"></el-input>
+                        <div class="form-small">
+                            <small>数值越小，约靠前</small>
+                        </div>
                     </div>
                 </el-form-item>
                 <el-form-item label="是否菜单">

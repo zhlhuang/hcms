@@ -20,6 +20,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="searchEvent">查询</el-button>
+                    <el-button type="primary" @click="openEvent">打开新窗口</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -82,6 +83,9 @@
             }
         },
         methods: {
+            openEvent() {
+                this.openNewFrame('新窗口Demo', "{:url('demo/demo/edit')}")
+            },
             GetList() {
                 this.handRes({
                     current_page: 1,

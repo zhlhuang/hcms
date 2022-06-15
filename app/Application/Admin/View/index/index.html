@@ -130,6 +130,7 @@
     .page-container {
         padding: 0 !important;
     }
+
     .sidebar-container {
         transition: .23s;
         width: max-content;
@@ -734,20 +735,12 @@
                     }
                 })
             },
-            /**
-             * 打开新窗口
-             * @param title 标题
-             * @param url 对应的URL
-             */
-            openNewFrame: function (title, url) {
-                this.goUrl([title], {
-                    name: title,
-                    url: url,
-                })
-            },
             // 打开新窗口
             handleEvent_adminOpenNewFrame: function (event) {
-                this.openNewFrame(event.detail.title, event.detail.url)
+                this.goUrl([event.detail.title], {
+                    access_name: event.detail.title,
+                    url: event.detail.url,
+                })
             },
             // 点击退出
             clickLogout: function () {
@@ -790,6 +783,4 @@
             this.unregisterEvent()
         }
     }
-
-
 </script>
