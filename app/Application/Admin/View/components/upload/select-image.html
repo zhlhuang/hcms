@@ -1,10 +1,7 @@
 <!-- 所有上传组件的公共方法和数据 -->
 {hcmstag:include file="admin@/components/upload/upload-file-mixin"}
-<script>
-    component_list.push({
-        key: 'select-image',
-        c: {
-            template: `<div class="select-file">
+<script type="text/x-template" id="select-image">
+    <div class="select-file">
         <div style="max-height: 400px;">
             <el-dialog title="选择图片" @close="$emit('close')" width="668px"
                        :model-value="show">
@@ -25,12 +22,12 @@
                                             </li>
                                             <template v-for="(item,index) in group_list" :key="index">
                                                 <li  class="el-menu-item"
-                                                    style="padding: 0 8px;position: relative;"
-                                                    :class="{'group_active' : now_group == item.group_id }">
+                                                     style="padding: 0 8px;position: relative;"
+                                                     :class="{'group_active' : now_group == item.group_id }">
                                             <span @click="selectGroup(item.group_id)"
                                                   style="word-break:break-all; white-space:normal; width:75%;line-height: 30px;vertical-align:middle;display:inline-block;">{{item.group_name}}</span>
                                                     <div style="position: absolute;right: 10px;top: 0;">
-                                                        <el-dropdown @command="(c)=>handleGroup(c,item)" 
+                                                        <el-dropdown @command="(c)=>handleGroup(c,item)"
                                                                      trigger="click">
                                                             <div class="el-dropdown-link" style="line-height: 30px;">
                                                                 <i style="line-height: 20px;"
@@ -138,7 +135,13 @@
                 </div>
             </el-dialog>
         </div>
-    </div>`,
+    </div>
+</script>
+<script>
+    component_list.push({
+        key: 'select-image',
+        c: {
+            template: `#select-image`,
             mixins: [window.__vue_upload_mixin],
             data() {
                 return {

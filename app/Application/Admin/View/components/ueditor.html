@@ -13,15 +13,12 @@
 <!--  上传图片组件  -->
 
 <!-- 上传视频组件,不需要时，可以直接注释 默认不显示  -->
-<!--<link rel="stylesheet" href="/assets/ueditor/cms_uploadVideo/index.css">-->
+<link rel="stylesheet" href="/assets/ueditor/cms_uploadVideo/index.css">
 <!-- 上传图片组件  -->
 {hcmstag:include file="admin/@/components/upload/select-ue-image"}
-<script>
-    var ueditorInstance = UE.getEditor('editor_content');
-    component_list.push({
-        key: "ueditor",
-        c: {
-            template: `<div>
+{hcmstag:include file="admin/@/components/upload/select-ue-video"}
+<script type="text/x-template" id="ueditor">
+    <div>
         <div>
             <div style="line-height: 0;">
                 <textarea id="editor_content" :style="'height: '+height+'px;width: '+width+'px;'"></textarea>
@@ -30,8 +27,17 @@
         <div>
             <select-ue-image :public_read="true" v-model:show="show_image" @confirm="confirmImage"
                              @close="show_image=false"></select-ue-image>
+            <select-ue-video :public_read="true" v-model:show="show_video" @confirm="confirmVideo"
+                             @close="show_video=false"></select-ue-video>
         </div>
-    </div>`,
+    </div>
+</script>
+<script>
+    var ueditorInstance = UE.getEditor('editor_content');
+    component_list.push({
+        key: "ueditor",
+        c: {
+            template: `#ueditor`,
             props: {
                 init: {
                     type: [String],
@@ -67,27 +73,25 @@
                     this.$emit('update', ueditorInstance.getContent())
                 },
                 confirmVideo(files) {
-                    console.log('confirmVideo', files)
-                    if (files) {
-                        for (var i = 0; i < files.length; i++) {
+                    if (files && files.length > 0) {
+                        for (let i in files) {
                             ueditorInstance.focus();
                             ueditorInstance.execCommand(
                                 "inserthtml",
-                                '<video class="edui-upload-video vjs-default-skin video-js" controls="" preload="none" width="420" height="280" src="' + files[i]['fileurl'] + '" data-setup="{}">\
-                                 <source src="' + files[i]['file_url'] + '" type="video/mp4"/>\
-                                 </video>'
+                                `<video src="` + files[i]['file_url'] + `"  class="edui-upload-video vjs-default-skin video-js" controls="" preload="none" width="375" height="280"  data-setup="{}">
+                                 <source src="` + files[i]['file_url'] + `" type="video/mp4"/>
+                                 </video>`
                             );
                         }
                     }
                 },
                 confirmImage(files) {
-                    console.log('confirmImage', files)
-                    if (files) {
+                    if (files && files.length > 0) {
                         for (var i = 0; i < files.length; i++) {
                             ueditorInstance.focus();
                             ueditorInstance.execCommand(
                                 "inserthtml",
-                                '<img src="' + files[i]['file_url'] + '" style="width: 100%;font-size:0;line-height:0;vertical-align:top;outline-width:0px;">'
+                                `<img src="` + files[i]['file_url'] + `" style="width: 100%;font-size:0;line-height:0;vertical-align:top;outline-width:0px;">`
                             );
                         }
                     }

@@ -1,13 +1,10 @@
 <!-- 所有上传组件的公共方法和数据 -->
 {hcmstag:include file="admin@/components/upload/upload-file-mixin"}
-<script>
-    $(function () {
-        component_list.push({
-            key: 'select-doc',
-            c: {
-                template: `<div class="select-file">
+
+<script type="text/x-template" id="select-doc">
+    <div class="select-file">
         <div style="max-height: 400px;">
-            <el-dialog  title="选择文档" @close="$emit('close')" width="668px"
+            <el-dialog title="选择文档" @close="$emit('close')" width="668px"
                        :model-value="show">
                 <div>
                     <el-row>
@@ -89,7 +86,7 @@
                             </div>
                             <div class="grid-content bg-purple-light" style="margin-top: 10px;">
                                 <div>
-                                    <template v-for="(item,index) in data_list"  :key="index">
+                                    <template v-for="(item,index) in data_list" :key="index">
                                         <div class="img-list-item">
                                             <el-tooltip class="item" effect="dark" :content="item.file_name"
                                                         placement="top">
@@ -142,7 +139,15 @@
                 </div>
             </el-dialog>
         </div>
-    </div>`,
+    </div>
+</script>
+
+<script>
+    $(function () {
+        component_list.push({
+            key: 'select-doc',
+            c: {
+                template: `#select-doc`,
                 mixins: [window.__vue_upload_mixin],
                 data() {
                     return {
