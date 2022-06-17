@@ -13,7 +13,9 @@
                     {{config_info.driver}}
                 </el-form-item>
                 <el-form-item v-if="config_info.redis_status==1" label="redis连接">
-                    {{config_info.redis_status==1?'已连接':'未连接'}} | v{{config_info.redis_info.version}} | {{config_info.redis_info.host}}:{{config_info.redis_info.port}} | 内存:{{config_info.redis_info.total_system_memory_human}}
+                    {{config_info.redis_status==1?'已连接':'未连接'}} | v{{config_info.redis_info.version}} |
+                    {{config_info.redis_info.host}}:{{config_info.redis_info.port}} |
+                    内存:{{config_info.redis_info.total_system_memory_human}}
                 </el-form-item>
             </el-form>
         </div>
@@ -104,6 +106,7 @@
                             this.getInfo()
                         }
                     })
+                }).catch(err => {
                 })
             }
         }

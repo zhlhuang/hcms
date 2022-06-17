@@ -9,15 +9,23 @@
                 now_group: -1,
                 form_data: {},
                 upload_setting: {},
-                acl: 'default'
+                acl: 'default',
+                is_init: false,
             }
         },
         props: {
             show: Boolean,
             public_read: Boolean,
         },
+        watch: {
+            show(value) {
+                if (value && !this.is_init) {
+                    this.getGroupList()
+                    this.is_init = true
+                }
+            }
+        },
         mounted() {
-            this.getGroupList()
         },
         computed: {
             selected_file_ids() {
@@ -66,6 +74,8 @@
                 }
                 this.$emit('confirm', this.selected_file_list)
                 this.$emit('close')
+                //确认之后，选择列表清空
+                this.clickCancelSelected()
             },
             moveFileGroup() {
                 return this.httpPost("{:url('component/upload/file/move')}", {
