@@ -3,7 +3,7 @@
 <script type="text/x-template" id="select-ue-image">
     <div class="select-file">
         <div style="max-height: 400px;">
-            <el-dialog :modal-append-to-body="false" title="选择图片" @close="$emit('close')" width="668px" :visible.sync="dialogVisible">
+            <el-dialog title="选择图片" @close="$emit('close')" width="668px" :model-value="show">
                 <div>
                     <el-row>
                         <el-col :span="6">
@@ -19,14 +19,14 @@
                                                 :class="{'group_active' : now_group == 0}">
                                                 未分组
                                             </li>
-                                            <template v-for="(item,index) in group_list">
-                                                <li :key="index" class="el-menu-item"
+                                            <template v-for="(item,index) in group_list" :key="index">
+                                                <li class="el-menu-item"
                                                     style="padding: 0 8px;position: relative;"
                                                     :class="{'group_active' : now_group == item.group_id }">
                                             <span @click="selectGroup(item.group_id)"
                                                   style="word-break:break-all; white-space:normal; width:75%;line-height: 30px;vertical-align:middle;display:inline-block;">{{item.group_name}}</span>
                                                     <div style="position: absolute;right: 10px;top: 0;">
-                                                        <el-dropdown @command="(c)=>handleGroup(c,item)" size="small"
+                                                        <el-dropdown @command="(c)=>handleGroup(c,item)"
                                                                      trigger="click">
                                                             <div class="el-dropdown-link" style="line-height: 30px;">
                                                                 <i style="line-height: 20px;"
@@ -46,7 +46,7 @@
                                             </template>
                                         </ul>
                                         <div class="grid-content" style="padding: 19px;">
-                                            <el-button type="primary" @click="editGroup()" size="mini">新增分组</el-button>
+                                            <el-button @click="editGroup()">新增分组</el-button>
                                         </div>
                                     </li>
                                 </ul>
@@ -84,9 +84,9 @@
                             </div>
                             <div class="grid-content bg-purple-light" style="margin-top: 10px;">
                                 <div>
-                                    <template v-for="(item,index) in data_list">
-                                        <div :key="index"
-                                             class="img-list-item">
+                                    <template v-for="(item,index) in data_list" :key="index">
+                                        <div
+                                                class="img-list-item">
                                             <img :src="item.file_thumb"
                                                  style="width:80px;height: 80px;"
                                                  @click="selectFileEvent(index)">
@@ -96,14 +96,14 @@
                                         </div>
                                     </template>
                                     <div>
-                                        <el-button v-show="selected_file_list.length > 0" type="danger" size="small"
+                                        <el-button v-show="selected_file_list.length > 0" type="danger"
                                                    @click="clickDeleteSelected">删除选中
                                         </el-button>
-                                        <el-button v-show="selected_file_list.length > 0" type="primary" size="small"
+                                        <el-button v-show="selected_file_list.length > 0" type="primary"
                                                    @click="clickCancelSelected">取消选中
                                         </el-button>
                                         <el-select v-show="selected_file_list.length > 0" v-model="move_group_id"
-                                                   placeholder="移动至" style="width:130px;margin-left: 10px;" size="small"
+                                                   placeholder="移动至" style="width:130px;margin-left: 10px;"
                                                    @change="moveFileGroup">
                                             <el-option label="请选择分组" :value="-1"></el-option>
                                             <el-option label="未分组" :value="0"></el-option>
@@ -129,8 +129,8 @@
                 </div>
                 <div>
                     <div solt="footer" style="text-align: right;padding-top: 10px;">
-                        <el-button size="small" type="primary" @click="confirmEvent">确定</el-button>
-                        <el-button size="small" type="default" @click="$emit('close')">关闭</el-button>
+                        <el-button @click="confirmEvent">确定</el-button>
+                        <el-button type="default" @click="$emit('close')">关闭</el-button>
                     </div>
                 </div>
             </el-dialog>
@@ -139,36 +139,30 @@
 </script>
 <script>
     $(function () {
-        Vue.component('select-ue-image', {
-            template: '#select-ue-image',
-            mixins: [window.__vue_upload_mixin],
-            props: {
-                show: false,
-            },
-            data() {
-                return {
-                    file_accept: "image/*",
-                    max_upload: 99,
-                    file_type: 'image'
-                }
-            },
-            watch: {
-                show(value) {
-                    if (value) {
-                        //获取分组列表
-                        this.getGroupList();
+        component_list.push({
+            key: 'select-ue-image',
+            c: {
+                template: `#select-ue-image`,
+                mixins: [window.__vue_upload_mixin],
+                data() {
+                    return {
+                        file_accept: "image/*",
+                        max_upload: 99,
+                        file_type: 'image'
                     }
-                    this.dialogVisible = value
-                }
-            },
-            computed: {},
-            methods: {}
-        });
+                },
+                computed: {},
+                methods: {}
+            }
+        })
     })
-
 </script>
 
 <style>
+    .select-file .el-input {
+        display: inline;
+    }
+
     .menu-container {
         max-height: 400px;
         overflow-y: scroll;

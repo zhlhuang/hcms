@@ -1,13 +1,15 @@
 <div class="page-container" v-cloak>
     <el-card>
-        <div slot="header" class="breadcrumb">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>日志配置</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>日志配置</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
         <div>
             <div style="margin-bottom: 10px;">
-                <el-radio-group size="small" @change="getInfo" v-model="log_type">
+                <el-radio-group @change="getInfo" v-model="log_type">
                     <el-radio-button label="request">操作日志</el-radio-button>
                     <el-radio-button label="error">错误日志</el-radio-button>
                 </el-radio-group>
@@ -20,7 +22,7 @@
                         type="success">
                 </el-alert>
             </div>
-            <el-form v-if="log_type==='request'" size="small" label-width="80px">
+            <el-form v-if="log_type==='request'" label-width="80px">
                 <el-form-item label="日志记录">
                     <el-switch
                             @change="submitEvent"
@@ -36,7 +38,7 @@
         </div>
         <div>
             <el-table
-                    size="small"
+
                     :data="file_list"
                     style="width: 100%">
                 <el-table-column
@@ -60,9 +62,9 @@
                         align="center"
                         min-width="180"
                         label="操作">
-                    <template slot-scope="{row}">
-                        <el-button @click="downloadEvent(row)" size="small" type="primary">下载</el-button>
-                        <el-button @click="deleteEvent(row)" size="small" type="danger">删除</el-button>
+                    <template #default="{row}">
+                        <el-button @click="downloadEvent(row)" type="primary">下载</el-button>
+                        <el-button @click="deleteEvent(row)" type="danger">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -71,58 +73,58 @@
 </div>
 
 <script>
-    $(function () {
-        new Vue({
-            el: ".page-container",
-            data: {
+    const App = {
+        data() {
+            return {
                 log_type: 'request',
                 file_list: [],
                 setting: {
+                    log_is_open: 1,
                     is_open: 1,
                 }
+            }
+        },
+        mounted() {
+            this.getInfo()
+        },
+        methods: {
+            downloadEvent({file_name}) {
+                location.href = "{:url('admin/log/index/download')}" + "/" + file_name
             },
-            mounted() {
-                this.getInfo()
-            },
-            methods: {
-                downloadEvent({file_name}) {
-                    location.href = "{:url('admin/log/index/download')}" + "/" + file_name
-                },
-                getInfo() {
-                    this.httpGet("{:url('admin/log/index/setting/info')}", {log_type: this.log_type}).then(res => {
-                        if (res.status) {
-                            let {setting = {}, file_list = []} = res.data
-                            this.file_list = file_list
-                            for (let key in setting) {
-                                //为了输入框显示，这里将对象转成字符串
-                                if (typeof setting[key] == "object") {
-                                    setting[key] = JSON.stringify(setting[key])
-                                }
-                            }
-                            this.setting = {
-                                ...setting
+            getInfo() {
+                this.httpGet("{:url('admin/log/index/setting/info')}", {log_type: this.log_type}).then(res => {
+                    if (res.status) {
+                        let {setting = {}, file_list = []} = res.data
+                        this.file_list = file_list
+                        for (let key in setting) {
+                            //为了输入框显示，这里将对象转成字符串
+                            if (typeof setting[key] == "object") {
+                                setting[key] = JSON.stringify(setting[key])
                             }
                         }
-                    })
-                },
-                deleteEvent({file_name}) {
-                    this.$confirm("是否确认删除该记录？", '提示').then(() => {
-                        this.httpPost("{:url('admin/log/index/delete')}/" + file_name, {}).then(res => {
-                            if (res.status) {
-                                this.$message.success(res.msg)
-                                this.getInfo()
-                            }
-                        })
-                    })
-                },
-                submitEvent() {
-                    this.httpPost("{:url('admin/log/index/setting')}", {setting: this.setting}).then(res => {
+                        this.setting = {
+                            ...setting
+                        }
+                    }
+                })
+            },
+            deleteEvent({file_name}) {
+                this.$confirm("是否确认删除该记录？", '提示').then(() => {
+                    this.httpPost("{:url('admin/log/index/delete')}/" + file_name, {}).then(res => {
                         if (res.status) {
                             this.$message.success(res.msg)
+                            this.getInfo()
                         }
                     })
-                }
+                })
+            },
+            submitEvent() {
+                this.httpPost("{:url('admin/log/index/setting')}", {setting: this.setting}).then(res => {
+                    if (res.status) {
+                        this.$message.success(res.msg)
+                    }
+                })
             }
-        })
-    })
+        }
+    }
 </script>

@@ -1,12 +1,14 @@
 <div class="page-container" v-cloak>
     <el-card>
-        <div slot="header" class="breadcrumb">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>文件列表</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>文件列表</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
         <div>
-            <el-form size="small" :inline="true">
+            <el-form :inline="true">
                 <el-form-item>
                     <el-input v-model="where.file_name" clearable placeholder="文件名称"></el-input>
                 </el-form-item>
@@ -25,14 +27,14 @@
                 </el-form-item>
             </el-form>
             <div style="margin-bottom: 10px;">
-                <el-button size="small" @click="show_select_image=true" type="primary">选择图片</el-button>
-                <el-button size="small" @click="show_select_video=true" type="primary">选择视频</el-button>
-                <el-button size="small" @click="show_select_doc=true" type="primary">选择文档</el-button>
+                <el-button @click="show_select_image=true" type="primary">选择图片</el-button>
+                <el-button @click="show_select_video=true" type="primary">选择视频</el-button>
+                <el-button @click="show_select_doc=true" type="primary">选择文档</el-button>
             </div>
         </div>
         <div>
             <el-table
-                    size="small"
+
                     :data="data_list"
                     style="width: 100%">
                 <el-table-column
@@ -70,7 +72,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="created_at"
-                        width="140"
+                        width="160"
                         label="创建时间">
                 </el-table-column>
                 <el-table-column
@@ -78,9 +80,9 @@
                         align="center"
                         min-width="80"
                         label="操作">
-                    <template slot-scope="{row}">
+                    <template #default="{row}">
                         <el-link @click="deleteEvent(row)">
-                            <el-button size="small" type="danger">删除</el-button>
+                            <el-button type="danger">删除</el-button>
                         </el-link>
                     </template>
                 </el-table-column>
@@ -98,67 +100,66 @@
             </div>
         </div>
     </el-card>
-    <select-image :show="show_select_image" @confirm="selectImageConfirm"
+    <select-image v-model:show="show_select_image" @confirm="selectImageConfirm"
                   @close="show_select_image=false"></select-image>
-    <select-video :show="show_select_video" @confirm="selectVideoConfirm"
+    <select-video v-model:show="show_select_video" @confirm="selectVideoConfirm"
                   @close="show_select_video=false"></select-video>
-    <select-doc :show="show_select_doc" @confirm="selectDocConfirm"
+    <select-doc v-model:show="show_select_doc" @confirm="selectDocConfirm"
                 @close="show_select_doc=false"></select-doc>
 </div>
 <!--引入图片选择组件-->
 {hcmstag:include file="admin@/components/upload/select-image"}
 <!--引入视频选择组件-->
 {hcmstag:include file="admin@/components/upload/select-video"}
-<!--引入文档选择组件-->
 {hcmstag:include file="admin@/components/upload/select-doc"}
+
 <script>
-    $(function () {
-        new Vue({
-            el: ".page-container",
-            data: {
+    const App = {
+        data() {
+            return {
                 show_select_doc: false,
                 show_select_image: false,
                 show_select_video: false,
                 is_init_list: true,
                 where: {},
-            },
-            methods: {
-                selectDocConfirm(files) {
-                    console.log('selectDocConfirm', files)
-                },
-                selectVideoConfirm(files) {
-                    console.log('selectVideoConfirm', files)
-                },
-                selectImageConfirm(files) {
-                    console.log('selectImageConfirm', files)
-                },
-                GetList() {
-                    this.httpGet("{:url('admin/upload/index/lists')}", {
-                        page: this.current_page,
-                        ...this.where
-                    }).then(res => {
-                        let {lists = {}} = res.data
-                        this.handRes(lists)
-                    })
-                },
-                deleteEvent({file_id}) {
-                    this.$confirm("是否确认删除该记录？", '提示', {file_id}).then(() => {
-                        this.httpPost("{:url('admin/upload/file/delete')}", {
-                            selected_file_ids: [file_id]
-                        }).then(res => {
-                            if (res.status) {
-                                this.$message.success(res.msg)
-                                this.GetList()
-                            }
-                        })
-                    }).catch(err => {
-                    })
-                },
-                searchEvent() {
-                    this.current_page = 1
-                    this.GetList()
-                }
             }
-        })
-    })
+        },
+        methods: {
+            selectDocConfirm(files) {
+                console.log('selectDocConfirm', files)
+            },
+            selectVideoConfirm(files) {
+                console.log('selectVideoConfirm', files)
+            },
+            selectImageConfirm(files) {
+                console.log('selectImageConfirm', files)
+            },
+            GetList() {
+                this.httpGet("{:url('admin/upload/index/lists')}", {
+                    page: this.current_page,
+                    ...this.where
+                }).then(res => {
+                    let {lists = {}} = res.data
+                    this.handRes(lists)
+                })
+            },
+            deleteEvent({file_id}) {
+                this.$confirm("是否确认删除该记录？", '提示', {file_id}).then(() => {
+                    this.httpPost("{:url('admin/upload/file/delete')}", {
+                        selected_file_ids: [file_id]
+                    }).then(res => {
+                        if (res.status) {
+                            this.$message.success(res.msg)
+                            this.GetList()
+                        }
+                    })
+                }).catch(err => {
+                })
+            },
+            searchEvent() {
+                this.current_page = 1
+                this.GetList()
+            }
+        }
+    }
 </script>

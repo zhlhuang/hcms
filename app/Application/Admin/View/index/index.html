@@ -1,6 +1,6 @@
 <link href=/assets/css/reset.css rel=stylesheet>
 
-<div id="app" v-cloak>
+<div id="app" class="page-container" v-cloak>
     <!-- 导航 -->
     <div class="sidebar-container" ref="nav">
         <el-row class="tac">
@@ -8,10 +8,11 @@
                 <!-- 左侧菜单  -->
                 <el-menu
                         default-active="2"
+                        mode="vertical"
+                        :collapse="isnavHid"
                         class="el-menu-vertical-demo"
                         text-color="rgb(191, 203, 217)"
                         active-text-color="#409eff"
-                        :collapse="isnavHid"
                         :default-active="tagData.defaultActive"
                         :class="{hid : minHid}"
                         :unique-opened="true"
@@ -19,35 +20,41 @@
                     <div v-for="(item, index) in navData" :key="item.menu_id">
                         <el-menu-item v-if="item.children.length === 0" :index="item.menu_id"
                                       @click="goUrl([item.access_name], item)">
-                            <i :class="item.menu_icon"></i>
-                            <span slot="title">{{item.access_name}}</span>
+                            <el-icon>
+                                <i :class="'iconfont '+item.menu_icon"></i>
+                            </el-icon>
+                            <template #title>
+                                <span>{{item.access_name}}</span>
+                            </template>
                         </el-menu-item>
-                        <el-submenu v-else :index="item.menu_id">
-                            <template slot="title">
-                                <i :class="item.menu_icon"></i>
+                        <el-sub-menu v-else :index="item.menu_id">
+                            <template #title>
+                                <el-icon>
+                                    <i :class="'iconfont '+item.menu_icon"></i>
+                                </el-icon>
                                 <span class="title">{{item.access_name}}</span>
                             </template>
                             <div v-for="(val, j) in item.children" :key="val.menu_id">
                                 <el-menu-item v-if="val.children.length === 0" :index="val.menu_id"
                                               @click="goUrl([item.access_name, val.access_name], val)">
-                                    <template slot="title">
+                                    <template #title>
                                         <span class="title">{{val.access_name}}</span>
                                     </template>
                                 </el-menu-item>
-                                <el-submenu :index="val.menu_id" v-else>
-                                    <template slot="title">
+                                <el-sub-menu :index="val.menu_id" v-else>
+                                    <template #title>
                                         <span class="title">{{val.access_name}}</span>
                                     </template>
                                     <el-menu-item v-for="(sub, v) in val.children" :key="sub.menu_id"
                                                   :index="sub.menu_id"
                                                   @click="goUrl([item.access_name, val.access_name, sub.access_name], sub)">
-                                        <template slot="title">
+                                        <template #title>
                                             <span class="title">{{sub.access_name}}</span>
                                         </template>
                                     </el-menu-item>
-                                </el-submenu>
+                                </el-sub-menu>
                             </div>
-                        </el-submenu>
+                        </el-sub-menu>
                     </div>
                 </el-menu>
             </el-col>
@@ -58,32 +65,29 @@
         <div class="navbar">
             <div class="left">
                 <div class="nav">
-                    <i class="el-icon-s-fold navicon" @click="navShow()" :class="{navShow : isnavHid}"></i>
+                    <i class="iconfont line-icon-gengduo1 navicon" @click="navShow()" :class="{navShow : isnavHid}"></i>
                     <el-breadcrumb separator="/">
                         <el-breadcrumb-item v-for="(item, index) in tagData.breadcrumb" :key="index">{{item}}
                         </el-breadcrumb-item>
                     </el-breadcrumb>
                 </div>
-
                 <div class="nav_right">
                     <!--  操作下拉框 -->
                     <el-dropdown>
                         <span class="el-dropdown-link">
-                            <template>
-                                <span>{{admin_user.real_name}}</span>
-                                <i class="el-icon-arrow-down el-icon--right"></i>
-                            </template>
+                              {{admin_user.real_name}}<i class="iconfont line-icon-xia2"></i>
                         </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item>
                             <span @click="clickLogout">
                                 退出登录
                             </span>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
                     </el-dropdown>
                 </div>
-
             </div>
             <div class="tag" ref="tagScroll">
                 <div class="list" ref="tagList">
@@ -98,21 +102,22 @@
                     >
                         <div class="chebox"></div>
                         {{item.name}}
-                        <i class="el-icon-refresh-left" @click.stop="refreshTag(index)"></i>
-                        <i class="el-icon-close" @click.stop="closeTag(index)"></i>
+                        <i style="margin-left: 8px;" class="el-icon iconfont line-icon-shuaxin"
+                           @click.stop="refreshTag(index)"></i>
+                        <i class="el-icon iconfont line-icon-cuo" @click.stop="closeTag(index)"></i>
                     </div>
                 </div>
             </div>
             <ul class="contextmenu" ref="contextmenu">
-<!--                <li @click="refreshTag(tempIndex)">刷新</li>-->
+                <!--                <li @click="refreshTag(tempIndex)">刷新</li>-->
                 <li @click="closeTag(tempIndex)">关闭本页</li>
                 <li @click="closeOtherTag(tempIndex)">关闭其他</li>
                 <li @click="closeAllTag">关闭所有</li>
             </ul>
         </div>
         <section class="app-main">
-            <template v-for="(url, index) in iframeUrls">
-                <iframe :id="'iframe-'+index" :src="url" :key="url" frameborder="0" class="iframe"
+            <template v-for="(url, index) in iframeUrls" :key="url">
+                <iframe :id="'iframe-'+index" :src="url" frameborder="0" class="iframe"
                         :style="{display: iframeUrl == url ? 'block': 'none'}"></iframe>
             </template>
         </section>
@@ -122,6 +127,10 @@
 </div>
 
 <style>
+    .page-container {
+        padding: 0 !important;
+    }
+
     .sidebar-container {
         transition: .23s;
         width: max-content;
@@ -166,15 +175,23 @@
     }
 
     .sidebar-container .el-menu-item:hover,
-    .sidebar-container .el-submenu__title:hover,
+    .sidebar-container .el-sub-menu__title:hover,
     .el-menu-item:hover {
         background-color: #001528 !important;
+    }
+
+    .el-menu-item .iconfont {
+        margin-right: 5px;
+    }
+
+    .el-sub-menu .iconfont {
+        margin-right: 5px;
     }
 
     .centent {
         position: relative;
         height: 100vh;
-        margin-left: 36px;
+        margin-left: 64px;
         flex: 1;
         transition: .23s ease-in;
         z-index: 10;
@@ -195,6 +212,9 @@
         transition: .23s;
         transform: rotate(0deg);
         cursor: pointer;
+        font-size: 18px;
+        margin-right: 4px;
+        color: #333333;
     }
 
     .centent .navShow {
@@ -223,11 +243,11 @@
         border: 1px solid #FFF;
     }
 
-    .el-submenu .el-menu--inline {
+    .el-sub-menu .el-menu--inline {
         background-color: #1f2d3d;
     }
 
-    .el-submenu {
+    .el-sub-menu {
         transition: .23s;
     }
 
@@ -235,24 +255,16 @@
         background-color: initial;
     }
 
-    .el-submenu__title {
+    .el-sub-menu__title {
         overflow: hidden;
     }
 
-    .el-submenu__title .title {
+    .el-sub-menu__title .title {
         color: rgb(191, 203, 217);
     }
 
-    .el-menu--collapse {
-        width: 36px;
-    }
-
-    .el-menu--collapse.hid {
-        width: 0px;
-    }
-
-    .el-menu--collapse .el-submenu__title > span,
-    .el-menu--collapse .el-submenu__title .el-icon-arrow-right {
+    .el-menu--collapse .el-sub-menu__title > span,
+    .el-menu--collapse .el-sub-menu__title .el-sub-menu__icon-arrow {
         height: 0;
         width: 0;
         overflow: hidden;
@@ -260,31 +272,18 @@
         display: inline-block;
     }
 
-    .el-menu--collapse .el-menu-item {
-        padding: 0 !important;
-    }
-
-    .el-menu--collapse .el-submenu__title,
-    .el-menu--collapse .el-tooltip {
-        padding-left: 10px !important;
-    }
-
-    .el-menu--collapse .el-submenu__title:hover {
-        background-color: rgb(38, 52, 69) !important;
-    }
-
     .el-menu--popup-right-start {
         background-color: #304156;
     }
 
-    .el-submenu__title:focus,
-    .el-submenu__title:hover {
+    .el-sub-menu__title:focus,
+    .el-sub-menu__title:hover {
         background-color: #001528 !important;
     }
 
     .navbar {
         width: 100%;
-        height: 85px;
+        height: 80px;
         border-bottom: 1px solid #d8dce5;
         background: #fff;
     }
@@ -296,15 +295,10 @@
         margin: 0 10px;
     }
 
-    .iconfont {
-        font-size: 16px;
-        margin-right: 4px;
-    }
-
     .navbar .left .nav {
         display: flex;
         align-items: center;
-        height: 50px;
+        height: 40px;
     }
 
     .navbar .tag {
@@ -336,10 +330,6 @@
         margin-right: 10px;
     }
 
-    .navbar .el-icon-s-fold {
-        font-size: 26px;
-        margin-right: 10px;
-    }
 
     .navbar .right {
         margin: 10px 20px 0;
@@ -349,7 +339,7 @@
     .navbar .nav_right {
         display: flex;
         align-items: center;
-        height: 50px;
+        height: 40px;
     }
 
     .app-main {
@@ -415,18 +405,18 @@
         margin-right: 8px;
     }
 
-    .tag-item .el-icon-close {
-        width: 15px;
-        height: 15px;
+    .tag-item .el-icon {
+        width: 18px;
+        height: 18px;
         text-align: center;
-        line-height: 15px;
-        font-size: 12px;
+        line-height: 18px;
+        font-size: 14px;
         border-radius: 50%;
         margin-left: 2px;
         transition: .3s;
     }
 
-    .tag-item .el-icon-close:hover {
+    .tag-item .el-icon:hover {
         background-color: #b4bccc;
         color: #fff;
     }
@@ -488,7 +478,7 @@
 
     @media screen and (max-width: 1200px) {
         .centent {
-            margin-left: 36px;
+            margin-left: 64px;
         }
 
         .sidebar-container {
@@ -517,35 +507,27 @@
 </style>
 
 <script>
-    var app = new Vue({
-        el: '#app',
-        data: {
-            isnavHid: false,
-            minHid: false,
-            windowSize: 1920,
-            // 左侧菜单
-            navData: [],
-            // 当前iframe内容页
-            iframeUrl: '',
-            iframeUrls: [],
-            // 标签列表
-            tags: [
-                // {name: '概括', url: 'http://ztbweb.cn', breadcrumb: ['概括'], defaultActive: '1Admin'}
-            ],
-            // 单线右键选中项
-            temData: {},
-            // 单线右键选中项序号
-            tempIndex: -1,
-            //用户等级
-            admin_user: {},
-        },
-        filters: {
-            ellipsis: function (value) {
-                if (!value) return "";
-                if (value.length > 70) {
-                    return value.slice(0, 70) + "...";
-                }
-                return value;
+    const App = {
+        data() {
+            return {
+                isnavHid: false,
+                minHid: false,
+                windowSize: 1920,
+                // 左侧菜单
+                navData: [],
+                // 当前iframe内容页
+                iframeUrl: '',
+                iframeUrls: [],
+                // 标签列表
+                tags: [
+                    // {name: '概括', url: 'http://ztbweb.cn', breadcrumb: ['概括'], defaultActive: '1Admin'}
+                ],
+                // 单线右键选中项
+                temData: {},
+                // 单线右键选中项序号
+                tempIndex: -1,
+                //用户等级
+                admin_user: {},
             }
         },
         methods: {
@@ -706,7 +688,6 @@
             },
             // 获取菜单
             getMenuList: function () {
-                var that = this
                 var PermissionInLoading = this.$loading({
                     lock: true,
                     text: ''
@@ -751,25 +732,15 @@
                     if (res.status) {
                         that.adminUserInfo.access_name = res.data.username
                         that.adminUserInfo.role_name = res.data.role_name
-                    } else {
-                        layer.msg(res.msg)
                     }
-                })
-            },
-            /**
-             * 打开新窗口
-             * @param title 标题
-             * @param url 对应的URL
-             */
-            openNewFrame: function (title, url) {
-                this.goUrl([title], {
-                    name: title,
-                    url: url,
                 })
             },
             // 打开新窗口
             handleEvent_adminOpenNewFrame: function (event) {
-                this.openNewFrame(event.detail.title, event.detail.url)
+                this.goUrl([event.detail.title], {
+                    access_name: event.detail.title,
+                    url: event.detail.url,
+                })
             },
             // 点击退出
             clickLogout: function () {
@@ -795,10 +766,10 @@
                 }
             }
         },
-        created: function () {
+        created() {
             this.onresize()
         },
-        mounted: function () {
+        mounted() {
             //如果是在iframe里面，需要刷新页面
             if (window.parent !== window) {
                 window.parent.location.reload()
@@ -806,10 +777,10 @@
             this.init()
             this.registerEvent()
             this.getMenuList()
-            // this.getAdminUserInfo()
+            this.getAdminUserInfo()
         },
-        unmount: function () {
+        unmount() {
             this.unregisterEvent()
         }
-    })
+    }
 </script>

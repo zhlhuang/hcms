@@ -6,6 +6,16 @@ window.__vueCommon = {
     },
     methods: {
         /**
+         * 打开新的子窗口
+         * @param title
+         * @param url
+         */
+        openNewFrame(title, url) {
+            if (typeof window.parent.__adminOpenNewFrame === 'function') {
+                window.parent.__adminOpenNewFrame({title, url})
+            }
+        },
+        /**
          * URL 解析
          * @param url
          * @returns {{protocol: string, hostname: string, search: ({}|{}), host: string, hash: string, pathname: string}}
@@ -123,7 +133,7 @@ window.__vueCommon = {
     }
 };
 
-(function (vue) {
-    //引入vue mixin
-    vue.mixin(window.__vueCommon);
-})(window.Vue);
+// (function (vue) {
+//     //引入vue mixin
+//     vue.mixin(window.__vueCommon);
+// })(window.Vue);

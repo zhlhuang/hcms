@@ -1,13 +1,15 @@
 <div class="page-container" v-cloak>
     <el-card>
-        <div slot="header" class="breadcrumb">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><a href="{:url('admin/setting/index')}">配置列表</a></el-breadcrumb-item>
-                <el-breadcrumb-item>{$title}</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item><a href="{:url('admin/setting/index')}">配置列表</a></el-breadcrumb-item>
+                    <el-breadcrumb-item>{$title}</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
         <div>
-            <el-form size="small" label-width="80px">
+            <el-form label-width="80px">
                 <el-form-item label="Key">
                     <el-input v-model="form.setting_key" placeholder="配置key，使用 {group}_{name} 格式"></el-input>
                 </el-form-item>
@@ -30,7 +32,7 @@
                     </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="submitEvent" type="primary" size="small">
+                    <el-button @click="submitEvent" type="primary">
                         提交
                     </el-button>
                 </el-form-item>
@@ -40,51 +42,50 @@
 </div>
 
 <script>
-    $(function () {
-        new Vue({
-            el: ".page-container",
-            data: {
+    const App = {
+        data() {
+            return {
                 form: {
                     type: "string"
                 }
-            },
-            mounted() {
-                this.getInfo()
-            },
-            methods: {
-                /**
-                 * 获取编辑所需信息
-                 */
-                getInfo() {
-                    this.httpGet("{:url('admin/setting/edit/info')}", {
-                        ...this.getUrlQuery()
-                    }).then(res => {
-                        if (res.status) {
-                            let {setting = {}} = res.data
-                            if (setting.setting_id) {
-                                this.form = {
-                                    ...setting
-                                }
+            }
+        },
+        mounted() {
+            this.getInfo()
+        },
+        methods: {
+            /**
+             * 获取编辑所需信息
+             */
+            getInfo() {
+                this.httpGet("{:url('admin/setting/edit/info')}", {
+                    ...this.getUrlQuery()
+                }).then(res => {
+                    if (res.status) {
+                        let {setting = {}} = res.data
+                        if (setting.setting_id) {
+                            this.form = {
+                                ...setting
                             }
                         }
-                    })
-                },
-                /**
-                 * 提交信息
-                 */
-                submitEvent() {
-                    this.httpPost("{:url('admin/setting/edit')}", {
-                        ...this.form,
-                    }).then(res => {
-                        if (res.status) {
-                            this.$message.success(res.msg)
-                            location.href = "{:url('admin/setting/index')}"
-                        }
-                    })
-                },
-            }
-        })
-    })
+                    }
+                })
+            },
+            /**
+             * 提交信息
+             */
+            submitEvent() {
+                this.httpPost("{:url('admin/setting/edit')}", {
+                    ...this.form,
+                }).then(res => {
+                    if (res.status) {
+                        this.$message.success(res.msg)
+                        location.href = "{:url('admin/setting/index')}"
+                    }
+                })
+            },
+        }
+    }
 </script>
 
 <style>

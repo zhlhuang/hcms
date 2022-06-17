@@ -8,12 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="renderer" content="webkit"/>
     <meta http-equiv="Cache-Control" content="no-siteapp"/>
-    <link rel="stylesheet" href="/assets/element-ui@2.15.6/index.css">
+    <link rel="stylesheet" href="/assets/element-plus/index.css"/>
+
     <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/vue.js"></script>
-    <script src="/assets/js/vue-common.js"></script>
-    <script src="/assets/js/vue-list.js"></script>
-    <script src="/assets/element-ui@2.15.6/index.js"></script>
+    <script src="/assets/vue3/index.min.js"></script>
+    <script src="/assets/element-plus/index.min.js"></script>
 </head>
 
 <body>
@@ -31,13 +30,18 @@
 </body>
 <script>
     $(function () {
-        new Vue({
+        const App = {
             el: "#app",
-            data: {},
+            data() {
+                return {}
+            },
             mounted() {
             },
             methods: {}
-        })
+        }
+        const app = Vue.createApp(App)
+        app.use(ElementPlus)
+        app.mount('#app')
     })
 </script>
 <style>

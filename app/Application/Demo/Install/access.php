@@ -15,7 +15,7 @@ return [
         'params' => '',
         'sort' => 100,
         'is_menu' => 1,
-        'menu_icon' => 'el-icon-data-analysis',
+        'menu_icon' => 'line-icon-fankui',
         'children' => [
             [
                 'access_name' => '列表页面',
