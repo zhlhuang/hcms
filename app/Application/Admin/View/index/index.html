@@ -721,20 +721,7 @@
                 window.__adminOpenNewFrame = null
                 window.removeEventListener('adminOpenNewFrame', this.handleEvent_adminOpenNewFrame.bind(this))
             },
-            // 获取管理员信息
-            getAdminUserInfo: function () {
-                var that = this
-                $.ajax({
-                    url: "/admin/AdminApi/getAdminUserInfo",
-                    method: 'get',
-                    params: {}
-                }).then(function (res) {
-                    if (res.status) {
-                        that.adminUserInfo.access_name = res.data.username
-                        that.adminUserInfo.role_name = res.data.role_name
-                    }
-                })
-            },
+
             // 打开新窗口
             handleEvent_adminOpenNewFrame: function (event) {
                 this.goUrl([event.detail.title], {
@@ -777,7 +764,6 @@
             this.init()
             this.registerEvent()
             this.getMenuList()
-            this.getAdminUserInfo()
         },
         unmount() {
             this.unregisterEvent()

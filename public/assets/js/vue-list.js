@@ -11,7 +11,10 @@ window.__vueList = {
     },
     mounted() {
         if (this.is_init_list) {
-            this.GetList()
+            setTimeout(() => {
+                //设置一定的延迟，比页面mounted稍微慢一些
+                this.GetList()
+            }, 200)
         }
     },
     methods: {

@@ -9,7 +9,7 @@
             </div>
         </template>
         <div>
-            <el-form label-width="80px">
+            <el-form :model="form" label-width="80px">
                 <el-form-item label="上级菜单">
                     <div>
                         <div>
@@ -22,7 +22,8 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="名称">
+                <el-form-item prop="access_name" :rules="[{ required: true, message: '请输入名称', trigger: 'blur' }]"
+                              label="名称">
                     <el-input v-model="form.access_name" placeholder=""></el-input>
                 </el-form-item>
                 <el-form-item label="图片">

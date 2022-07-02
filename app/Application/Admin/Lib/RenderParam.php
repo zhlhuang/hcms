@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace App\Application\Admin\Lib;
 
 use App\Application\Admin\Service\AdminSettingService;
+use App\Service\ApiService;
 use Hyperf\Di\Annotation\Inject;
 
 class RenderParam
@@ -24,6 +25,11 @@ class RenderParam
      */
     protected AdminSettingService $service;
 
+    /**
+     * @Inject()
+     */
+    protected ApiService $api_service;
+
 
     public function __construct(array $data = [])
     {
@@ -31,8 +37,12 @@ class RenderParam
         $this->common_data = [
             'site_name' => $this->service->getSiteSetting('site_name', 'Hcms'),
             'version' => config('version.version'),
+            'api_encode' => $this->api_service->getEncodeData(),
             'env' => env('APP_ENV')
         ];
+        if ($this->api_service->getEncodeData()) {
+            $this->common_data += ['api_key' => $this->api_service->getApiKey()];
+        }
     }
 
     public static function display(string $template = '', array $data = []): RenderParam

@@ -11,6 +11,7 @@ namespace App\Aspect;
 
 use App\Annotation\Api;
 use App\Exception\ApiErrorException;
+use App\Service\ApiService;
 use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Aop\AbstractAspect;
@@ -39,6 +40,11 @@ class ApiAspect extends AbstractAspect
     protected RequestInterface $request;
 
     /**
+     * @Inject
+     */
+    protected ApiService $api_service;
+
+    /**
      * @throws ApiErrorException
      */
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
@@ -47,12 +53,12 @@ class ApiAspect extends AbstractAspect
             $res = $proceedingJoinPoint->process();
 
             //如果api接口返回数组，直接默认是成功返回格式
-            return is_array($res) ? $this->response->json([
+            return is_array($res) ? $this->response->json($this->api_service->encryptData([
                 'data' => $res,
                 'code' => 200,
                 'status' => true,
                 'msg' => $this->request->isMethod('GET') ? '请求成功' : '操作成功'
-            ]) : $res;
+            ])) : $res;
         } catch (\Throwable $exception) {
             throw new ApiErrorException($exception->getMessage(), (int)$exception->getCode(),
                 $exception->getPrevious());

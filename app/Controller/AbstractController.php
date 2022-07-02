@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Service\ApiService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
@@ -33,6 +34,11 @@ class AbstractController
     protected ResponseInterface $response;
 
     /**
+     * @Inject
+     */
+    protected ApiService $api_service;
+
+    /**
      * @param array  $data
      * @param string $msg
      * @param int    $code
@@ -47,7 +53,7 @@ class AbstractController
     ): PsrResponseInterface {
         !$msg && $msg = $this->request->isMethod('GET') ? '请求成功' : '操作成功';
 
-        return $this->response->json(compact('data', 'msg', 'status', 'code'));
+        return $this->response->json($this->api_service->encryptData(compact('data', 'msg', 'status', 'code')));
     }
 
     protected function returnErrorJson(
@@ -56,6 +62,6 @@ class AbstractController
         array $data = [],
         bool $status = false
     ): PsrResponseInterface {
-        return $this->response->json(compact('data', 'msg', 'status', 'code'));
+        return $this->response->json($this->api_service->encryptData(compact('data', 'msg', 'status', 'code')));
     }
 }

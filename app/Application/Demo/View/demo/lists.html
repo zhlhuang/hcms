@@ -122,12 +122,14 @@
                     // this.httpPost("{:url('admin/setting/delete')}", {setting_id}).then(res => {
                     //     if (res.status) {
                     //         this.$message.success(res.msg)
+                    //         this.GetList()
                     //     }
                     // })
                 }).catch(err => {
                 })
             },
             searchEvent() {
+                this.refreshList()
             }
         }
     }

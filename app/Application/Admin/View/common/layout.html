@@ -25,6 +25,7 @@
     {/if}
     <script src="/assets/js/vue-common.js?v={$version}"></script>
     <script src="/assets/js/vue-list.js?v={$version}"></script>
+    <script src="/assets/js/crypto-js.js?v={$version}"></script>
     <script src="/assets/element-plus/zh-cn.js?v={$version}"></script>
     <script>
         //用户存放页面中会引入的组件
@@ -37,6 +38,16 @@
 </div>
 </body>
 <script>
+    {if $api_encode}
+        let API_ENCODE = true
+        let KEY = "{$api_key}";
+    {else/}
+        let API_ENCODE = false
+        let KEY = "";
+    {/if}
+</script>
+<script>
+
     $(function () {
         let app = Vue.createApp(App)
         app.use(ElementPlus, {

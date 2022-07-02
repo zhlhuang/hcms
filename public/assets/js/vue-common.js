@@ -62,6 +62,19 @@ window.__vueCommon = {
             }
             return urlObj && urlObj.search && urlObj.search[variable] ? urlObj.search[variable] : default_value;
         },
+        decryptRes: function (res) {
+            if (API_ENCODE) {
+                //开启了api加密，就需要解密处理
+                let {data = ''} = res
+                let key = CryptoJS.enc.Utf8.parse(KEY);
+                let decrypted = CryptoJS.AES.decrypt(data, key, {
+                    mode: CryptoJS.mode.ECB,
+                    padding: CryptoJS.pad.Pkcs7
+                }).toString(CryptoJS.enc.Utf8);
+                res = JSON.parse(decrypted)
+            }
+            return res
+        },
         httpGet: function (url, data, loading = true, loadingTarget = '.loading') {
             return new Promise((resolve, reject) => {
                 let loadingInstance = loading ? this.$loading({
@@ -73,6 +86,7 @@ window.__vueCommon = {
                     data: data,
                     dataType: 'json',
                     success: (res) => {
+                        res = this.decryptRes(res)
                         if (!res.status) {
                             this.$message.error(res.msg)
                         }
@@ -107,6 +121,7 @@ window.__vueCommon = {
                     data: data,
                     dataType: 'json',
                     success: (res) => {
+                        res = this.decryptRes(res)
                         if (!res.status) {
                             this.$message.error(res.msg)
                         }
