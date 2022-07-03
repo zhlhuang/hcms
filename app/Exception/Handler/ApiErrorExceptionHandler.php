@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Exception\Handler;
 
 use App\Exception\ApiErrorException;
+use App\Service\ApiService;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\ExceptionHandler\ExceptionHandler;
@@ -36,6 +37,11 @@ class ApiErrorExceptionHandler extends ExceptionHandler
      */
     protected RenderInterface $render;
 
+    /**
+     * @inject()
+     */
+    protected ApiService $api_service;
+
     public function __construct(LoggerFactory $loggerFactory)
     {
         $this->logger = $loggerFactory->get('Exception', 'error');
@@ -57,12 +63,12 @@ class ApiErrorExceptionHandler extends ExceptionHandler
         $this->logger->error($throwable->getTraceAsString());
         $this->stopPropagation();
         //返回json 错误
-        $result = Json::encode([
+        $result = Json::encode($this->api_service->encryptData([
             'status' => false,
             'code' => $throwable->getCode(),
             'data' => $data,
             'msg' => $throwable->getMessage()
-        ]);
+        ]));
 
         return $response->withAddedHeader('content-type', 'application/json; charset=utf-8')
             ->withBody(new SwooleStream($result));

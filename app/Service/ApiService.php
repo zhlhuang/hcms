@@ -15,7 +15,6 @@ class ApiService
 {
     protected bool $encode_data = false;
     protected string $api_key = '';
-    protected string $api_iv = '';
 
     public function __construct()
     {

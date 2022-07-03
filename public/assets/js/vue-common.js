@@ -71,6 +71,10 @@ window.__vueCommon = {
                     mode: CryptoJS.mode.ECB,
                     padding: CryptoJS.pad.Pkcs7
                 }).toString(CryptoJS.enc.Utf8);
+                if (!decrypted) {
+                    this.$message.error('数据获取异常！');
+                    return res
+                }
                 res = JSON.parse(decrypted)
             }
             return res
