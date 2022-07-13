@@ -25,6 +25,7 @@ use Hyperf\HttpMessage\Upload\UploadedFile;
  * @method UploadFile save(array $data = [])
  * @method array getUploadForm($acl = 'default')
  * @method string getObjectUrl(string $file_url)
+ * @method string getObjectThumb(UploadFile $file, string $file_url)
  */
 class UploadService
 {

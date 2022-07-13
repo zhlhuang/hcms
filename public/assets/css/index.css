@@ -40,3 +40,11 @@
     border-radius: 12px;
     cursor: pointer;
 }
+
+.lists__image {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1px solid #e5e5e5;
+}

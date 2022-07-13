@@ -8,5 +8,6 @@
 declare(strict_types=1);
 
 return [
-    'encode_data' => env('APP_ENV') !== 'dev'
+    'encode_data' => env('APP_ENV') !== 'dev',
+    'key' => '2c1dc1975775ee38',
 ];

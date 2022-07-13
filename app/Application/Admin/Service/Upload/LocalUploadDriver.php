@@ -10,9 +10,16 @@ declare(strict_types=1);
 namespace App\Application\Admin\Service\Upload;
 
 use App\Application\Admin\Model\UploadFile;
+use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Contract\RequestInterface;
 
 class LocalUploadDriver extends AbstractUploadDriver
 {
+    /**
+     * @Inject()
+     */
+    protected RequestInterface $request;
+
     public function save(array $data = []): UploadFile
     {
         //检查上传文件是否合法
@@ -84,5 +91,41 @@ class LocalUploadDriver extends AbstractUploadDriver
         $path_dir .= $this->upload_file->file_type . DIRECTORY_SEPARATOR . date('Ym');
 
         return $path_dir;
+    }
+
+    function getObjectUrl($file_url): string
+    {
+        if (strpos($file_url, 'http') === 0) {
+            return $file_url;
+        } else {
+            //不是http开头，拼接路径
+            return $this->getDomain() . $file_url;
+        }
+    }
+
+    function getObjectThumb(UploadFile $upload_file, $file_thumb): string
+    {
+        if (strpos($file_thumb, 'http') === 0) {
+            return $file_thumb;
+        } else {
+            //不是http开头，拼接路径
+            return $this->getDomain() . $file_thumb;
+        }
+    }
+
+    private function getDomain()
+    {
+        $domain = $this->request->getUri()
+                ->getScheme() . "://" . $this->request->getUri()
+                ->getHost();
+
+        $port = $this->request->getUri()
+            ->getPort();
+        if ($port != '' && ($port != '80' || $port != '443')) {
+            $domain .= ':' . $this->request->getUri()
+                    ->getPort();
+        }
+
+        return $domain;
     }
 }

@@ -19,7 +19,9 @@ class ApiService
     public function __construct()
     {
         $this->encode_data = boolval(config('api.encode_data'));
-        $this->api_key = substr(md5(config('version.version')), 8, 16);
+        $api_key = config('api.key', '');
+        //如果配置中没有key，则默认使用version的md5
+        $this->api_key = $api_key ?: substr(md5(config('version.version')), 8, 16);
     }
 
     /**
@@ -52,7 +54,8 @@ class ApiService
             $encode = base64_encode(openssl_encrypt($data_str, "AES-128-ECB", $key, 1));
 
             return [
-                'data' => $encode
+                'data' => $encode,
+                'is_encrypt' => true //告诉前端，数据是否加密
             ];
         } else {
             return $data;

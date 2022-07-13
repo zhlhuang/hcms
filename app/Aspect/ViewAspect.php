@@ -48,10 +48,10 @@ class ViewAspect extends AbstractAspect
 
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
-        $res = $proceedingJoinPoint->process();
+        $render_param = $proceedingJoinPoint->process();
         //如果返回的是Response 对象，直接返回
-        if ($res instanceof ResponseInterface) {
-            return $res;
+        if ($render_param instanceof ResponseInterface) {
+            return $render_param;
         }
         //获取template名称，默认是控制的方法名称
         $template = $proceedingJoinPoint->getReflectMethod()->name;
@@ -62,13 +62,14 @@ class ViewAspect extends AbstractAspect
         $view_annotation = $proceedingJoinPoint->getAnnotationMetadata()->method['App\Annotation\View'] ?? null;
         //根据注解传参获取模板
         $view_annotation && $view_annotation->template && $template = $view_annotation->template;
-        if (!($res instanceof RenderParam)) {
-            $res = RenderParam::display($template, $res ?: []);
+        if (!($render_param instanceof RenderParam)) {
+            $render_param = RenderParam::display($template, $render_param ?: [])
+                ->setLayout($view_annotation->layout);
         }
-        $template = $res->template ?: $template; //拿出指定的模板
-        $data = $res->getData();
+        $template = $render_param->template ?: $template; //拿出指定的模板
+        $data = $render_param->getData();
         $engine = $this->container->get(ThinkEngine::class);
-        $engine->setLayout($res->layout);
+        $engine->setLayout($render_param->layout);
 
         $class = $proceedingJoinPoint->getReflectMethod()->class;
 
@@ -76,6 +77,7 @@ class ViewAspect extends AbstractAspect
         preg_match_all("/App\\\Application\\\\(.+?)\\\\Controller\\\\(.+?)Controller/", $class, $res__);
         $module_name = $res__[1][0] ?? '';
         $controller = $res__[2][0] ?? '';
+        $controller = str_replace("\\", "/", $controller);
         $controller = strtolower($controller); //控制器名称
         $module_name = ucfirst($module_name); //模块名称
 

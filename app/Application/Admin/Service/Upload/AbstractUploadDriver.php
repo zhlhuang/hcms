@@ -43,6 +43,23 @@ abstract class AbstractUploadDriver
     }
 
     /**
+     * 非本地存储，用户获取文件路径
+     *
+     * @param $file_url
+     * @return string
+     */
+    abstract function getObjectUrl($file_url): string;
+
+    /**
+     * 非本地存储，用户获取文件路径
+     *
+     * @param UploadFile $upload_file
+     * @param            $file_thumb
+     * @return string
+     */
+    abstract function getObjectThumb(UploadFile $upload_file, $file_thumb): string;
+
+    /**
      * 保存图片
      *
      * @param array $data

@@ -20,21 +20,4 @@ interface NonLocalUploadDriver
      * @return array
      */
     function getUploadForm(string $acl = 'default'): array;
-
-    /**
-     * 非本地存储，用户获取文件路径
-     *
-     * @param $file_url
-     * @return string
-     */
-    function getObjectUrl($file_url): string;
-
-    /**
-     * 非本地存储，用户获取文件路径
-     *
-     * @param UploadFile $upload_file
-     * @param            $file_thumb
-     * @return string
-     */
-    function getObjectThumb(UploadFile $upload_file, $file_thumb): string;
 }

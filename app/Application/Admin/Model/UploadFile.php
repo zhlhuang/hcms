@@ -82,13 +82,9 @@ class UploadFile extends Model
     public function getFileUrlAttribute($value): string
     {
         try {
-            if ($this->file_drive != self::UPLOAD_DRIVE_LOCAL && $this->acl === self::ACL_DEFAULT) {
-                $s = new UploadService();
+            $upload_service = new UploadService();
 
-                return $s->getObjectUrl($value);
-            }
-
-            return $value;
+            return $upload_service->getObjectUrl($value);
         } catch (\Throwable $exception) {
             return $value;
         }
@@ -97,13 +93,9 @@ class UploadFile extends Model
     public function getFileThumbAttribute($value): string
     {
         try {
-            if ($this->file_drive != self::UPLOAD_DRIVE_LOCAL && $this->acl === self::ACL_DEFAULT) {
-                $s = new UploadService();
+            $upload_service = new UploadService();
 
-                return $s->getObjectThumb($this, $value);
-            }
-
-            return $value;
+            return $upload_service->getObjectThumb($this, $value);
         } catch (\Throwable $exception) {
             return $value;
         }
