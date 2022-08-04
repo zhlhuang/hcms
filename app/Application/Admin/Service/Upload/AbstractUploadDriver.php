@@ -43,7 +43,7 @@ abstract class AbstractUploadDriver
     }
 
     /**
-     * 非本地存储，用户获取文件路径
+     * 获取文件访问路径
      *
      * @param $file_url
      * @return string
@@ -51,7 +51,7 @@ abstract class AbstractUploadDriver
     abstract function getObjectUrl($file_url): string;
 
     /**
-     * 非本地存储，用户获取文件路径
+     * 获取文件缩略图访问路径
      *
      * @param UploadFile $upload_file
      * @param            $file_thumb

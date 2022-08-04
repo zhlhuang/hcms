@@ -98,7 +98,7 @@ class LocalUploadDriver extends AbstractUploadDriver
         if (strpos($file_url, 'http') === 0) {
             return $file_url;
         } else {
-            //不是http开头，拼接路径
+            //不是http开头，拼接访问路径
             return $this->getDomain() . $file_url;
         }
     }
@@ -108,12 +108,17 @@ class LocalUploadDriver extends AbstractUploadDriver
         if (strpos($file_thumb, 'http') === 0) {
             return $file_thumb;
         } else {
-            //不是http开头，拼接路径
+            //不是http开头，拼接访问路径
             return $this->getDomain() . $file_thumb;
         }
     }
 
-    private function getDomain()
+    /**
+     * 获取域名
+     *
+     * @return string
+     */
+    private function getDomain(): string
     {
         $domain = $this->request->getUri()
                 ->getScheme() . "://" . $this->request->getUri()
