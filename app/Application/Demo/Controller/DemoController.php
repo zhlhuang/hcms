@@ -13,6 +13,7 @@ namespace App\Application\Demo\Controller;
 use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Controller\AdminAbstractController;
+use App\Application\Demo\Model\DemoUser;
 use App\Application\Demo\Service\DemoSettingService;
 use App\Application\Demo\Service\QueueService;
 use Hyperf\Di\Annotation\Inject;
@@ -21,6 +22,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Qbhy\HyperfAuth\Annotation\Auth;
 
 /**
  * @Middleware(AdminMiddleware::class)
@@ -33,6 +35,42 @@ class DemoController extends AdminAbstractController
      * @Inject()
      */
     protected DemoSettingService $demo_setting;
+
+    /**
+     * @Inject()
+     */
+    protected DemoUser $demo_user;
+
+    /**
+     * @Auth("api_auth")
+     * @Api()
+     * @PostMapping(path="auth/login")
+     */
+    function authLogin()
+    {
+        $user = $this->demo_user->getLoginInfo();
+
+        return compact('user');
+    }
+
+    /**
+     * @Api()
+     * @PostMapping(path="auth/submit")
+     */
+    function authSubmit()
+    {
+        $username = $this->request->post('username', '');
+        $password = $this->request->post('password', '');
+        $token = DemoUser::login($username, $password);
+
+        return compact('token');
+    }
+
+    /**
+     * @View()
+     * @GetMapping(path="auth")
+     */
+    function auth() { }
 
     /**
      * 示例队列消息生成

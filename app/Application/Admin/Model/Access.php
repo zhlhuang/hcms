@@ -57,7 +57,10 @@ class Access extends Model
 
     public function children(): HasMany
     {
-        return $this->hasMany(Access::class, 'parent_access_id', 'access_id');
+        //关联的数据也需要排序
+        return $this->hasMany(Access::class, 'parent_access_id', 'access_id')
+            ->orderBy('sort')
+            ->orderBy('access_id');
     }
 
     public function saved()

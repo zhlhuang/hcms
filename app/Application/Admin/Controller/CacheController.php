@@ -21,6 +21,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Redis\Redis;
+use Hyperf\Utils\Codec\Json;
 
 /**
  * @Middleware(AdminMiddleware::class)
@@ -28,6 +29,9 @@ use Hyperf\Redis\Redis;
  */
 class CacheController extends AbstractController
 {
+
+    const REDIS_HASH = 5;
+    const REDIS_LIST = 3;
     /**
      * @Inject()
      */
@@ -47,7 +51,6 @@ class CacheController extends AbstractController
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
         $cache_key = str_replace(['../', './'], '', trim(urldecode($cache_key)));
-
         $cache_config = $this->config->get('cache.default');
         $is_redis_drive = $cache_config['driver'] == 'Hyperf\Cache\Driver\RedisDriver';
         if ($is_redis_drive) {
@@ -55,6 +58,12 @@ class CacheController extends AbstractController
                 return $this->returnErrorJson('找不到该缓存记录');
             }
             $detail = $this->redis->get($cache_key);
+            if ($this->redis->type($cache_key) == self::REDIS_HASH) {
+                $detail = $this->redis->hGetAll($cache_key);
+            }
+            if ($this->redis->type($cache_key) == self::REDIS_LIST) {
+                $detail = $this->redis->lRange($cache_key, 0, -1);
+            }
         } else {
             //文件系统
             $file_path = BASE_PATH . '/runtime/caches/' . $cache_key;
@@ -63,12 +72,16 @@ class CacheController extends AbstractController
             }
             $detail = file_get_contents($file_path);
         }
-        $format_detail = unserialize($detail);
-        if ($format_detail instanceof FileStorage) {
-            $format_detail = $format_detail->getData();
-        }
 
-        $format_detail = json_encode($format_detail);
+        try {
+            $format_detail = unserialize($detail);
+            if ($format_detail instanceof FileStorage) {
+                $format_detail = $format_detail->getData();
+            }
+            $format_detail = Json::encode($format_detail);
+        } catch (\Throwable $exception) {
+            $format_detail = $detail;
+        }
 
         return compact('detail', 'format_detail');
     }
@@ -109,7 +122,6 @@ class CacheController extends AbstractController
     function info()
     {
         $cache_config = $this->config->get('cache.default');
-        $prefix = $cache_config['prefix'] ?? "";
         $is_redis_drive = $cache_config['driver'] == 'Hyperf\Cache\Driver\RedisDriver';
         try {
             $redis_info = $this->redis->info();
@@ -133,7 +145,7 @@ class CacheController extends AbstractController
         ];
         $keys = [];
         if ($is_redis_drive) {
-            $keys = $this->redis->keys($prefix . '*');
+            $keys = $this->redis->keys('*');
         } else {
             //如果是文件存储
             $dir = BASE_PATH . '/runtime/caches/';
@@ -147,6 +159,7 @@ class CacheController extends AbstractController
                 }
             }
         }
+        sort($keys);
 
         return compact('config_info', 'keys');
     }
