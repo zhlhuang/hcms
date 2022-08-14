@@ -16,17 +16,12 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use Intervention\Image\ImageManagerStatic as Image;
-use Qbhy\HyperfAuth\AuthManager;
 
 /**
  * @Controller(prefix="admin/passport")
  */
 class PassportController extends AbstractController
 {
-    /**
-     * @Inject()
-     */
-    protected AuthManager $auth;
 
     /**
      * @Inject()
@@ -44,8 +39,8 @@ class PassportController extends AbstractController
      */
     function logout()
     {
-        $this->auth->guard('session')
-            ->logout();
+        $admin_user = (new AdminUser())->getLoginUserInfo();
+        $admin_user->logout();
 
         return [];
     }
@@ -87,8 +82,7 @@ class PassportController extends AbstractController
 
         if (!empty($admin_user->admin_user_id)) {
             return $this->returnSuccessJson([
-                'status' => $this->auth->guard('session')
-                    ->login($admin_user),
+                'status' => $admin_user->login(),
             ], '登录成功');
         } else {
             return $this->returnErrorJson('账号或密码错误');

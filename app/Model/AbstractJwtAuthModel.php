@@ -20,22 +20,25 @@ use Qbhy\HyperfAuth\AuthManager;
 abstract class AbstractJwtAuthModel extends Model implements Authenticatable, CacheableInterface
 {
     /**
+     *  这里因为使用了模型缓存，所以重构 AuthAbility
+     */
+    use AuthAbilityCache, Cacheable;
+
+    protected string $guard_key = 'api_auth';
+
+    /**
      * @Inject()
      */
     protected AuthManager $auth;
 
-    use AuthAbilityCache, Cacheable;
 
     /**
-     * 登录用户，获取登录token
-     *
-     * @param Authenticatable $user
      * @return mixed
      */
-    protected function loginAuth(Authenticatable $user)
+    public function login()
     {
-        return $this->auth->guard('api_auth')
-            ->login($user);
+        return $this->auth->guard($this->guard_key)
+            ->login($this);
     }
 
     /**
@@ -45,7 +48,19 @@ abstract class AbstractJwtAuthModel extends Model implements Authenticatable, Ca
      */
     protected function getLoginUser(): Authenticatable
     {
-        return $this->auth->guard('api_auth')
+        return $this->auth->guard($this->guard_key)
             ->user();
+    }
+
+    public function checkLogin(): bool
+    {
+        return $this->auth->guard($this->guard_key)
+            ->check();
+    }
+
+    public function logout()
+    {
+        return $this->auth->guard($this->guard_key)
+            ->logout();
     }
 }

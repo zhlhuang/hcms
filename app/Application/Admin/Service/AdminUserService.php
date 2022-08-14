@@ -12,9 +12,9 @@ namespace App\Application\Admin\Service;
 
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminUser;
+use App\Exception\ErrorException;
 use Hyperf\Context\Context;
 use Hyperf\Di\Annotation\Inject;
-use Qbhy\HyperfAuth\AuthManager;
 
 class AdminUserService
 {
@@ -22,9 +22,7 @@ class AdminUserService
     /**
      * @Inject()
      */
-    protected AuthManager $auth;
-
-    protected ?AdminUser $admin_user = null;
+    protected AdminUser $admin_user;
 
     private function __construct() { }
 
@@ -40,16 +38,16 @@ class AdminUserService
 
 
     /**
-     * @return AdminUser|null
+     * @return AdminUser
+     * @throws ErrorException
      */
-    public function getAdminUser(): ?AdminUser
+    public function getAdminUser(): AdminUser
     {
-        if (!$this->admin_user) {
+        if (!$this->admin_user->admin_user_id) {
             try {
-                $this->admin_user = $this->auth->guard('session')
-                    ->user();
+                $this->admin_user = $this->admin_user->getLoginUserInfo();
             } catch (\Throwable $exception) {
-
+                throw new ErrorException('未登录', 501);
             }
         }
 

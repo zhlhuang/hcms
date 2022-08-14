@@ -61,7 +61,7 @@ class DemoController extends AdminAbstractController
     {
         $username = $this->request->post('username', '');
         $password = $this->request->post('password', '');
-        $token = DemoUser::login($username, $password);
+        $token = DemoUser::loginEvent($username, $password);
 
         return compact('token');
     }

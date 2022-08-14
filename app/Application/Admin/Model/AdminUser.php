@@ -4,15 +4,11 @@ declare (strict_types=1);
 
 namespace App\Application\Admin\Model;
 
-use App\Application\Admin\Model\Lib\AuthAbilityCache;
 use App\Application\Admin\Service\AdminUserService;
 use App\Exception\ErrorException;
+use App\Model\AbstractJwtAuthModel;
 use Hyperf\Database\Model\Relations\HasOne;
 use Hyperf\Database\Model\SoftDeletes;
-use Hyperf\DbConnection\Model\Model;
-use Hyperf\ModelCache\Cacheable;
-use Hyperf\ModelCache\CacheableInterface;
-use Qbhy\HyperfAuth\Authenticatable;
 
 /**
  * @property int            $admin_user_id
@@ -26,12 +22,11 @@ use Qbhy\HyperfAuth\Authenticatable;
  * @property-read string    $role_name
  * @property-read AdminRole $role
  */
-class AdminUser extends Model implements Authenticatable, CacheableInterface
+class AdminUser extends AbstractJwtAuthModel
 {
-    /**
-     *  这里因为使用了模型缓存，所以重构 AuthAbility
-     */
-    use AuthAbilityCache, SoftDeletes, Cacheable;
+    use SoftDeletes;
+
+    protected string $guard_key = 'session';
 
     /**
      * The table associated with the model.
@@ -58,6 +53,16 @@ class AdminUser extends Model implements Authenticatable, CacheableInterface
         'updated_at' => 'datetime'
     ];
     protected $hidden = ['deleted_at'];
+
+    public function getLoginUserInfo(): self
+    {
+        /**
+         * @var self $user
+         */
+        $user = $this->getLoginUser();
+
+        return $user;
+    }
 
     /**
      * 创建管理用户

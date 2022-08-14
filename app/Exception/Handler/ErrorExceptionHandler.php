@@ -10,6 +10,7 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\Utils\Codec\Json;
 use Hyperf\View\RenderInterface;
@@ -32,6 +33,11 @@ class ErrorExceptionHandler extends ExceptionHandler
     protected RequestInterface $request;
 
     /**
+     * @Inject()
+     */
+    protected HttpResponse $http_response;
+
+    /**
      * @inject()
      */
     protected RenderInterface $render;
@@ -43,6 +49,7 @@ class ErrorExceptionHandler extends ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
+
         $description = $throwable->getMessage();
         $app_env = $this->config->get('app_env', 'dev');
 
@@ -59,6 +66,10 @@ class ErrorExceptionHandler extends ExceptionHandler
         $this->logger->error($throwable->getTraceAsString());
 
         $this->stopPropagation();
+
+        if ($throwable->getCode() === 501) {
+            return $this->http_response->redirect('/admin/passport/login');
+        }
 
         return $this->render->render('Admin/View/error', compact('description', 'location', 'content'));
     }

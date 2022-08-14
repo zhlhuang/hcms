@@ -48,6 +48,14 @@ return [
                 'sort' => 100,
                 'is_menu' => 1,
                 'menu_icon' => '',
+            ],
+            [
+                'access_name' => '身份认证',
+                'uri' => 'demo/demo/auth',
+                'params' => '',
+                'sort' => 100,
+                'is_menu' => 1,
+                'menu_icon' => '',
             ]
         ]
     ]

@@ -1,0 +1,129 @@
+<div class="page-container" v-cloak>
+    <el-card>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>前端登录</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
+        <div>
+            <el-form :model="form" label-width="100px">
+                <el-form-item prop="username" :rules="[{ required: true, message: '请输入名称', trigger: 'blur' }]"
+                              label="登录用户名">
+                    <div>
+                        <el-input v-model="form.username" placeholder=""></el-input>
+                        <div class="form-small">
+                            <small>不存在用户默认是注册</small>
+                        </div>
+                    </div>
+                </el-form-item>
+                <el-form-item prop="password"
+                              :rules="[{ required: true, message: '请输入名称', trigger: 'blur' }]"
+                              label="登录密码">
+                    <div>
+                        <el-input v-model="form.password" type="password" placeholder=""></el-input>
+                    </div>
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click="submitEvent" type="primary">
+                        提交
+                    </el-button>
+                </el-form-item>
+                <template v-for="(login_token,index) in login_tokens" :key="index">
+                    <el-form-item v-if="login_token!=''" :label="`login token `+(index+1)">
+                        <div>
+                            <div style="word-wrap: break-word;width: 500px;">
+                                {{login_token}}
+                                <el-link @click="loginAuthEvent(login_token)" :underline="false" type="primary">登录请求
+                                </el-link>
+                            </div>
+                        </div>
+                    </el-form-item>
+                </template>
+            </el-form>
+        </div>
+    </el-card>
+</div>
+<script>
+    const App = {
+        data() {
+            return {
+                login_tokens: '',
+                form: {
+                    username: '',
+                    password: ''
+                }
+            }
+        },
+        mounted() {
+        },
+        methods: {
+            /**
+             * 获取编辑所需信息
+             */
+            loginAuthEvent(login_token) {
+                let loading = true
+                return new Promise((resolve, reject) => {
+                    let loadingInstance = loading ? this.$loading({
+                        target: '.loading'
+                    }) : false
+                    $.ajax({
+                        url: "{:url('demo/demo/auth/login')}",
+                        type: 'POST',
+                        // 直接将token放在参数上也可以
+                        // data: {
+                        //     token: login_token,
+                        // },
+                        headers: {
+                            Authorization: "Bearer " + login_token
+                        },
+                        dataType: 'json',
+                        success: (res) => {
+                            res = this.decryptRes(res)
+                            if (!res.status) {
+                                this.$message.error(res.msg)
+                            }
+                            if (res.code === 501) {
+                                setTimeout(function () {
+                                    location.href = "/admin/index/index"
+                                }, 1500)
+                            }
+                            setTimeout(function () {
+                                resolve(res);
+                            }, 300)
+                        }, error: (err) => {
+                            this.$message.error('系统繁忙，请稍后再试。');
+                            reject(err)
+                        },
+                        complete: () => {
+                            if (loadingInstance !== false) {
+                                loadingInstance.close()
+                            }
+                        }
+                    });
+                })
+            },
+            /**
+             * 提交信息
+             */
+            submitEvent() {
+                this.httpPost("{:url('demo/demo/auth/submit')}", {
+                    ...this.form,
+                }).then(res => {
+                    if (res.status) {
+                        this.$message.success(res.msg)
+                        let {token = ''} = res.data
+                        this.login_tokens = [
+                            ...[token],
+                            ...this.login_tokens
+                        ]
+                    }
+                })
+            },
+        }
+    }
+</script>
+
+<style>
+</style>
