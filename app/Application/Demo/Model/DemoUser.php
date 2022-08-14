@@ -4,10 +4,9 @@ declare (strict_types=1);
 
 namespace App\Application\Demo\Model;
 
-use App\Application\Admin\Model\Lib\AuthAbilityCache;
 use App\Model\AbstractJwtAuthModel;
+use Hyperf\Utils\Network;
 use Qbhy\HyperfAuth\Authenticatable;
-use function EasyWeChat\Kernel\Support\get_client_ip;
 
 /**
  * @property int            $demo_user_id
@@ -45,7 +44,7 @@ class DemoUser extends AbstractJwtAuthModel
     {
         $user = self::firstOrCreate(['username' => $username]);
         $user->password = md5($password);
-        $user->login_ip = get_client_ip();
+        $user->login_ip = Network::ip();
         $user->login_time = date('Y-m-d H:i:s');
         $user->save();
 
