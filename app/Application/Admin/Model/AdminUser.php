@@ -6,7 +6,7 @@ namespace App\Application\Admin\Model;
 
 use App\Application\Admin\Service\AdminUserService;
 use App\Exception\ErrorException;
-use App\Model\AbstractJwtAuthModel;
+use App\Model\AbstractAuthModel;
 use Hyperf\Database\Model\Relations\HasOne;
 use Hyperf\Database\Model\SoftDeletes;
 
@@ -22,7 +22,7 @@ use Hyperf\Database\Model\SoftDeletes;
  * @property-read string    $role_name
  * @property-read AdminRole $role
  */
-class AdminUser extends AbstractJwtAuthModel
+class AdminUser extends AbstractAuthModel
 {
     use SoftDeletes;
 

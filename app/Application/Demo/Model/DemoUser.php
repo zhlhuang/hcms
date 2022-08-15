@@ -4,7 +4,7 @@ declare (strict_types=1);
 
 namespace App\Application\Demo\Model;
 
-use App\Model\AbstractJwtAuthModel;
+use App\Model\AbstractAuthModel;
 use Hyperf\Utils\Network;
 use Qbhy\HyperfAuth\Authenticatable;
 
@@ -17,7 +17,7 @@ use Qbhy\HyperfAuth\Authenticatable;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
-class DemoUser extends AbstractJwtAuthModel
+class DemoUser extends AbstractAuthModel
 {
 
     protected $primaryKey = 'demo_user_id';
