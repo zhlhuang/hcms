@@ -1,7 +1,65 @@
+<?php if(empty($__vue_upload_mixin)): ?>
+<!--  防止重复渲染，加入一个判断条件 -->
+<?php $__vue_upload_mixin=true; ?>
+<script type="text/x-template" id="uploading-file-list">
+    <div class="uploading_file_list">
+        <el-dialog
+                :model-value="show"
+                title="文件上传"
+                width="500px"
+                @close="$emit('close')"
+        >
+            <div>
+                <div v-for="(item,index) in lists" :key="index" style="margin-bottom: 10px;">
+                    <div>
+                        {{item.file_name}}
+                    </div>
+                    <div style="margin-top: 4px">
+                        <el-progress
+                                :text-inside="true"
+                                :stroke-width="16"
+                                :percentage="item.percent"
+                                status="success"
+                        />
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button type="primary" @click="$emit('close')">关闭</el-button>
+                </div>
+            </template>
+        </el-dialog>
+    </div>
+</script>
+<script>
+    component_list.push({
+        key: 'uploading-file-list',
+        c: {
+            template: `#uploading-file-list`,
+            props: {
+                lists: [Array, Object],
+                show: Boolean,
+            },
+            data() {
+                return {
+                    file_accept: "video/*",
+                    max_upload: 99,
+                    file_type: 'video'
+                }
+            },
+            computed: {},
+            methods: {}
+        }
+    });
+</script>
+
 <script>
     window.__vue_upload_mixin = {
         data() {
             return {
+                show_uploading: false,
+                uploading_file_list: [],
                 upload_drive: '',
                 move_group_id: -1,
                 upload_url: "{:url('component/upload/file')}",
@@ -26,6 +84,7 @@
             }
         },
         mounted() {
+
         },
         computed: {
             selected_file_ids() {
@@ -235,7 +294,6 @@
                 return xhr;
             },
             handleUploadSuccess({body = '', header}, file) {
-                // console.log('handleUploadSuccess', body, header, file)
                 if (this.upload_drive === 'qcloud') {
                     //如果是腾讯云上传，获取返回结果header location
                     if (body === '') {
@@ -248,38 +306,39 @@
                             file_size: file.size,
                             file_ext: file.name.split('.').pop()
                         }
-                        this.httpPost("{:url('component/upload/save')}", request_data).then(() => {
-                            this.$loading({target: '.el-dialog__body'}).close();
-                            setTimeout(() => {
-                                this.GetList()
-                            }, 300)
+                        this.httpPost("{:url('component/upload/save')}", request_data).then(res => {
+                            if (!res.status) {
+                                this.$message.error(body.msg)
+                            }
                         })
                     }
                 } else {
                     this.$loading({target: '.el-dialog__body'}).close();
-                    if (body.status) {
-                        this.GetList()
-                    } else {
+                    if (!body.status) {
                         this.$message.error(body.msg)
                     }
                 }
             },
-            handleUploadProgress(e) {
-                let percent = parseInt(e.percent)
-                let show_text = '上传中' + percent + '%'
-                if (percent === 100) {
-                    this.$loading({
-                        target: '.el-dialog__body',
-                        text: show_text
-                    }).close();
-                } else if (percent > 0) {
-                    this.$loading({
-                        target: '.el-dialog__body',
-                        text: show_text
-                    })
+            uploadingClose() {
+                this.show_uploading = false
+                this.uploading_file_list = []
+                this.GetList()
+            },
+            handleUploadProgress(e, file) {
+                if (!this.show_uploading) {
+                    this.show_uploading = true
                 }
-            }
-            ,
+                let uploading_file = {}
+                uploading_file[file.uid] = {
+                    file_name: file.name,
+                    file_uid: file.uid,
+                    percent: parseFloat(e.percent.toFixed(2))
+                }
+                this.uploading_file_list = {
+                    ...this.uploading_file_list,
+                    ...uploading_file,
+                }
+            },
             beforeUploadEvent(file) {
                 //上传之前校验格式和大小
                 let ext = file.name.split('.').pop()
@@ -381,3 +440,5 @@
         }
     }
 </script>
+
+<?php endif; ?>

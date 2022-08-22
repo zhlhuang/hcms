@@ -144,8 +144,8 @@
                 })
             },
             deleteEvent({file_id}) {
-                this.$confirm("是否确认删除该记录？", '提示', {file_id}).then(() => {
-                    this.httpPost("{:url('admin/upload/file/delete')}", {
+                this.$confirm("是否确认删除该记录？【只删除文件记录，实际文件未删除】", '提示', {file_id}).then(() => {
+                    this.httpPost("{:url('component/upload/file/delete')}", {
                         selected_file_ids: [file_id]
                     }).then(res => {
                         if (res.status) {

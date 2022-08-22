@@ -185,6 +185,7 @@ class UploadController extends AbstractController
             ['file_type', '=', $file_type]
         ];
         $group_list = UploadFileGroup::where($where)
+            ->orderByDesc('group_id')
             ->get();
 
         $upload_file_size = $this->setting->getUploadSetting('upload_file_size', 2048);

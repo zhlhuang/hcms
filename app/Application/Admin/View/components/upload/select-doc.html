@@ -95,7 +95,8 @@
                                                      @click="selectFileEvent(index)">
                                             </el-tooltip>
                                             <div v-if="item.is_select" class="is_check" @click="selectFileEvent(index)">
-                                                <i style="line-height: 80px;font-size: 30px;" class="iconfont line-icon-dui"></i>
+                                                <i style="line-height: 80px;font-size: 30px;"
+                                                   class="iconfont line-icon-dui"></i>
                                             </div>
                                         </div>
                                     </template>
@@ -139,6 +140,9 @@
                 </div>
             </el-dialog>
         </div>
+        <!--  上传窗口组件  -->
+        <uploading-file-list v-model:show="show_uploading" :lists="uploading_file_list"
+                             @close="uploadingClose"></uploading-file-list>
     </div>
 </script>
 

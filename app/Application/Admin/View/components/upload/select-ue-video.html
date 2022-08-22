@@ -137,6 +137,9 @@
                 </div>
             </el-dialog>
         </div>
+        <!--  上传窗口组件  -->
+        <uploading-file-list v-model:show="show_uploading" :lists="uploading_file_list"
+                             @close="uploadingClose"></uploading-file-list>
     </div>
 </script>
 <script>
