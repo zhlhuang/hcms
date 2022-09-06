@@ -1,0 +1,39 @@
+version: "3.9"
+networks:
+  mynetwork:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24 # 注意子网冲突
+          gateway: 172.18.0.1
+services:
+  web:
+    build:
+      context: ./
+#      dockerfile: Dockerfile-php8
+    image: zhlhuang/hcms-dev:0.1.0  # 根据自己项目名称定义镜像名和版本
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.2
+    ports:
+      - "9501:9501"
+    links:
+      - redis
+    environment:
+      - DB_DRIVER=mysql
+      - DB_HOST=172.18.0.1
+      - DB_PORT=3306
+      - DB_DATABASE=hcms-dev
+      - DB_USERNAME=root
+      - DB_PASSWORD=
+      - DB_CHARSET=utf8mb4
+      - DB_COLLATION=utf8mb4_unicode_ci
+      - DB_PREFIX=hc_
+      - JWT_SECRET=hcms-auth
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+  redis:
+    image: redis
+    networks:
+      mynetwork:
+        ipv4_address: 172.18.0.3

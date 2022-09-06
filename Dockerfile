@@ -1,6 +1,6 @@
 # Default Dockerfile
 
-FROM hyperf/hyperf:7.4-alpine-v3.15-swoole
+FROM hyperf/hyperf:7.4-alpine-v3.16-swoole
 LABEL maintainer="Hcms Developers <364626853@qq.com>" version="0.1" license="MIT" app.name="Hcms"
 
 ##
