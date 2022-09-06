@@ -9,13 +9,13 @@ services:
   web:
     build:
       context: ./
-#      dockerfile: Dockerfile-php8
+#      dockerfile: Dockerfile-php8 # 默认是 Dockerfile 如果需要php8可以只指定
     image: zhlhuang/hcms-dev:0.1.0  # 根据自己项目名称定义镜像名和版本
     networks:
       mynetwork:
         ipv4_address: 172.18.0.2
-    ports:
-      - "9501:9501"
+#    ports:
+#      - "9501:9501" # 默认不做映射 直接通过 172.18.0.2:9501 可以访问
     links:
       - redis
     environment:
