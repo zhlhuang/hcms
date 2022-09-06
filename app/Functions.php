@@ -8,23 +8,23 @@
 
 declare(strict_types=1);
 
-use App\Application\Admin\Service\AdminSettingService;
-
 use Hyperf\Context\Context;
 use Hyperf\HttpMessage\Server\Request;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * @param $uri
- * @param $params
+ * @param      $uri
+ * @param      $params
+ * @param bool $with_domain
  * @return string
  */
-function url($uri, $params = null, $with_domain = false): string
+function url($uri, $params = null, bool $with_domain = false): string
 {
-
-
-    $site_dir = (new AdminSettingService)->getSiteSetting('site_dir', '/');
-    $url = $site_dir . $uri;
+    if (strpos($uri, "/") === 0) {
+        $url = $uri;
+    } else {
+        $url = "/" . $uri;
+    }
     if (!empty($params)) {
         //带有数组参数
         if (is_array($params)) {

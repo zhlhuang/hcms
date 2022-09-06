@@ -17,16 +17,6 @@
                     <el-input v-model="setting.site_description" placeholder="请输入关于站点的介绍" style="width: 400px" :rows="5"
                               type="textarea"></el-input>
                 </el-form-item>
-                <el-form-item label="站点访问路径">
-                    <div>
-                        <el-input v-model="setting.site_dir" placeholder="请输入站点访问路径，默认是 / 不需要修改"></el-input>
-                        <div class="form-small">
-                            <small>
-                                修改该配置会导致网站不能访问，需要谨慎配置。
-                            </small>
-                        </div>
-                    </div>
-                </el-form-item>
                 <el-form-item>
                     <el-button @click="submitEvent" type="primary">保存</el-button>
                 </el-form-item>
@@ -42,7 +32,6 @@
                 setting: {
                     site_name: "Hcms",
                     site_description: "Hcms 是基于Hyperf 框架开发的模块化管理系统，致力于定制化项目模块化开发规范。",
-                    site_dir: "/",
                 }
             }
         },

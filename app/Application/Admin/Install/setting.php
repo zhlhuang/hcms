@@ -60,12 +60,6 @@ return [
             'setting_description' => '站点描述',
             'setting_value' => 'Hcms 是基于Hyperf 框架开发的模块化管理系统，致力于定制化项目模块化开发规范。',
             'type' => 'string',
-        ],
-        [
-            'setting_key' => 'site_dir',
-            'setting_description' => '网站根目录，一般都是/',
-            'setting_value' => '/',
-            'type' => 'string',
         ]
     ]
 ];
