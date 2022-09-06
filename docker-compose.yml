@@ -11,6 +11,7 @@ services:
       context: ./
 #      dockerfile: Dockerfile-php8 # 默认是 Dockerfile 如果需要php8可以只指定
     image: zhlhuang/hcms-dev:0.1.0  # 根据自己项目名称定义镜像名和版本
+    container_name: hcms-dev-web # 容器名称根据自己项目名称定义
     networks:
       mynetwork:
         ipv4_address: 172.18.0.2
@@ -34,6 +35,7 @@ services:
       - redis
   redis:
     image: redis
+    container_name: hcms-dev-redis # 容器名称根据自己项目名称定义
     networks:
       mynetwork:
         ipv4_address: 172.18.0.3
