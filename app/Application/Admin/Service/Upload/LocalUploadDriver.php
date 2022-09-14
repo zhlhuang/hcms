@@ -27,7 +27,7 @@ class LocalUploadDriver extends AbstractUploadDriver
 
         $upload_file_dir = $this->getPathDir();
         $dir_path = BASE_PATH . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR;
-        $file_name = time() . '.' . $this->file->getExtension();
+        $file_name = md5(time() . rand(1000, 9999)) . '.' . $this->file->getExtension();
         if (!is_dir($dir_path)) {
             mkdir($dir_path, 0700, true);
         }

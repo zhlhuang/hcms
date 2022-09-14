@@ -1,0 +1,148 @@
+<script type="text/x-template" id="dialog-lists">
+    <div class="dialog-lists">
+        <el-dialog
+                :title="title"
+                width="800px"
+                :model-value="show" @close="$emit('close')">
+            <div>
+                <el-form :inline="true">
+                    <el-form-item>
+                        <el-date-picker
+                                value-format="YYYY-MM-DD"
+                                v-model="where.date"
+                                type="daterange"
+                                range-separator="至"
+                                start-placeholder="开始时间"
+                                end-placeholder="结束时间"
+                        />
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="searchEvent">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div>
+                <el-table
+                        :data="data_list"
+                        style="width: 100%">
+                    <el-table-column
+                            fixed
+                            prop="date"
+                            label="日期"
+                            min-width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="name"
+                            label="姓名"
+                            min-width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="address"
+                            min-width="380"
+                            label="地址">
+                    </el-table-column>
+                    <el-table-column
+                            fixed="right"
+                            align="center"
+                            min-width="180"
+                            label="操作">
+                        <template #default="{row}">
+                            <el-link>
+                                <el-button type="primary">编辑</el-button>
+                            </el-link>
+                            <el-link @click="deleteEvent(row)">
+                                <el-button type="danger">删除</el-button>
+                            </el-link>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="pagination-container">
+                    <el-pagination
+                            background
+                            layout="prev, pager, next"
+                            :total="total_num"
+                            :current-page="current_page"
+                            :page-size="per_page"
+                            @current-change="currentChangeEvent"
+                    >
+                    </el-pagination>
+                </div>
+            </div>
+        </el-dialog>
+    </div>
+</script>
+<script>
+    component_list.push({
+        key: 'dialog-lists',
+        c: {
+            template: '#dialog-lists',
+            props: {
+                title: {
+                    type: String,
+                    default: '记录列表'
+                },
+                show: {
+                    type: Boolean,
+                    default: true
+                }
+            },
+            data: function () {
+                return {
+                    is_init_list: true,
+                    where: {
+                        date: [],
+                    },
+                }
+            },
+            mounted: function () {
+            },
+            methods: {
+                GetList() {
+                    this.handRes({
+                        current_page: 1,
+                        last_page: 2,
+                        total: 25,
+                        data: [{
+                            date: '2016-05-02',
+                            name: '王小虎',
+                            address: '上海市普陀区金沙江路 1518 弄'
+                        }, {
+                            date: '2016-05-04',
+                            name: '王小虎',
+                            address: '上海市普陀区金沙江路 1517 弄'
+                        }, {
+                            date: '2016-05-01',
+                            name: '王小虎',
+                            address: '上海市普陀区金沙江路 1519 弄'
+                        }, {
+                            date: '2016-05-03',
+                            name: '王小虎',
+                            address: '上海市普陀区金沙江路 1516 弄'
+                        }]
+                    })
+                    // this.httpGet('{:url("admin/access/index/lists")}', {
+                    //     page: this.current_page,
+                    //     ...this.where
+                    // }).then(res => {
+                    //     let {lists = {}} = res.data
+                    //     this.handRes(lists)
+                    // })
+                },
+                deleteEvent({setting_id}) {
+                    this.$confirm("是否确认删除该记录？", '提示').then(() => {
+                        // this.httpPost("{:url('admin/setting/delete')}", {setting_id}).then(res => {
+                        //     if (res.status) {
+                        //         this.$message.success(res.msg)
+                        //         this.GetList()
+                        //     }
+                        // })
+                    }).catch(err => {
+                    })
+                },
+                searchEvent() {
+                    this.refreshList()
+                }
+            }
+        }
+    })
+</script>
