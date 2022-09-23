@@ -142,9 +142,8 @@
              * 获取编辑所需信息
              */
             getInfo() {
-                this.httpGet("{:url('admin/access/edit/info')}", {
-                    ...this.getUrlQuery()
-                }).then(res => {
+                let access_id = this.getUrlQuery('access_id', 0)
+                this.httpGet("{:url('admin/access/edit/')}" + access_id).then(res => {
                     if (res.status) {
                         let {access_list = [], access = {}} = res.data
                         this.access_list = [

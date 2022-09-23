@@ -82,9 +82,9 @@ class AccessController extends AbstractController
 
     /**
      * @Api()
-     * @GetMapping(path="edit/info")
+     * @GetMapping(path="edit/{access_id}")
      */
-    function editInfo()
+    function editInfo(int $access_id = 0)
     {
         //获取菜单
         $access_list = Access::where('parent_access_id', 0)
@@ -92,7 +92,7 @@ class AccessController extends AbstractController
             ->select()
             ->get();
 
-        $access = Access::where('access_id', $this->request->input('access_id', 0))
+        $access = Access::where('access_id', $access_id)
             ->first() ?: [];
 
         return compact('access_list', 'access');

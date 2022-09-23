@@ -294,6 +294,8 @@
                 return xhr;
             },
             handleUploadSuccess({body = '', header}, file) {
+                //将请求的结果进行解密处理
+                body = this.decryptRes(body)
                 if (this.upload_drive === 'qcloud') {
                     //如果是腾讯云上传，获取返回结果header location
                     if (body === '') {

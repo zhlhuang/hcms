@@ -65,7 +65,10 @@ window.__vueCommon = {
         decryptRes: function (res) {
             if (API_ENCODE) {
                 //开启了api加密，就需要解密处理
-                let {data = ''} = res
+                let {data = '', is_encrypt = false} = res
+                if (!is_encrypt) {
+                    return res;
+                }
                 let key = CryptoJS.enc.Utf8.parse(KEY);
                 let decrypted = CryptoJS.AES.decrypt(data, key, {
                     mode: CryptoJS.mode.ECB,

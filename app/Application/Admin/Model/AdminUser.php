@@ -52,7 +52,7 @@ class AdminUser extends AbstractAuthModel
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
-    protected $hidden = ['deleted_at'];
+    protected $hidden = ['deleted_at', 'password'];
 
     public function getLoginUserInfo(): self
     {

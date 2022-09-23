@@ -62,8 +62,7 @@ class ErrorExceptionHandler extends ExceptionHandler
             $content = '';
         }
         //记录错误日志
-        $this->logger->error($error_detail);
-        $this->logger->error($throwable->getTraceAsString());
+        $this->logger->error($error_detail, $throwable->getTrace());
 
         $this->stopPropagation();
 
