@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Application\Admin\Model\Lib\AuthAbilityCache;
-use Hyperf\Database\Model\Model;
+use Hyperf\DbConnection\Model\Model;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\ModelCache\Cacheable;
 use Hyperf\ModelCache\CacheableInterface;

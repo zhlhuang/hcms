@@ -9,13 +9,10 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Model\Lib;
 
-use Hyperf\Database\Model\Model;
 use Qbhy\HyperfAuth\Authenticatable;
 
 /**
  * Trait AuthAbility.
- *
- * @mixin Authenticatable|Model
  */
 trait AuthAbilityCache
 {
