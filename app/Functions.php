@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 use Hyperf\Context\Context;
 use Hyperf\HttpMessage\Server\Request;
+use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\Utils\ApplicationContext;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -55,3 +57,30 @@ function url($uri, $params = null, bool $with_domain = false): string
 
     return $url;
 }
+
+
+/**
+ * 获取IP地址
+ *
+ * @return string
+ */
+function getIp(): string
+{
+    try {
+        $request = ApplicationContext::getContainer()
+            ->get(RequestInterface::class);
+        $headers = $request->getHeaders();
+        if (isset($headers['x-forwarded-for'][0])) {
+            return $headers['x-forwarded-for'][0];
+        } elseif (isset($headers['x-real-ip'][0])) {
+            return $headers['x-real-ip'][0];
+        } else {
+            $server_params = $request->getServerParams();
+
+            return $server_params['remote_addr'] ?? '';
+        }
+    } catch (\Throwable $exception) {
+        return "";
+    }
+}
+

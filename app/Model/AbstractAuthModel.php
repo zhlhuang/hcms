@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Application\Admin\Model\Lib\AuthAbilityCache;
+use App\Exception\ErrorException;
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\ModelCache\Cacheable;
@@ -36,12 +37,12 @@ abstract class AbstractAuthModel extends Model implements Authenticatable, Cache
      * 模型登录操作
      *
      * @return mixed
-     * @throws \ErrorException
+     * @throws ErrorException
      */
     public function login()
     {
         if (!$this->getKey()) {
-            throw new \ErrorException('空对象，不支持登录');
+            throw new ErrorException('空对象，不支持登录');
         }
 
         return $this->auth->guard($this->guard_key)
