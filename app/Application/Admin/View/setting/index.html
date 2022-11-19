@@ -74,7 +74,7 @@
                         <el-link :href="`{:url('admin/setting/edit')}?setting_id=`+row.setting_id">
                             <el-button type="primary">编辑</el-button>
                         </el-link>
-                        <el-link @click="deleteEvent">
+                        <el-link @click="deleteEvent(row)">
                             <el-button type="danger">删除</el-button>
                         </el-link>
                     </template>
@@ -106,10 +106,11 @@
         },
         methods: {
             deleteEvent({setting_id}) {
-                this.$confirm("是否确认删除该记录？", '提示', {setting_id}).then(() => {
-                    this.httpGet("{:url('admin/setting/delete')}", {}).then(res => {
+                this.$confirm("是否确认删除该记录？", '提示').then(() => {
+                    this.httpPost("{:url('admin/setting/delete')}", {setting_id}).then(res => {
                         if (res.status) {
                             this.$message.success(res.msg)
+                            this.GetList()
                         }
                     })
                 }).catch(err => {

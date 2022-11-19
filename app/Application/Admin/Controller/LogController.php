@@ -59,10 +59,11 @@ class LogController extends AbstractController
     }
 
     /**
-     * @GetMapping(path="index/download/{file_name}")
+     * @GetMapping(path="index/detail")
      */
-    function download($file_name = '')
+    function detail()
     {
+        $file_name = $this->request->input('file');
         $file_name = str_replace('/', '', trim($file_name));
         $file_type = explode('-', $file_name)[0] ?? 'request';
         $request_log_config = $this->config->get("logger.{$file_type}", []);
@@ -72,7 +73,7 @@ class LogController extends AbstractController
             throw new ErrorException('抱歉，找不到该文件');
         }
 
-        return $this->response->download($file_dir . $file_name, $file_name);
+        return $this->response->raw(file_get_contents($file_dir . $file_name));
     }
 
     /**

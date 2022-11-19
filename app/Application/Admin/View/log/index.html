@@ -63,7 +63,7 @@
                         min-width="180"
                         label="操作">
                     <template #default="{row}">
-                        <el-button @click="downloadEvent(row)" type="primary">下载</el-button>
+                        <el-button @click="detailEvent(row)" type="primary">详情</el-button>
                         <el-button @click="deleteEvent(row)" type="danger">删除</el-button>
                     </template>
                 </el-table-column>
@@ -88,8 +88,9 @@
             this.getInfo()
         },
         methods: {
-            downloadEvent({file_name}) {
-                location.href = "{:url('admin/log/index/download')}" + "/" + file_name
+            detailEvent({file_name}) {
+                let url = "{:url('admin/log/index/detail',['file'=>''])}" + file_name
+                this.openNewFrame('日志 ' + file_name, url)
             },
             getInfo() {
                 this.httpGet("{:url('admin/log/index/setting/info')}", {log_type: this.log_type}).then(res => {

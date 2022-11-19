@@ -41,15 +41,45 @@
                 lists: [Array, Object],
                 show: Boolean,
             },
-            data() {
-                return {
-                    file_accept: "video/*",
-                    max_upload: 99,
-                    file_type: 'video'
+            computed: {
+                finished() {
+                    let is_finished = false
+                    let has_false = false
+                    for (let key in this.lists) {
+                        let item = this.lists[key]
+                        if (item.percent < 100) {
+                            has_false = true
+                        }
+                    }
+                    if (!has_false) {
+                        is_finished = true
+                    }
+                    return is_finished
                 }
             },
-            computed: {},
-            methods: {}
+            watch: {
+                show(value) {
+                    if (value) {
+                        this.finishClose()
+                    }
+                }
+            },
+            data() {
+                return {}
+            },
+            mounted() {
+            },
+            methods: {
+                finishClose() {
+                    setTimeout(() => {
+                        if (this.finished) {
+                            this.$emit('close')
+                        } else {
+                            this.finishClose()
+                        }
+                    }, 1000)
+                }
+            }
         }
     });
 </script>

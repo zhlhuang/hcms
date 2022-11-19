@@ -139,6 +139,28 @@ class SettingController extends AbstractController
     function site() { }
 
     /**
+     * @Api()
+     * @PostMapping(path="delete")
+     */
+    function settingDelete()
+    {
+        $setting_id = (int)$this->request->post('setting_id', 0);
+        $setting = Setting::find($setting_id) ?: [];
+        if (!$setting) {
+            return $this->returnErrorJson('抱歉，找不到该配置');
+        }
+        $setting_group = $setting->setting_group;
+        if ($setting->delete()) {
+            SettingService::getInstance()
+                ->flushCache($setting_group);
+
+            return [];
+        } else {
+            return $this->returnErrorJson();
+        }
+    }
+
+    /**
      * @View()
      * @GetMapping(path="edit")
      */
