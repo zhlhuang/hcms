@@ -70,6 +70,10 @@ class QueueListener implements ListenerInterface
         }
         if ($event instanceof RetryHandle) {
             $queue_list->process_count = $queue_list->process_count + 1;
+            $queue_list->error_msg = $event->getThrowable()
+                ->getMessage();
+            $queue_list->error_data = substr($event->getThrowable()
+                ->getTraceAsString(), 0, 2000);
         }
         $queue_list->save();
     }

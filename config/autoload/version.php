@@ -8,5 +8,5 @@
 
 return [
     'version' => '0.1.0', //项目版本
-    'hcms_version' => '0.10.8', //hcms版本
+    'hcms_version' => '0.10.10', //hcms版本
 ];
