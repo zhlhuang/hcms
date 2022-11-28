@@ -18,10 +18,10 @@ use Qcloud\Cos\Client;
 
 class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadDriver
 {
-    private $secret_id;
-    private $secret_key;
-    private $region;
-    private $bucket;
+    private string $secret_id;
+    private string $secret_key;
+    private string $region;
+    private string $bucket;
     private int $is_private;
 
     public function __construct(UploadedFile $file = null, string $file_type = 'image')

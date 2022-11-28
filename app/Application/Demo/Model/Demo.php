@@ -13,23 +13,23 @@ use Hyperf\DbConnection\Model\Model;
  */
 class Demo extends Model
 {
-    protected $primaryKey = 'demo_id';
+    protected string $primaryKey = 'demo_id';
     /**
      * The table associated with the model.
      *
-     * @var string
+     * @var ?string
      */
-    protected $table = 'demo';
+    protected ?string $table = 'demo';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [];
+    protected array $fillable = [];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = ['demo_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected array $casts = ['demo_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 }

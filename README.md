@@ -4,7 +4,7 @@ Hcms 是一个基于 [Hyperf](https://hyperf.io/) 框架的项目开发管理系
 
 # 依赖
 
-- PHP >= 7.4
+- PHP >= 8.0
 - Swoole PHP extension >= 4.5，and Disabled `Short Name`
 - OpenSSL PHP extension
 - JSON PHP extension

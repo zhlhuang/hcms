@@ -18,25 +18,25 @@ use Hyperf\ModelCache\Cacheable;
  */
 class Setting extends Model
 {
-    protected $primaryKey = 'setting_id';
+    protected string $primaryKey = 'setting_id';
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'setting';
+    protected ?string $table = 'setting';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['setting_key', 'setting_description', 'setting_value', 'setting_group', 'type'];
+    protected array $fillable = ['setting_key', 'setting_description', 'setting_value', 'setting_group', 'type'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = ['setting_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected  array $casts = ['setting_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
     const TYPE_STRING = 'string';
     const TYPE_NUMBER = 'number';
     const TYPE_JSON = 'json';

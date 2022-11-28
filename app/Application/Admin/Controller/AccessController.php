@@ -15,17 +15,13 @@ use Hyperf\HttpServer\Annotation\Middleware;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/access")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/access")]
 class AccessController extends AbstractController
 {
 
-    /**
-     * @Api()
-     * @PostMapping(path="delete")
-     */
+    #[Api]
+    #[PostMapping("delete")]
     function delete()
     {
         $access_id = $this->request->post('access_id', 0);
@@ -43,10 +39,8 @@ class AccessController extends AbstractController
         return $access->delete() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @PostMapping(path="edit")
-     */
+    #[Api]
+    #[PostMapping("edit")]
     function submitEdit()
     {
         $validator = $this->validationFactory->make($this->request->all(), [
@@ -81,9 +75,9 @@ class AccessController extends AbstractController
     }
 
     /**
-     * @Api()
-     * @GetMapping(path="edit/{access_id}")
      */
+    #[Api]
+    #[GetMapping("edit/{access_id}")]
     function editInfo(int $access_id = 0)
     {
         //获取菜单
@@ -98,10 +92,8 @@ class AccessController extends AbstractController
         return compact('access_list', 'access');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="edit")
-     */
+    #[View]
+    #[GetMapping("edit")]
     function edit()
     {
         $access_id = (int)$this->request->input('access_id', 0);
@@ -109,10 +101,8 @@ class AccessController extends AbstractController
         return ['title' => $access_id > 0 ? '编辑菜单与权限' : '新增菜单与权限'];
     }
 
-    /**
-     * @Api()
-     * @PostMapping(path="index/sort")
-     */
+    #[Api]
+    #[PostMapping("index/sort")]
     function sort()
     {
         $access_id = $this->request->input('access_id', 0);
@@ -126,10 +116,8 @@ class AccessController extends AbstractController
         return $access->save() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="index/lists")
-     */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $lists = AccessService::getInstance()
@@ -138,9 +126,9 @@ class AccessController extends AbstractController
         return compact('lists');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

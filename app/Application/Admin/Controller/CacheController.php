@@ -23,30 +23,24 @@ use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Redis\Redis;
 use Hyperf\Utils\Codec\Json;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/cache")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/cache")]
 class CacheController extends AbstractController
 {
 
     const REDIS_HASH = 5;
     const REDIS_LIST = 3;
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ConfigInterface $config;
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected Redis $redis;
 
 
     /**
      * 获取缓存详情
-     * @Api()
-     * @GetMapping(path="index/detail/{cache_key}")
      */
+    #[Api]
+    #[GetMapping("index/detail/{cache_key}")]
     function cacheDetail($cache_key = '')
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
@@ -88,9 +82,9 @@ class CacheController extends AbstractController
 
     /**
      * 删除缓存
-     * @Api()
-     * @PostMapping(path="index/delete/{cache_key}")
      */
+    #[Api]
+    #[PostMapping("index/delete/{cache_key}")]
     function cacheDelete($cache_key = '')
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
@@ -116,9 +110,9 @@ class CacheController extends AbstractController
 
     /**
      * 获取当前缓存信息、数据
-     * @Api()
-     * @GetMapping(path="index/info")
      */
+    #[Api]
+    #[GetMapping("index/info")]
     function info()
     {
         $cache_config = $this->config->get('cache.default');
@@ -164,9 +158,9 @@ class CacheController extends AbstractController
         return compact('config_info', 'keys');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

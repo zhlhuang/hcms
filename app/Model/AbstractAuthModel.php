@@ -27,9 +27,7 @@ abstract class AbstractAuthModel extends Model implements Authenticatable, Cache
 
     protected string $guard_key = 'api_auth';
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AuthManager $auth;
 
 

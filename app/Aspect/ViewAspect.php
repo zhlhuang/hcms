@@ -22,28 +22,20 @@ use Hyperf\View\RenderInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 
-/**
- * @Aspect()
- */
+#[Aspect]
 class ViewAspect extends AbstractAspect
 {
-    public $priority = 99;
-    public $annotations = [
+    public ?int $priority = 99;
+    public array $annotations = [
         View::class
     ];
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ContainerInterface $container;
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ConfigInterface $config;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected RenderInterface $render;
 
     public function process(ProceedingJoinPoint $proceedingJoinPoint)

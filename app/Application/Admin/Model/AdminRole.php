@@ -25,25 +25,25 @@ class AdminRole extends Model
 {
     use SoftDeletes;
 
-    protected $primaryKey = 'role_id';
+    protected string $primaryKey = 'role_id';
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'admin_role';
+    protected ?string $table = 'admin_role';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['role_id', 'parent_role_id', 'role_name', 'description'];
+    protected array $fillable = ['role_id', 'parent_role_id', 'role_name', 'description'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
+    protected  array $casts = [
         'role_id' => 'integer',
         'parent_role_id' => 'integer',
         'created_at' => 'datetime',

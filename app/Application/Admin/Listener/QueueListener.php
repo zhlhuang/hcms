@@ -24,6 +24,7 @@ use Hyperf\Event\Contract\ListenerInterface;
  */
 class QueueListener implements ListenerInterface
 {
+
     public function listen(): array
     {
         return [BeforeHandle::class, AfterHandle::class, FailedHandle::class, RetryHandle::class];
@@ -34,12 +35,12 @@ class QueueListener implements ListenerInterface
      *
      * @param object $event
      */
-    public function process(object $event)
+    public function process(object $event): void
     {
         /**
          * @var Event $event
          */
-        $message_param = new QueueMessageParam($event->message);
+        $message_param = new QueueMessageParam($event->getMessage());
         $class_name = $message_param->getClassName();
         $method = $message_param->getMethod();
         $params = $message_param->getParams();

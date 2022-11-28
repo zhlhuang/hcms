@@ -23,16 +23,12 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/user")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/user")]
 class UserController extends AbstractController
 {
-    /**
-     * @Api()
-     * @PostMapping(path="delete")
-     */
+    #[Api]
+    #[PostMapping("delete")]
     function delete()
     {
         $admin_user_id = (int)$this->request->input('admin_user_id', 0);
@@ -46,10 +42,8 @@ class UserController extends AbstractController
     }
 
 
-    /**
-     * @Api()
-     * @PostMapping(path="edit")
-     */
+    #[Api]
+    #[PostMapping("edit")]
     function submitEdit()
     {
         $validator = $this->validationFactory->make($this->request->all(), [
@@ -86,10 +80,8 @@ class UserController extends AbstractController
         return $res ? $this->returnSuccessJson(compact('admin_user')) : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="edit/info")
-     */
+    #[Api]
+    #[GetMapping("edit/info")]
     function editInfo()
     {
         //获取下级角色
@@ -112,10 +104,8 @@ class UserController extends AbstractController
         return compact('role_list', 'admin_user');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="edit")
-     */
+    #[View]
+    #[GetMapping("edit")]
     function edit()
     {
         $admin_user_id = (int)$this->request->input('admin_user_id', 0);
@@ -123,10 +113,8 @@ class UserController extends AbstractController
         return ['title' => $admin_user_id > 0 ? '编辑管理员' : '新增管理员'];
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="index/lists")
-     */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $where = [];
@@ -174,9 +162,9 @@ class UserController extends AbstractController
         return compact('lists', 'role_list');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

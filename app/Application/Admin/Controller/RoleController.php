@@ -25,17 +25,12 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/role")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/role")]
 class RoleController extends AbstractController
 {
-
-    /**
-     * @Api()
-     * @PostMapping(path="delete")
-     */
+    #[Api]
+    #[PostMapping("delete")]
     function delete()
     {
         $role_id = $this->request->post('role_id', 0);
@@ -53,11 +48,8 @@ class RoleController extends AbstractController
         return $role->delete() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
-
-    /**
-     * @Api()
-     * @PostMapping(path="edit")
-     */
+    #[Api]
+    #[PostMapping("edit")]
     function submitEdit()
     {
         $validator = $this->validationFactory->make($this->request->all(), [
@@ -86,10 +78,8 @@ class RoleController extends AbstractController
         return $role->role_id > 0 ? $this->returnSuccessJson(compact('role')) : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="edit/info")
-     */
+    #[Api]
+    #[GetMapping("edit/info")]
     function editInfo()
     {
         //获取下级角色
@@ -123,10 +113,8 @@ class RoleController extends AbstractController
         return compact('role_list', 'role', 'access_list', 'role_access_ids', 'admin_role_id');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="edit")
-     */
+    #[View]
+    #[GetMapping("edit")]
     function edit()
     {
         $role_id = (int)$this->request->input('role_id', 0);
@@ -136,9 +124,9 @@ class RoleController extends AbstractController
 
     /**
      * 角色列表
-     * @Api()
-     * @GetMapping(path="index/lists")
      */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $lists = AdminRole::where('parent_role_id', AdminUserService::getInstance()
@@ -154,9 +142,9 @@ class RoleController extends AbstractController
         return compact('lists');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

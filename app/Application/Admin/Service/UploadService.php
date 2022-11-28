@@ -31,9 +31,7 @@ class UploadService
 {
     protected AbstractUploadDriver $upload_driver;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminSettingService $setting;
 
     protected array $driver_list = [
@@ -46,7 +44,7 @@ class UploadService
         return call_user_func([$this->upload_driver, $name], ...$arguments);
     }
 
-    public function __construct(UploadedFile $file = null, string $file_type = 'image')
+    public function __construct(?UploadedFile $file = null, string $file_type = 'image')
     {
         $upload_driver = $this->setting->getUploadSetting('upload_drive', UploadFile::UPLOAD_DRIVE_LOCAL);
 

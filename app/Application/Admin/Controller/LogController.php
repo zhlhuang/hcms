@@ -22,27 +22,18 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/log")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/log")]
 class LogController extends AbstractController
 {
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminSettingService $setting;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ConfigInterface $config;
 
-
-    /**
-     * @Api()
-     * @PostMapping(path="index/delete/{file_name}")
-     */
+    #[Api]
+    #[PostMapping("index/delete/{file_name}")]
     function deleteLog($file_name = '')
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
@@ -58,9 +49,7 @@ class LogController extends AbstractController
         return unlink($file_dir . $file_name) ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
-    /**
-     * @GetMapping(path="index/detail")
-     */
+    #[GetMapping("index/detail")]
     function detail()
     {
         $file_name = $this->request->input('file');
@@ -76,10 +65,8 @@ class LogController extends AbstractController
         return $this->response->raw(file_get_contents($file_dir . $file_name));
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="index/setting/info")
-     */
+    #[Api]
+    #[GetMapping("index/setting/info")]
     function settingInfo()
     {
         $log_type = $this->request->input('log_type', 'request');
@@ -106,10 +93,8 @@ class LogController extends AbstractController
         return compact('setting', 'file_list');
     }
 
-    /**
-     * @Api()
-     * @PostMapping(path="index/setting")
-     */
+    #[Api]
+    #[PostMapping("index/setting")]
     function settingSave()
     {
         $setting = $this->request->post('setting', []);
@@ -118,9 +103,10 @@ class LogController extends AbstractController
         return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

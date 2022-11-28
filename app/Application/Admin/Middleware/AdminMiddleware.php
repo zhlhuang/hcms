@@ -27,21 +27,15 @@ use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 
 class AdminMiddleware implements MiddlewareInterface
 {
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminUser $amin_user;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected HttpResponse $response;
 
     protected LoggerInterface $logger;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminSettingService $setting;
 
     public function __construct(LoggerFactory $loggerFactory)

@@ -22,24 +22,16 @@ class ApiErrorExceptionHandler extends ExceptionHandler
 {
     protected LoggerInterface $logger;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ConfigInterface $config;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected RequestInterface $request;
 
-    /**
-     * @inject()
-     */
+    #[Inject]
     protected RenderInterface $render;
 
-    /**
-     * @inject()
-     */
+    #[Inject]
     protected ApiService $api_service;
 
     public function __construct(LoggerFactory $loggerFactory)

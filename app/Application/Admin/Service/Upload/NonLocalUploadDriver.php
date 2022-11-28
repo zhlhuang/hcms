@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace App\Application\Admin\Service\Upload;
 
-use App\Application\Admin\Model\UploadFile;
-
 interface NonLocalUploadDriver
 {
     /**

@@ -16,8 +16,8 @@ use Hyperf\HttpServer\Contract\ResponseInterface;
 
 /**
  * 指定到模块的静态文件，为了方便安装的模块可以自带静态文件
- * @Controller(prefix="assets")
  */
+#[Controller("assets")]
 class AssetsController
 {
     /**

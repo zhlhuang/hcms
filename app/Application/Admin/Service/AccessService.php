@@ -27,9 +27,7 @@ class AccessService
     protected array $all_access = [];
     protected array $menu_list = [];
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected EventDispatcherInterface $dispatcher;
 
     /**
@@ -65,9 +63,7 @@ class AccessService
         return $this->all_access;
     }
 
-    /**
-     * @Cacheable(prefix="access",ttl=86400,listener="access-update")
-     */
+    #[Cacheable(prefix: "access", ttl: 86400, listener: "access-update")]
     private function getAllAccessTree(int $parent_access_id = 0): array
     {
         return Access::where('parent_access_id', $parent_access_id)
@@ -151,8 +147,8 @@ class AccessService
 
     /**
      * 获取角色权限记录  access_id => uri
-     * @Cacheable(prefix="role_access",ttl=86400,listener="role-access-update")
      */
+    #[Cacheable(prefix: "role_access", ttl: 86400, listener: "role-access-update")]
     private function getRoleAccessList(int $role_id): array
     {
         $role_access_list = array_merge($this->not_auth, AdminRoleAccess::where('role_id', $role_id)

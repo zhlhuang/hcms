@@ -24,28 +24,20 @@ use App\Application\Admin\Middleware\AdminMiddleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Qbhy\HyperfAuth\Annotation\Auth;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="/demo/demo")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("/demo/demo")]
 class DemoController extends AdminAbstractController
 {
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected DemoSettingService $demo_setting;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected DemoUser $demo_user;
 
-    /**
-     * @Auth("api_auth")
-     * @Api()
-     * @PostMapping(path="auth/login")
-     */
+    #[Auth("api_auth")]
+    #[Api]
+    #[PostMapping("auth/login")]
     function authLogin()
     {
         $user = $this->demo_user->getLoginInfo();
@@ -53,10 +45,8 @@ class DemoController extends AdminAbstractController
         return compact('user');
     }
 
-    /**
-     * @Api()
-     * @PostMapping(path="auth/submit")
-     */
+    #[Api]
+    #[PostMapping("auth/submit")]
     function authSubmit()
     {
         $username = $this->request->post('username', '');
@@ -66,11 +56,11 @@ class DemoController extends AdminAbstractController
         return compact('token');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="auth")
-     */
-    function auth() { }
+    #[View]
+    #[GetMapping("auth")]
+    function auth()
+    {
+    }
 
     /**
      * 示例队列消息生成
@@ -94,10 +84,8 @@ class DemoController extends AdminAbstractController
         return compact('type');
     }
 
-    /**
-     * @Api()
-     * @PostMapping(path="setting")
-     */
+    #[Api]
+    #[PostMapping("setting")]
     function settingSave()
     {
         $setting = $this->request->post('setting', []);
@@ -106,10 +94,8 @@ class DemoController extends AdminAbstractController
         return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="setting/info")
-     */
+    #[Api]
+    #[GetMapping("setting/info")]
     function settingInfo()
     {
         $setting = $this->demo_setting->getDemoSetting();
@@ -117,37 +103,33 @@ class DemoController extends AdminAbstractController
         return compact('setting');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="setting")
-     */
-    function setting() { }
+    #[View]
+    #[GetMapping("setting")]
+    function setting()
+    {
+    }
 
-    /**
-     * @View()
-     * @GetMapping(path="queue")
-     */
-    function queue() { }
+    #[View]
+    #[GetMapping("queue")]
+    function queue()
+    {
+    }
 
-    /**
-     * @View()
-     * @GetMapping(path="edit")
-     */
+    #[View]
+    #[GetMapping("edit")]
     function edit()
     {
         return ['title' => '编辑示例页面'];
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="lists")
-     */
-    function lists() { }
+    #[View]
+    #[GetMapping("lists")]
+    function lists()
+    {
+    }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
+    #[View]
+    #[GetMapping("index")]
     function index()
     {
         return ['msg' => $this->request->input('msg', '')];

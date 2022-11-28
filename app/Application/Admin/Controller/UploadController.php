@@ -25,23 +25,19 @@ use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/upload")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/upload")]
 class UploadController extends AbstractController
 {
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminSettingService $setting;
 
     /**
      * 移动文件
-     * @Api()
-     * @PostMapping(path="/component/upload/file/move")
      */
+    #[Api]
+    #[PostMapping("/component/upload/file/move")]
     function fileMove()
     {
         $selected_file_ids = $this->request->post('selected_file_ids', []);
@@ -59,9 +55,9 @@ class UploadController extends AbstractController
 
     /**
      * 删除文件
-     * @Api()
-     * @PostMapping(path="/component/upload/file/delete")
      */
+    #[Api]
+    #[PostMapping("/component/upload/file/delete")]
     function fileDelete()
     {
         $selected_file_ids = $this->request->post('selected_file_ids', []);
@@ -76,9 +72,9 @@ class UploadController extends AbstractController
 
     /**
      * 文件列表
-     * @Api()
-     * @GetMapping(path="/component/upload/file/lists")
      */
+    #[Api]
+    #[GetMapping("/component/upload/file/lists")]
     function fileList()
     {
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
@@ -115,9 +111,9 @@ class UploadController extends AbstractController
 
     /**
      * 上传文件
-     * @Api()
-     * @RequestMapping(path="/component/upload/save")
      */
+    #[Api]
+    #[RequestMapping("/component/upload/save")]
     function fileSave()
     {
         $post_data = $this->request->post();
@@ -136,9 +132,9 @@ class UploadController extends AbstractController
 
     /**
      * 上传文件
-     * @Api()
-     * @RequestMapping(path="/component/upload/file")
      */
+    #[Api]
+    #[RequestMapping("/component/upload/file")]
     function fileUpload()
     {
         $file = $this->request->file('file');
@@ -157,9 +153,9 @@ class UploadController extends AbstractController
 
     /**
      * 删除分组
-     * @Api()
-     * @PostMapping(path="/component/upload/group/delete")
      */
+    #[Api]
+    #[PostMapping("/component/upload/group/delete")]
     function groupDelete()
     {
         $group_id = $this->request->post('group_id', 0);
@@ -175,9 +171,9 @@ class UploadController extends AbstractController
 
     /**
      * 分组列表
-     * @Api()
-     * @GetMapping(path="/component/upload/group/lists")
      */
+    #[Api]
+    #[GetMapping("/component/upload/group/lists")]
     function groupList()
     {
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
@@ -207,9 +203,9 @@ class UploadController extends AbstractController
 
     /**
      * 新增/编辑分组
-     * @Api()
-     * @PostMapping(path="/component/upload/group")
      */
+    #[Api]
+    #[PostMapping("/component/upload/group")]
     function groupEdit()
     {
         $validator = $this->validationFactory->make($this->request->post(), [
@@ -237,9 +233,9 @@ class UploadController extends AbstractController
 
     /**
      * 上传配置
-     * @Api()
-     * @GetMapping(path="setting/info")
      */
+    #[Api]
+    #[GetMapping("setting/info")]
     function settingInfo()
     {
         $setting = $this->setting->getUploadSetting();
@@ -250,9 +246,9 @@ class UploadController extends AbstractController
 
     /**
      * 修改上传配置
-     * @Api()
-     * @PostMapping(path="setting")
      */
+    #[Api]
+    #[PostMapping("setting")]
     function settingSubmit()
     {
         $setting = $this->request->post('setting', []);
@@ -261,10 +257,8 @@ class UploadController extends AbstractController
         return $res ? self::returnSuccessJson() : self::returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="index/lists")
-     */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $where = [];
@@ -285,15 +279,19 @@ class UploadController extends AbstractController
 
     /**
      * 上传配置页面
-     * @View()
-     * @GetMapping(path="setting")
      */
-    function setting() { }
+    #[View]
+    #[GetMapping("setting")]
+    function setting()
+    {
+    }
 
     /**
      * 文件列表页面
-     * @View()
-     * @GetMapping(path="index")
      */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

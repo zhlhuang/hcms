@@ -27,19 +27,13 @@ use Throwable;
 
 class HttpExceptionHandler extends ExceptionHandler
 {
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ConfigInterface $config;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected RequestInterface $request;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected RenderInterface $render;
 
     public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface

@@ -20,14 +20,10 @@ class RenderParam
     public bool $layout = true;
     protected array $data = [];
     protected array $common_data = [];
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminSettingService $service;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ApiService $api_service;
 
 

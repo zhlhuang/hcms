@@ -19,29 +19,21 @@ use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 
-/**
- * @Aspect()
- */
+#[Aspect]
 class ApiAspect extends AbstractAspect
 {
-    public $priority = 99;
-    public $annotations = [
+    public ?int $priority = 99;
+    public array $annotations = [
         Api::class
     ];
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ResponseInterface $response;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     protected RequestInterface $request;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     protected ApiService $api_service;
 
     /**

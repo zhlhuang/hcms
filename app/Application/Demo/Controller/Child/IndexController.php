@@ -14,10 +14,9 @@ use Hyperf\HttpServer\Annotation\GetMapping;
  */
 class IndexController extends AbstractController
 {
-
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    public function index() { }
+    #[View]
+    #[GetMapping("index")]
+    public function index()
+    {
+    }
 }

@@ -17,30 +17,26 @@ use Hyperf\HttpMessage\Upload\UploadedFile;
 
 abstract class AbstractUploadDriver
 {
-    protected ?UploadedFile $file;
     protected UploadFile $upload_file;
-    protected $config;
+    protected array $config;
 
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminSettingService $setting;
 
-    public function __construct(UploadedFile $file = null, string $file_type = 'image')
+    public function __construct(public ?UploadedFile $file = null, string $file_type = 'image')
     {
-        $this->file = $file;
-
         $this->config = $this->setting->getUploadSetting();
         $this->upload_file = new UploadFile();
         $this->upload_file->file_drive = $this->config['upload_drive'] ?? '';
         $this->upload_file->file_type = $file_type;
-        if ($this->file) {
+        if ($this->file instanceof UploadedFile) {
             $this->upload_file->file_name = $this->file->getClientFilename();
             $this->upload_file->file_ext = $this->file->getExtension();
             $this->upload_file->file_size = $this->file->getSize();
         }
     }
+
 
     /**
      * 获取文件访问路径

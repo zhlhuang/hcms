@@ -16,7 +16,7 @@ abstract class AbstractSettingService
      * @param mixed  $default
      * @return mixed
      */
-    public function getSettings(string $group = '', string $key = '', $default = '')
+    public function getSettings(string $group = '', string $key = '', mixed $default = ''): mixed
     {
         $settings = SettingService::getInstance()
             ->getSettings($group);
