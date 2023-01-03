@@ -6,14 +6,17 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
+use App\Application\Admin\Controller\RequestParam\AccessSubmitRequestParam;
 use App\Application\Admin\Model\Access;
 use App\Application\Admin\Service\AccessService;
 use App\Controller\AbstractController;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use App\Application\Admin\Middleware\AdminMiddleware;
-use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Annotation\PutMapping;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 
 /**
  * @Middleware(AdminMiddleware::class)
@@ -24,11 +27,10 @@ class AccessController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="delete")
+     * @DeleteMapping(path="delete/{access_id}")
      */
-    function delete()
+    function delete(int $access_id)
     {
-        $access_id = $this->request->post('access_id', 0);
         $access = Access::find($access_id);
         if (!$access) {
             return $this->returnErrorJson('找不到该记录');
@@ -45,36 +47,26 @@ class AccessController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="edit")
+     * @RequestMapping(path="edit",methods={"POST","PUT"})
      */
     function submitEdit()
     {
-        $validator = $this->validationFactory->make($this->request->all(), [
-            'access_name' => 'required',
-            'uri' => 'required',
-        ], [
-            'access_name.required' => '请输入菜单/权限名称',
-            'uri.required' => '请输入uri',
-        ]);
+        $request_param = new AccessSubmitRequestParam();
+        $request_param->validatedThrowMessage();
 
-        if ($validator->fails()) {
-            return $this->returnErrorJson($validator->errors()
-                ->first());
-        }
-
-        $access_id = (int)$this->request->post('access_id', 0);
-        $parent_access_id = (int)$this->request->post('parent_access_id', 0);
+        $access_id = $request_param->getAccessId();
+        $parent_access_id = $request_param->getParentAccessId();
         if ($parent_access_id > 0 && $access_id === $parent_access_id) {
             return $this->returnErrorJson('上级菜单不能是自己或自己的下级');
         }
         $access = Access::updateOrCreate(['access_id' => $access_id], [
             'parent_access_id' => $parent_access_id,
-            'access_name' => $this->request->post('access_name', ''),
-            'uri' => $this->request->post('uri', ''),
-            'params' => $this->request->post('params', ''),
-            'sort' => (int)$this->request->post('sort', 100),
-            'is_menu' => (int)$this->request->post('is_menu', Access::IS_MENU_YES),
-            'menu_icon' => $this->request->post('menu_icon', ''),
+            'access_name' => $request_param->getAccessName(),
+            'uri' => $request_param->getUri(),
+            'params' => $request_param->getParams(),
+            'sort' => $request_param->getSort(),
+            'is_menu' => $request_param->getIsMenu(),
+            'menu_icon' => $request_param->getMenuIcon(),
         ]);
 
         return $access ? $this->returnSuccessJson(compact('access')) : $this->returnErrorJson();
@@ -111,11 +103,10 @@ class AccessController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="index/sort")
+     * @PutMapping(path="index/sort/{access_id}")
      */
-    function sort()
+    function sort(int $access_id)
     {
-        $access_id = $this->request->input('access_id', 0);
         $access = Access::where('access_id', $access_id)
             ->first();
         if (!$access) {

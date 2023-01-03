@@ -167,7 +167,7 @@
              * 提交信息
              */
             submitEvent() {
-                this.httpPost("{:url('admin/access/edit')}", {
+                this.httpPut("{:url('admin/access/edit')}", {
                     ...this.form,
                     parent_access_id: this.parent_access_id
                 }).then(res => {

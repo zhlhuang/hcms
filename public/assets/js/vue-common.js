@@ -82,6 +82,32 @@ window.__vueCommon = {
             }
             return res
         },
+        handleRes(loadingInstance, resolve, reject) {
+            return {
+                success: (res) => {
+                    res = this.decryptRes(res)
+                    if (!res.status) {
+                        this.$message.error(res.msg)
+                    }
+                    if (res.code === 501) {
+                        setTimeout(function () {
+                            location.href = "/admin/index/index"
+                        }, 1500)
+                    }
+                    setTimeout(() => {
+                        resolve(res);
+                    }, 300)
+                }, error: (err) => {
+                    this.$message.error('系统繁忙，请稍后再试。');
+                    reject(err)
+                },
+                complete: () => {
+                    if (loadingInstance !== false) {
+                        loadingInstance.close()
+                    }
+                }
+            }
+        },
         httpGet: function (url, data, loading = true, loadingTarget = '.loading') {
             return new Promise((resolve, reject) => {
                 let loadingInstance = loading ? this.$loading({
@@ -92,29 +118,8 @@ window.__vueCommon = {
                     type: 'GET',
                     data: data,
                     dataType: 'json',
-                    success: (res) => {
-                        res = this.decryptRes(res)
-                        if (!res.status) {
-                            this.$message.error(res.msg)
-                        }
-                        if (res.code === 501) {
-                            setTimeout(function () {
-                                location.href = "/admin/index/index"
-                            }, 1500)
-                        }
-                        setTimeout(() => {
-                            resolve(res);
-                        }, 300)
-                    }, error: (err) => {
-                        this.$message.error('系统繁忙，请稍后再试。');
-                        reject(err)
-                    },
-                    complete: () => {
-                        if (loadingInstance !== false) {
-                            loadingInstance.close()
-                        }
-                    }
-                });
+                    ...this.handleRes(loadingInstance, resolve, reject)
+                })
             })
         },
         httpPost: function (url, data, loading = true, loadingTarget = '.loading') {
@@ -127,28 +132,35 @@ window.__vueCommon = {
                     type: 'POST',
                     data: data,
                     dataType: 'json',
-                    success: (res) => {
-                        res = this.decryptRes(res)
-                        if (!res.status) {
-                            this.$message.error(res.msg)
-                        }
-                        if (res.code === 501) {
-                            setTimeout(function () {
-                                location.href = "/admin/index/index"
-                            }, 1500)
-                        }
-                        setTimeout(function () {
-                            resolve(res);
-                        }, 300)
-                    }, error: (err) => {
-                        this.$message.error('系统繁忙，请稍后再试。');
-                        reject(err)
-                    },
-                    complete: () => {
-                        if (loadingInstance !== false) {
-                            loadingInstance.close()
-                        }
-                    }
+                    ...this.handleRes(loadingInstance, resolve, reject)
+                });
+            })
+        },
+        httpPut: function (url, data, loading = true, loadingTarget = '.loading') {
+            return new Promise((resolve, reject) => {
+                let loadingInstance = loading ? this.$loading({
+                    target: loadingTarget
+                }) : false
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    data: data,
+                    dataType: 'json',
+                    ...this.handleRes(loadingInstance, resolve, reject)
+                });
+            })
+        },
+        httpDelete: function (url, data, loading = true, loadingTarget = '.loading') {
+            return new Promise((resolve, reject) => {
+                let loadingInstance = loading ? this.$loading({
+                    target: loadingTarget
+                }) : false
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: data,
+                    dataType: 'json',
+                    ...this.handleRes(loadingInstance, resolve, reject)
                 });
             })
         }

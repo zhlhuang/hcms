@@ -27,7 +27,7 @@ abstract class AbstractUploadDriver
      */
     protected AdminSettingService $setting;
 
-    public function __construct(UploadedFile $file = null, string $file_type = 'image')
+    public function __construct(?UploadedFile $file = null, string $file_type = 'image')
     {
         $this->file = $file;
 
