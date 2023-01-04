@@ -40,6 +40,7 @@
     "hyperf/devtool": "~3.0.0",
     "hyperf/testing": "~3.0.0",
     "hyperf/watcher": "~3.0",
+    "hyperf/code-generator": "~0.3.3",
     "mockery/mockery": "^1.0",
     "phpstan/phpstan": "^1.0",
     "swoole/ide-helper": "^5.0"
