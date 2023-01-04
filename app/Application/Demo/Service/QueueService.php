@@ -13,32 +13,26 @@ use Hyperf\AsyncQueue\Annotation\AsyncQueueMessage;
 
 class QueueService
 {
-    /**
-     * @AsyncQueueMessage(delay=5)
-     */
+    #[AsyncQueueMessage(delay: 5)]
     function setDelayMessage($data)
     {
-        var_dump("开始执行 DelayMessage ".$data['id']);
+        var_dump("开始执行 DelayMessage " . $data['id']);
         sleep(2);
         var_dump("执行 DelayMessage 完成");
     }
 
-    /**
-     * @AsyncQueueMessage()
-     */
+    #[AsyncQueueMessage]
     function setLongMessage($data)
     {
-        var_dump("开始执行 LongMessage ".$data['id']);
+        var_dump("开始执行 LongMessage " . $data['id']);
         sleep(5);
         var_dump("执行 LongMessage 完成");
     }
 
-    /**
-     * @AsyncQueueMessage(maxAttempts=3)
-     */
+    #[AsyncQueueMessage(maxAttempts: 3)]
     function setErrorMessage($data)
     {
-        var_dump("开始执行 ErrorMessage ".$data['id']);
+        var_dump("开始执行 ErrorMessage " . $data['id']);
         sleep(2);
         throw new \Exception('throw ErrorMessage');
     }
