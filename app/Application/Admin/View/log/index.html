@@ -89,11 +89,11 @@
         },
         methods: {
             detailEvent({file_name}) {
-                let url = "{:url('admin/log/index/detail',['file'=>''])}" + file_name
+                let url = "{:url('admin/log/detail',['file'=>''])}" + file_name
                 this.openNewFrame('日志 ' + file_name, url)
             },
             getInfo() {
-                this.httpGet("{:url('admin/log/index/setting/info')}", {log_type: this.log_type}).then(res => {
+                this.httpGet("{:url('admin/log/setting')}", {log_type: this.log_type}).then(res => {
                     if (res.status) {
                         let {setting = {}, file_list = []} = res.data
                         this.file_list = file_list
@@ -111,7 +111,7 @@
             },
             deleteEvent({file_name}) {
                 this.$confirm("是否确认删除该记录？", '提示').then(() => {
-                    this.httpPost("{:url('admin/log/index/delete')}/" + file_name, {}).then(res => {
+                    this.httpDelete("{:url('admin/log/delete')}/" + file_name, {}).then(res => {
                         if (res.status) {
                             this.$message.success(res.msg)
                             this.getInfo()
@@ -121,7 +121,7 @@
                 })
             },
             submitEvent() {
-                this.httpPost("{:url('admin/log/index/setting')}", {setting: this.setting}).then(res => {
+                this.httpPut("{:url('admin/log/setting')}", {setting: this.setting}).then(res => {
                     if (res.status) {
                         this.$message.success(res.msg)
                     }

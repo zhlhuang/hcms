@@ -105,15 +105,15 @@
             this.GetList()
         },
         methods: {
-            sortEvent(access) {
+            sortEvent({access_id, sort}) {
                 this.$prompt('请输入排序', '提示', {
-                    inputValue: access.sort,
+                    inputValue: sort,
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                 }).then(({value}) => {
-                    this.httpPost("{:url('admin/access/index/sort')}", {
-                        access_id: access.access_id,
-                        sort: value
+                    sort = value
+                    this.httpPut("{:url('admin/access/index/sort')}/" + access_id, {
+                        sort
                     }).then(res => {
                         if (res.status) {
                             this.$message.success(res.msg)
@@ -133,7 +133,7 @@
             },
             deleteEvent(access_id) {
                 this.$confirm('是确认删除？', '提示').then(() => {
-                    this.httpPost("{:url('admin/access/delete')}", {access_id}).then(res => {
+                    this.httpDelete("{:url('admin/access/delete')}/" + access_id).then(res => {
                         if (res.status) {
                             this.$message.success(res.msg)
                             this.GetList()

@@ -64,9 +64,9 @@ class DemoController extends AdminAbstractController
 
     /**
      * 示例队列消息生成
-     * @Api()
-     * @PostMapping(path="queue")
      */
+    #[Api]
+    #[PostMapping("queue")]
     function setQueueMessage()
     {
         $type = $this->request->input('type', 'delay');

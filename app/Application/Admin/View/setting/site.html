@@ -48,7 +48,7 @@
                 })
             },
             submitEvent() {
-                this.httpPost("{:url('admin/setting/site')}", {setting: this.setting}).then(res => {
+                this.httpPut("{:url('admin/setting/site')}", {setting: this.setting}).then(res => {
                     if (res.status) {
                         this.$message.success(res.msg)
                     }

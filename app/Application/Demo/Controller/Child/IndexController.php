@@ -9,9 +9,7 @@ use App\Controller\AbstractController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 
-/**
- * @Controller(prefix="/demo/child/index")
- */
+#[Controller("/demo/child/index")]
 class IndexController extends AbstractController
 {
     #[View]

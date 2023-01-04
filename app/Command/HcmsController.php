@@ -8,9 +8,6 @@ use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Command\Annotation\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
-/**
- * @Command
- */
 #[Command]
 class HcmsController extends HyperfCommand
 {

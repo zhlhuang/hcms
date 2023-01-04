@@ -133,8 +133,8 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
 
     /**
      * 设置存储桶的跨域请求，设置缓存防止每次都调用
-     * @Cacheable(prefix="qcloud",ttl=864000,listener="qcloud-bucket-cors")
      */
+    #[Cacheable(prefix: "qcloud", ttl: 864000, listener: "qcloud-bucket-cors")]
     private function putBucketCors($cache_key = ''): bool
     {
         $cos = $this->getCosClient();

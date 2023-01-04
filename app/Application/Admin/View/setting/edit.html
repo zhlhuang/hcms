@@ -58,9 +58,8 @@
              * 获取编辑所需信息
              */
             getInfo() {
-                this.httpGet("{:url('admin/setting/edit/info')}", {
-                    ...this.getUrlQuery()
-                }).then(res => {
+                let setting_id = this.getUrlQuery('setting_id', 0)
+                this.httpGet("{:url('admin/setting/edit')}/" + setting_id, {}).then(res => {
                     if (res.status) {
                         let {setting = {}} = res.data
                         if (setting.setting_id) {
@@ -75,7 +74,7 @@
              * 提交信息
              */
             submitEvent() {
-                this.httpPost("{:url('admin/setting/edit')}", {
+                this.httpPut("{:url('admin/setting/edit')}", {
                     ...this.form,
                 }).then(res => {
                     if (res.status) {

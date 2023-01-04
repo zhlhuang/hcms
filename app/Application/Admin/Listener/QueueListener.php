@@ -19,9 +19,7 @@ use Hyperf\AsyncQueue\Event\RetryHandle;
 use Hyperf\Event\Annotation\Listener;
 use Hyperf\Event\Contract\ListenerInterface;
 
-/**
- * @Listener()
- */
+#[Listener]
 class QueueListener implements ListenerInterface
 {
 

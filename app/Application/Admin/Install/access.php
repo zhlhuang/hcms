@@ -31,60 +31,54 @@ return [
                 'uri' => 'admin/access/index',
                 'sort' => 100,
                 'is_menu' => 1,
-                'children' => [
-                    [
-                        'access_name' => '新增/编辑菜单/权限',
-                        'uri' => 'admin/access/edit',
-                        'sort' => 100,
-                        'is_menu' => 0,
-                    ],
-                    [
-                        'access_name' => '删除菜单/权限',
-                        'uri' => 'admin/access/delete',
-                        'sort' => 100,
-                        'is_menu' => 0,
-                    ],
-                ]
+            ],
+            [
+                'access_name' => '新增/编辑菜单/权限',
+                'uri' => 'admin/access/edit',
+                'sort' => 100,
+                'is_menu' => 0,
+            ],
+            [
+                'access_name' => '删除菜单/权限',
+                'uri' => 'admin/access/delete',
+                'sort' => 100,
+                'is_menu' => 0,
             ],
             [
                 'access_name' => '角色管理',
                 'uri' => 'admin/role/index',
                 'sort' => 100,
-                'is_menu' => 1,
-                'children' => [
-                    [
-                        'access_name' => '新增/编辑角色',
-                        'uri' => 'admin/role/edit',
-                        'sort' => 100,
-                        'is_menu' => 0,
-                    ],
-                    [
-                        'access_name' => '删除角色',
-                        'uri' => 'admin/role/delete',
-                        'sort' => 100,
-                        'is_menu' => 0,
-                    ],
-                ]
+                'is_menu' => 1
+            ],
+            [
+                'access_name' => '新增/编辑角色',
+                'uri' => 'admin/role/edit',
+                'sort' => 100,
+                'is_menu' => 0,
+            ],
+            [
+                'access_name' => '删除角色',
+                'uri' => 'admin/role/delete',
+                'sort' => 100,
+                'is_menu' => 0,
             ],
             [
                 'access_name' => '管理员',
                 'uri' => 'admin/user/index',
                 'sort' => 100,
-                'is_menu' => 1,
-                'children' => [
-                    [
-                        'access_name' => '新增/编辑管理员',
-                        'uri' => 'admin/user/edit',
-                        'sort' => 100,
-                        'is_menu' => 0,
-                    ],
-                    [
-                        'access_name' => '删除管理员',
-                        'uri' => 'admin/user/delete',
-                        'sort' => 100,
-                        'is_menu' => 0,
-                    ],
-                ]
+                'is_menu' => 1
+            ],
+            [
+                'access_name' => '新增/编辑管理员',
+                'uri' => 'admin/user/edit',
+                'sort' => 100,
+                'is_menu' => 0,
+            ],
+            [
+                'access_name' => '删除管理员',
+                'uri' => 'admin/user/delete',
+                'sort' => 100,
+                'is_menu' => 0,
             ],
             [
                 'access_name' => '配置管理',
@@ -171,13 +165,13 @@ return [
             ],
             [
                 'access_name' => '日志',
-                'uri' => 'admin/log/index',
+                'uri' => 'admin/log',
                 'sort' => 100,
                 'is_menu' => 1,
             ],
             [
                 'access_name' => '缓存',
-                'uri' => 'admin/cache/index',
+                'uri' => 'admin/cache',
                 'sort' => 100,
                 'is_menu' => 1,
             ]
