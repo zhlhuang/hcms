@@ -99,9 +99,8 @@
              * 获取编辑所需信息
              */
             getInfo() {
-                this.httpGet("{:url('admin/user/edit/info')}", {
-                    ...this.getUrlQuery()
-                }).then(res => {
+                let admin_user_id = this.getUrlQuery('admin_user_id', 0)
+                this.httpGet("{:url('admin/user/edit')}/" + admin_user_id, {}).then(res => {
                     if (res.status) {
                         let {role_list = [], admin_user = {}} = res.data
                         this.role_list = role_list

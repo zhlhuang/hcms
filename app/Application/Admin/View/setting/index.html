@@ -107,7 +107,7 @@
         methods: {
             deleteEvent({setting_id}) {
                 this.$confirm("是否确认删除该记录？", '提示').then(() => {
-                    this.httpPost("{:url('admin/setting/delete')}", {setting_id}).then(res => {
+                    this.httpDelete("{:url('admin/setting/delete')}/" + setting_id, {}).then(res => {
                         if (res.status) {
                             this.$message.success(res.msg)
                             this.GetList()

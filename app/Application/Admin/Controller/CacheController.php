@@ -17,6 +17,7 @@ use Hyperf\Cache\Collector\FileStorage;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
@@ -45,7 +46,7 @@ class CacheController extends AbstractController
     /**
      * 获取缓存详情
      * @Api()
-     * @GetMapping(path="index/detail/{cache_key}")
+     * @GetMapping(path="detail/{cache_key}")
      */
     function cacheDetail($cache_key = '')
     {
@@ -89,7 +90,7 @@ class CacheController extends AbstractController
     /**
      * 删除缓存
      * @Api()
-     * @PostMapping(path="index/delete/{cache_key}")
+     * @DeleteMapping(path="{cache_key}")
      */
     function cacheDelete($cache_key = '')
     {
@@ -117,7 +118,7 @@ class CacheController extends AbstractController
     /**
      * 获取当前缓存信息、数据
      * @Api()
-     * @GetMapping(path="index/info")
+     * @GetMapping(path="info")
      */
     function info()
     {
@@ -166,7 +167,7 @@ class CacheController extends AbstractController
 
     /**
      * @View()
-     * @GetMapping(path="index")
+     * @GetMapping(path="")
      */
     function index() { }
 }

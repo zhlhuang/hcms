@@ -12,6 +12,7 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
+use App\Application\Admin\Controller\RequestParam\RoleSubmitRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Access;
 use App\Application\Admin\Model\AdminRole;
@@ -21,9 +22,10 @@ use App\Application\Admin\Service\AdminUserService;
 use App\Controller\AbstractController;
 use Hyperf\Database\Model\Relations\Relation;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
-use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 
 /**
  * @Middleware(AdminMiddleware::class)
@@ -34,18 +36,17 @@ class RoleController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="delete")
+     * @DeleteMapping(path="delete/{role_id}")
      */
-    function delete()
+    function delete(int $role_id)
     {
-        $role_id = $this->request->post('role_id', 0);
         $role = AdminRole::find($role_id);
         if (!$role) {
             return $this->returnErrorJson('找不到该记录');
         }
 
         //如果有下级菜单，不能删除
-        if (AdminRole::where('parent_role_id', $role->role_id)
+        if (AdminRole::where('role_id', $role->role_id)
                 ->count() > 0) {
             return $this->returnErrorJson('该角色有下级角色，不能删除');
         }
@@ -56,31 +57,23 @@ class RoleController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="edit")
+     * @RequestMapping(path="edit",methods={"POST","PUT"})
      */
     function submitEdit()
     {
-        $validator = $this->validationFactory->make($this->request->all(), [
-            'role_name' => 'required',
-        ], [
-            'role_name.required' => '请输入角色名称',
-        ]);
+        $request_param = new RoleSubmitRequestParam();
+        $request_param->validatedThrowMessage();
 
-        if ($validator->fails()) {
-            return $this->returnErrorJson($validator->errors()
-                ->first());
-        }
-
-        $role_id = (int)$this->request->post('role_id', 0);
-        $access_list = $this->request->post('access_list', []);
-        $parent_role_id = (int)$this->request->post('parent_role_id', 0);
+        $role_id = $request_param->getRoleId();
+        $access_list = $request_param->getAccessList();
+        $parent_role_id = $request_param->getParentRoleId();
         if ($parent_role_id > 0 && $role_id === $parent_role_id) {
             return $this->returnErrorJson('父级角色不能是自己或自己的下级');
         }
         $role = AdminRole::saveRole($role_id, [
             'parent_role_id' => $parent_role_id,
-            'role_name' => $this->request->post('role_name', ''),
-            'description' => $this->request->post('description', ''),
+            'role_name' => $request_param->getRoleName(),
+            'description' => $request_param->getDescription(),
         ], $access_list);
 
         return $role->role_id > 0 ? $this->returnSuccessJson(compact('role')) : $this->returnErrorJson();
@@ -88,9 +81,9 @@ class RoleController extends AbstractController
 
     /**
      * @Api()
-     * @GetMapping(path="edit/info")
+     * @GetMapping(path="edit/{role_id}")
      */
-    function editInfo()
+    function editInfo(int $role_id = 0)
     {
         //获取下级角色
         $admin_role_id = AdminUserService::getInstance()
@@ -99,10 +92,9 @@ class RoleController extends AbstractController
             ->with(['children'])
             ->select()
             ->get();
-        $role_id = $this->request->input('role_id', 0);
         $parent_role_id = (int)$this->request->input('parent_role_id', 0);
         //获取该管理员信息
-        $role = AdminRole::where('role_id', $this->request->input('role_id', 0))
+        $role = AdminRole::where('role_id', $role_id)
             ->first() ?: [];
         //获取所有父类权限
         $parent_access_ids = Access::distinct()

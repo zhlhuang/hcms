@@ -120,8 +120,8 @@
              * 获取编辑所需信息
              */
             getInfo(is_change_parent = false) {
-                this.httpGet("{:url('admin/role/edit/info')}", {
-                    ...this.getUrlQuery(),
+                let role_id = this.getUrlQuery('role_id', 0)
+                this.httpGet("{:url('admin/role/edit')}/" + role_id, {
                     parent_role_id: this.parent_role_id,
                 }).then(res => {
                     if (res.status) {

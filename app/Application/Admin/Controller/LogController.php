@@ -18,9 +18,11 @@ use App\Exception\ErrorException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Annotation\PutMapping;
 
 /**
  * @Middleware(AdminMiddleware::class)
@@ -41,7 +43,7 @@ class LogController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="index/delete/{file_name}")
+     * @DeleteMapping(path="delete/{file_name}")
      */
     function deleteLog($file_name = '')
     {
@@ -59,7 +61,7 @@ class LogController extends AbstractController
     }
 
     /**
-     * @GetMapping(path="index/detail")
+     * @GetMapping(path="detail")
      */
     function detail()
     {
@@ -78,7 +80,7 @@ class LogController extends AbstractController
 
     /**
      * @Api()
-     * @GetMapping(path="index/setting/info")
+     * @GetMapping(path="setting")
      */
     function settingInfo()
     {
@@ -108,7 +110,7 @@ class LogController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="index/setting")
+     * @PutMapping(path="setting")
      */
     function settingSave()
     {
@@ -120,7 +122,7 @@ class LogController extends AbstractController
 
     /**
      * @View()
-     * @GetMapping(path="index")
+     * @GetMapping(path="")
      */
     function index() { }
 }

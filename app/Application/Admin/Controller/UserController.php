@@ -11,6 +11,7 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
+use App\Application\Admin\Controller\RequestParam\UserSubmitRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminUser;
@@ -19,9 +20,10 @@ use App\Controller\AbstractController;
 use Hyperf\Database\Model\Relations\Relation;
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
-use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Annotation\RequestMapping;
 
 /**
  * @Middleware(AdminMiddleware::class)
@@ -31,13 +33,11 @@ class UserController extends AbstractController
 {
     /**
      * @Api()
-     * @PostMapping(path="delete")
+     * @DeleteMapping(path="delete/{admin_user_id}")
      */
-    function delete()
+    function delete(int $admin_user_id)
     {
-        $admin_user_id = (int)$this->request->input('admin_user_id', 0);
-        $admin_user = AdminUser::where('admin_user_id', $admin_user_id)
-            ->first();
+        $admin_user = AdminUser::find($admin_user_id);
         if (!$admin_user) {
             return $this->returnErrorJson('找不到该记录');
         }
@@ -48,39 +48,28 @@ class UserController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="edit")
+     * @RequestMapping(path="edit",methods={"POST","PUT"})
      */
     function submitEdit()
     {
-        $validator = $this->validationFactory->make($this->request->all(), [
-            'role_id' => 'required',
-            'real_name' => 'required',
-            'username' => 'required',
-        ], [
-            'role_id.required' => '请选择所属的角色',
-            'real_name.required' => '请输入管理员姓名',
-            'username.required' => '请输入登录用户名',
-        ]);
-        if ($validator->fails()) {
-            return $this->returnErrorJson($validator->errors()
-                ->first());
-        }
+        $request_param = new UserSubmitRequestParam();
+        $request_param->validatedThrowMessage();
         /**
          * @var AdminUser
          */
         $admin_user = AdminUser::firstOrNew([
-            'admin_user_id' => $this->request->post('admin_user_id', 0)
+            'admin_user_id' => $request_param->getAdminUserId()
         ]);
-        $password = $this->request->post('password', '');
-        $username = $this->request->post('username', '');
-        $real_name = $this->request->post('real_name', '');
+        $password = $request_param->getPassword();
+        $username = $request_param->getUsername();
+        $real_name = $request_param->getRealName();
         if ($admin_user->admin_user_id === 0 && $password === '') {
             return $this->returnErrorJson('请输入密码');
         }
         if ($password !== '' || !$admin_user->admin_user_id) {
             $admin_user->password = AdminUser::makePassword($username, $password);
         }
-        $role_id = (int)$this->request->post('role_id', 0);
+        $role_id = $request_param->getRoleId();
         $res = $admin_user->createAdminUser($username, $password, $real_name, $role_id);
 
         return $res ? $this->returnSuccessJson(compact('admin_user')) : $this->returnErrorJson();
@@ -88,9 +77,9 @@ class UserController extends AbstractController
 
     /**
      * @Api()
-     * @GetMapping(path="edit/info")
+     * @GetMapping(path="edit/{admin_user_id}")
      */
-    function editInfo()
+    function editInfo(int $admin_user_id)
     {
         //获取下级角色
         $admin_role_id = AdminUserService::getInstance()
@@ -103,8 +92,6 @@ class UserController extends AbstractController
             ])
             ->select()
             ->get();
-        $admin_user_id = (int)$this->request->input('admin_user_id', 0);
-
         $admin_user = AdminUser::where('admin_user_id', $admin_user_id)
             ->select(['admin_user_id', 'role_id', 'real_name', 'username'])
             ->first() ?: [];

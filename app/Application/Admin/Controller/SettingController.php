@@ -11,6 +11,7 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
+use App\Application\Admin\Controller\RequestParam\SettingSubmitRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Setting;
 use App\Application\Admin\Service\AdminSettingService;
@@ -18,9 +19,11 @@ use App\Controller\AbstractController;
 use App\Service\SettingService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Annotation\PutMapping;
 
 /**
  * @Middleware(AdminMiddleware::class)
@@ -47,7 +50,7 @@ class SettingController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="site")
+     * @PutMapping(path="site")
      */
     function siteSave()
     {
@@ -85,32 +88,20 @@ class SettingController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="edit")
+     * @PutMapping(path="edit")
      */
     function editSubmit()
     {
-        $validator = $this->validationFactory->make($this->request->all(), [
-            'setting_key' => 'required',
-            'setting_value' => 'required',
-            'type' => 'required',
-        ], [
-            'setting_key.required' => '请输入配置的key',
-            'setting_value.required' => '请输入配置的值',
-            'type.required' => '请选择配置类型',
-        ]);
+        $request_param = new SettingSubmitRequestParam();
+        $request_param->validatedThrowMessage();
 
-        if ($validator->fails()) {
-            return $this->returnErrorJson($validator->errors()
-                ->first());
-        }
-
-        $setting_id = (int)$this->request->post('setting_id', 0);
+        $setting_id = $request_param->getSettingId();
         $setting = Setting::updateOrCreate(['setting_id' => $setting_id], [
-            'setting_key' => $this->request->post('setting_key', ''),
-            'setting_value' => $this->request->post('setting_value', ''),
-            'setting_description' => $this->request->post('setting_description', ''),
-            'setting_group' => $this->request->post('setting_group', ''),
-            'type' => $this->request->post('type', Setting::TYPE_STRING),
+            'setting_key' => $request_param->getSettingKey(),
+            'setting_value' => $request_param->getSettingValue(),
+            'setting_description' => $request_param->getSettingDescription(),
+            'setting_group' => $request_param->getSettingGroup(),
+            'type' => $request_param->getType(),
         ]);
 
         //清空指定分组的缓存
@@ -122,11 +113,10 @@ class SettingController extends AbstractController
 
     /**
      * @Api()
-     * @GetMapping(path="edit/info")
+     * @GetMapping(path="edit/{setting_id}")
      */
-    function editInfo()
+    function editInfo(int $setting_id = 0)
     {
-        $setting_id = (int)$this->request->input('setting_id', 0);
         $setting = Setting::find($setting_id) ?: [];
 
         return compact('setting');
@@ -140,11 +130,10 @@ class SettingController extends AbstractController
 
     /**
      * @Api()
-     * @PostMapping(path="delete")
+     * @DeleteMapping(path="delete/{setting_id}")
      */
-    function settingDelete()
+    function settingDelete(int $setting_id = 0)
     {
-        $setting_id = (int)$this->request->post('setting_id', 0);
         $setting = Setting::find($setting_id) ?: [];
         if (!$setting) {
             return $this->returnErrorJson('抱歉，找不到该配置');

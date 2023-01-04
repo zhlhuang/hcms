@@ -113,9 +113,7 @@
             },
             deleteEvent({admin_user_id}) {
                 this.$confirm('是否确认删除该管理员？', '提示').then(() => {
-                    this.httpPost("{:url('admin/user/delete')}", {
-                        admin_user_id,
-                    }).then(res => {
+                    this.httpDelete("{:url('admin/user/delete')}/" + admin_user_id, {}).then(res => {
                         if (res.status) {
                             this.$message.success(res.msg)
                             this.GetList()
