@@ -12,9 +12,7 @@ namespace App\Application\Admin\Controller\RequestParam;
 use App\Annotation\RequestParam;
 use App\Controller\RequestParam\BaseRequestParam;
 
-/**
- * @RequestParam()
- */
+#[RequestParam]
 class UserSubmitRequestParam extends BaseRequestParam
 {
     protected array $rules = [
