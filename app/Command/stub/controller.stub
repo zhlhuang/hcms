@@ -8,15 +8,12 @@ use App\Controller\AbstractController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 
-/**
- * @Controller(prefix="/{module}/{controller}")
- */
+
+#[Controller("/{module}/{controller}")]
 class {Controller}Controller extends AbstractController
 {
 
-    /**
-     * @GetMapping(path="index")
-     */
+    #[GetMapping("index")]
     public function index()
     {
        return "hello {module}/{controller} index";
