@@ -18,6 +18,7 @@
     "hyperf/cache": "~3.0.0",
     "hyperf/command": "~3.0.0",
     "hyperf/config": "~3.0.0",
+    "hyperf/crontab": "^3.0",
     "hyperf/database": "~3.0.0",
     "hyperf/db-connection": "~3.0.0",
     "hyperf/framework": "~3.0.0",

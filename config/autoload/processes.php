@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
-    //如果不需要队列处理，可以注释下面代码
-    \Hyperf\AsyncQueue\Process\ConsumerProcess::class
+    //如果需要队列处理，可以开启下面代码
+    // \Hyperf\AsyncQueue\Process\ConsumerProcess::class,
+    // \Hyperf\Crontab\Process\CrontabDispatcherProcess::class,
 ];

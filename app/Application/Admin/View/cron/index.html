@@ -1,0 +1,173 @@
+<div class="page-container" v-cloak>
+    <el-card>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>执行日志</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
+        <div>
+            <el-form :inline="true">
+                <el-form-item>
+                    <el-input v-model="where.task_class" clearable placeholder="任务类名称"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="searchEvent">查询</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <div style="display: flex;align-items: center">
+                        <div style="margin-right: 10px">
+                            删除时间为
+                            <el-date-picker
+                                    style="width: 200px;"
+                                    v-model="delete_muti_time"
+                                    type="datetime"
+                                    value-format="YYYY-MM-DD HH:mm:ss"
+                                    placeholder="选择日期和时间"
+                            ></el-date-picker>
+                        </div>
+                        <div style="margin-right: 10px">
+                            之前的记录
+                        </div>
+                        <div>
+                            <el-button type="danger" @click="deleteMutiEvent">删除</el-button>
+                        </div>
+                    </div>
+                </el-form-item>
+            </el-form>
+        </div>
+        <div>
+            <el-table
+                    :data="data_list"
+                    style="width: 100%">
+                <el-table-column
+                        fixed
+                        prop="log_id"
+                        label="ID"
+                        min-width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="task_class"
+                        label="任务类"
+                        min-width="200">
+                </el-table-column>
+                <el-table-column
+                        prop="cron_name"
+                        label="任务名称"
+                        min-width="140">
+                </el-table-column>
+                <el-table-column
+                        prop="cron_rule"
+                        label="任务规则"
+                        min-width="140">
+                </el-table-column>
+                <el-table-column
+                        prop="cron_memo"
+                        label="任务介绍"
+                        min-width="180">
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="result"
+                        label="执行状态"
+                        min-width="120">
+                    <template #default="{row}">
+                        <div>
+                            <el-tag v-if="row.result===1" type="success">成功</el-tag>
+                            <el-tag v-else type="danger">异常</el-tag>
+                            <div v-if="row.result===0" style="margin-top: 10px;">
+                                <small>{{row.result_msg}}</small>
+                            </div>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="execute_time"
+                        label="执行时间"
+                        min-width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="created_at"
+                        label="创建时间"
+                        min-width="160">
+                </el-table-column>
+                <el-table-column
+                        fixed="right"
+                        align="center"
+                        min-width="100"
+                        label="操作">
+                    <template #default="{row}">
+                        <el-link @click="deleteEvent(row)">
+                            <el-button type="danger">删除</el-button>
+                        </el-link>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        background
+                        layout="prev, pager, next, total"
+                        :total="total_num"
+                        :current-page="current_page"
+                        :page-size="per_page"
+                        @current-change="currentChangeEvent"
+                >
+                </el-pagination>
+            </div>
+        </div>
+    </el-card>
+</div>
+<script>
+    const App = {
+        data() {
+            return {
+                is_init_list: true,
+                where: {},
+                delete_muti_time: ''
+            }
+        },
+        methods: {
+            deleteMutiEvent() {
+                console.log('deleteMutiEvent', this.delete_muti_time)
+                if (!this.delete_muti_time) {
+                    this.$message.error('请选择时间')
+                    return
+                }
+
+                this.$confirm("是否确认删除" + this.delete_muti_time + "之前的记录？", '提示').then(() => {
+                    this.httpDelete("{:url('admin/cron/delete')}", {time: this.delete_muti_time}).then(res => {
+                        if (res.status) {
+                            this.$message.success(res.msg)
+                            this.GetList()
+                        }
+                    })
+                }).catch(err => {
+                })
+            },
+            GetList() {
+                this.httpGet('{:url("admin/cron/lists")}', {
+                    page: this.current_page,
+                    ...this.where
+                }).then(res => {
+                    let {lists = {}} = res.data
+                    this.handRes(lists)
+                })
+            },
+            deleteEvent({log_id}) {
+                this.$confirm("是否确认删除该记录？", '提示').then(() => {
+                    this.httpDelete("{:url('admin/cron/delete')}/" + log_id).then(res => {
+                        if (res.status) {
+                            this.$message.success(res.msg)
+                            this.GetList()
+                        }
+                    })
+                }).catch(err => {
+                })
+            },
+            searchEvent() {
+                this.refreshList()
+            }
+        }
+    }
+</script>

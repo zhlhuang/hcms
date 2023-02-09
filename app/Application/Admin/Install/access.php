@@ -174,6 +174,12 @@ return [
                 'uri' => 'admin/cache',
                 'sort' => 100,
                 'is_menu' => 1,
+            ],
+            [
+                'access_name' => '定时任务',
+                'uri' => 'admin/cron',
+                'sort' => 100,
+                'is_menu' => 1,
             ]
         ],
     ],

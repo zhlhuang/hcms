@@ -5,7 +5,7 @@ declare(strict_types=1);
 return [
     'name' => 'Demo',
     'require' => [
-        'hcms_version' => '0.10.0',
+        'hcms_version' => '0.12.0',
         'composer' => [
             'hyperf/async-queue' => '^2.2'
         ],
