@@ -124,7 +124,10 @@ class QueueController extends AbstractController
             ->orderBy('queue_id', 'DESC')
             ->paginate();
 
-        return $this->returnSuccessJson(compact('lists', 'where'));
+        $processes = config('processes');
+        $open_service = in_array(\Hyperf\AsyncQueue\Process\ConsumerProcess::class, $processes);
+
+        return $this->returnSuccessJson(compact('lists', 'open_service'));
     }
 
     /**
@@ -143,5 +146,6 @@ class QueueController extends AbstractController
     #[GetMapping("index")]
     function index()
     {
+
     }
 }

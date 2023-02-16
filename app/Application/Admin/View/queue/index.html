@@ -8,6 +8,9 @@
             </div>
         </template>
         <div>
+            <div v-if="!open_service" style="margin-bottom: 20px">
+                <el-alert title="未开启队列服务，请前往 processes.php 配置文件开启服务" type="error"/>
+            </div>
             <el-form :inline="true">
                 <el-form-item>
                     <el-input v-model="where.class_name" clearable placeholder="类名"></el-input>
@@ -128,6 +131,7 @@
         data() {
             return {
                 is_init_list: true,
+                open_service: true,
                 where: {
                     status: -1
                 },
@@ -139,7 +143,8 @@
                     page: this.current_page,
                     ...this.where
                 }).then(res => {
-                    let {lists = {}} = res.data
+                    let {lists = {}, open_service = false} = res.data
+                    this.open_service = open_service
                     this.handRes(lists)
                 })
             },

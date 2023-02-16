@@ -106,6 +106,16 @@ class HcmsInstall extends HyperfCommand
         }
         $config_list = include_once $config_file;
         $require = $config_list['require'] ?? [];
+        $install_check = $config_list['install_check'] ?? [];
+        if (!empty($install_check)) {
+            try {
+                $install_check();
+            } catch (\Throwable $exception) {
+                $this->output->writeln("<error>{$exception->getMessage()} ×</error>");
+
+                return false;
+            }
+        }
         //依赖检测
         if (!empty($require['module'])) {
             $app_path = BASE_PATH . '/app/Application/';

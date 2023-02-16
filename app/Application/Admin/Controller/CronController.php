@@ -61,7 +61,11 @@ class CronController extends AbstractController
             ->orderByDesc('created_at')
             ->paginate();
 
-        return compact('lists');
+        $processes = config('processes');
+        $open_service = in_array(\Hyperf\Crontab\Process\CrontabDispatcherProcess::class, $processes);
+
+
+        return compact('lists', 'open_service');
     }
 
     #[View]
