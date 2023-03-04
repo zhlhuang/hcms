@@ -122,8 +122,7 @@ class LocalUploadDriver extends AbstractUploadDriver
      */
     private function getDomain(): string
     {
-        $domain = $this->request->getUri()
-                ->getScheme() . "://" . $this->request->getUri()
+        $domain = getScheme() . "://" . $this->request->getUri()
                 ->getHost();
 
         $port = $this->request->getUri()
