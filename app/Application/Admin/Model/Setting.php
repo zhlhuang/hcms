@@ -75,5 +75,6 @@ class Setting extends Model
             //数字配置写入也要转成字符串
             $this->attributes['setting_value'] = $value . '';
         }
+        $this->attributes['setting_value'] = $value;
     }
 }
