@@ -68,6 +68,7 @@ class Setting extends Model
 
     function setSettingValueAttribute($value)
     {
+        $this->attributes['setting_value'] = $value;
         if (is_array($value)) {
             $this->attributes['setting_value'] = Json::encode($value);
         }
@@ -75,6 +76,5 @@ class Setting extends Model
             //数字配置写入也要转成字符串
             $this->attributes['setting_value'] = $value . '';
         }
-        $this->attributes['setting_value'] = $value;
     }
 }
