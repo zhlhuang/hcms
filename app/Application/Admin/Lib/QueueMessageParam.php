@@ -69,9 +69,9 @@ class QueueMessageParam
     }
 
     /**
-     * @return false|string
+     * @return string
      */
-    public function getParamsMd5()
+    public function getParamsMd5(): string
     {
         return $this->params_md5;
     }

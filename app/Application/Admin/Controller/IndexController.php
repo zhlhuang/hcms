@@ -15,17 +15,12 @@ use Hyperf\HttpServer\Annotation\Middleware;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="/admin/index")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("/admin/index")]
 class IndexController extends AbstractController
 {
-
-    /**
-     * @Api()
-     * @GetMapping(path="index/lists")
-     */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $menu_list = AccessService::getInstance()
@@ -37,16 +32,18 @@ class IndexController extends AbstractController
         return compact('menu_list', 'admin_user');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 
     /**
      * 根据项目实际情况需要修改该路由
-     * @View(template="index")
-     * @RequestMapping(path="/")
      */
-    function root() { }
+    #[RequestMapping("/")]
+    function root()
+    {
+        return $this->response->redirect(url('admin/index/index'));
+    }
 }

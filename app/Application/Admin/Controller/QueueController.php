@@ -23,17 +23,13 @@ use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\Redis\RedisFactory;
 use Psr\Container\ContainerInterface;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/queue")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/queue")]
 class QueueController extends AbstractController
 {
 
-    /**
-     * @Api()
-     * @GetMapping(path="status/lists")
-     */
+    #[Api]
+    #[GetMapping("status/lists")]
     function statusLists(ContainerInterface $container, ConfigInterface $config)
     {
         try {
@@ -107,10 +103,8 @@ class QueueController extends AbstractController
         }
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="index/lists")
-     */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $class_name = $this->request->input('class_name', '');
@@ -130,20 +124,28 @@ class QueueController extends AbstractController
             ->orderBy('queue_id', 'DESC')
             ->paginate();
 
-        return $this->returnSuccessJson(compact('lists', 'where'));
+        $processes = config('processes');
+        $open_service = in_array(\Hyperf\AsyncQueue\Process\ConsumerProcess::class, $processes);
+
+        return $this->returnSuccessJson(compact('lists', 'open_service'));
     }
 
     /**
      * 显示队列状态页面
-     * @View()
-     * @GetMapping(path="status")
      */
-    function status() { }
+    #[View]
+    #[GetMapping("status")]
+    function status()
+    {
+    }
 
     /**
      * 执行记录页面
-     * @View()
-     * @GetMapping(path="index")
      */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+
+    }
 }

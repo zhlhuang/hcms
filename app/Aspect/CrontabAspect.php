@@ -16,12 +16,11 @@ use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 
-/**
- * @Aspect()
- */
+
+#[Aspect]
 class CrontabAspect extends AbstractAspect
 {
-    public $annotations = [
+    public array $annotations = [
         Crontab::class
     ];
 

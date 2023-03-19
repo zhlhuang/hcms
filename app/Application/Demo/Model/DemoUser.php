@@ -20,25 +20,25 @@ use Qbhy\HyperfAuth\Authenticatable;
 class DemoUser extends AbstractAuthModel
 {
 
-    protected $primaryKey = 'demo_user_id';
+    protected string $primaryKey = 'demo_user_id';
     /**
      * The table associated with the model.
      *
-     * @var string
+     * @var ?string
      */
-    protected $table = 'demo_user';
+    protected ?string $table = 'demo_user';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['username'];
+    protected array $fillable = ['username'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = ['demo_user_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected array $casts = ['demo_user_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 
     static function loginEvent($username, $password)
     {

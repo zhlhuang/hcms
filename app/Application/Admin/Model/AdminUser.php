@@ -33,26 +33,26 @@ class AdminUser extends AbstractAuthModel
      *
      * @var string
      */
-    protected $table = 'admin_user';
-    protected $primaryKey = 'admin_user_id';
+    protected ?string $table = 'admin_user';
+    protected string $primaryKey = 'admin_user_id';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [];
+    protected array $guarded = [];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
+    protected  array $casts = [
         'admin_user_id' => 'integer',
         'role_id' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime'
     ];
-    protected $hidden = ['deleted_at', 'password'];
+    protected array $hidden = ['deleted_at', 'password'];
 
     public function getLoginUserInfo(): self
     {

@@ -22,25 +22,18 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
-use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\PutMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/setting")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/setting")]
 class SettingController extends AbstractController
 {
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminSettingService $setting;
 
-    /**
-     * @Api()
-     * @GetMapping(path="site/info")
-     */
+    #[Api]
+    #[GetMapping("site/info")]
     function siteInfo()
     {
         $setting = $this->setting->getSiteSetting();
@@ -48,10 +41,8 @@ class SettingController extends AbstractController
         return compact('setting');
     }
 
-    /**
-     * @Api()
-     * @PutMapping(path="site")
-     */
+    #[Api]
+    #[PutMapping("site")]
     function siteSave()
     {
         $setting = $this->request->post('setting', []);
@@ -60,10 +51,8 @@ class SettingController extends AbstractController
         return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="index/lists")
-     */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $where = [];
@@ -86,10 +75,8 @@ class SettingController extends AbstractController
         return compact('lists', 'setting_group');
     }
 
-    /**
-     * @Api()
-     * @PutMapping(path="edit")
-     */
+    #[Api]
+    #[PutMapping("edit")]
     function editSubmit()
     {
         $request_param = new SettingSubmitRequestParam();
@@ -111,10 +98,8 @@ class SettingController extends AbstractController
         return $setting ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="edit/{setting_id}")
-     */
+    #[Api]
+    #[GetMapping("edit/{setting_id}")]
     function editInfo(int $setting_id = 0)
     {
         $setting = Setting::find($setting_id) ?: [];
@@ -122,16 +107,14 @@ class SettingController extends AbstractController
         return compact('setting');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="site")
-     */
-    function site() { }
+    #[View]
+    #[GetMapping("site")]
+    function site()
+    {
+    }
 
-    /**
-     * @Api()
-     * @DeleteMapping(path="delete/{setting_id}")
-     */
+    #[Api]
+    #[DeleteMapping("delete/{setting_id}")]
     function settingDelete(int $setting_id = 0)
     {
         $setting = Setting::find($setting_id) ?: [];
@@ -149,10 +132,8 @@ class SettingController extends AbstractController
         }
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="edit")
-     */
+    #[View]
+    #[GetMapping("edit")]
     function edit()
     {
         $setting_id = (int)$this->request->input('setting_id', 0);
@@ -161,9 +142,9 @@ class SettingController extends AbstractController
     }
 
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

@@ -19,9 +19,7 @@ use Hyperf\Di\Annotation\Inject;
 class AdminUserService
 {
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminUser $admin_user;
 
     private function __construct() { }

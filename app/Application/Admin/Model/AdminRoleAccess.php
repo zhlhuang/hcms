@@ -21,19 +21,19 @@ class AdminRoleAccess extends Model
      *
      * @var string
      */
-    protected $table = 'admin_role_access';
+    protected ?string $table = 'admin_role_access';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['role_id', 'access_id', 'access_uri'];
+    protected array $fillable = ['role_id', 'access_id', 'access_uri'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
+    protected  array $casts = [
         'role_access_id' => 'integer',
         'role_id' => 'integer',
         'access_id' => 'integer',

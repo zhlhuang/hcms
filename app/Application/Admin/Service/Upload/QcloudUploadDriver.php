@@ -18,10 +18,10 @@ use Qcloud\Cos\Client;
 
 class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadDriver
 {
-    private $secret_id;
-    private $secret_key;
-    private $region;
-    private $bucket;
+    private string $secret_id;
+    private string $secret_key;
+    private string $region;
+    private string $bucket;
     private int $is_private;
 
     public function __construct(UploadedFile $file = null, string $file_type = 'image')
@@ -133,8 +133,8 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
 
     /**
      * 设置存储桶的跨域请求，设置缓存防止每次都调用
-     * @Cacheable(prefix="qcloud",ttl=864000,listener="qcloud-bucket-cors")
      */
+    #[Cacheable(prefix: "qcloud", ttl: 864000, listener: "qcloud-bucket-cors")]
     private function putBucketCors($cache_key = ''): bool
     {
         $cos = $this->getCosClient();

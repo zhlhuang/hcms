@@ -14,21 +14,15 @@ use Hyperf\HttpServer\Annotation\Middleware;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use Hyperf\Redis\Redis;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/main")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/main")]
 class MainController extends AbstractController
 {
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected Redis $redis;
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
+    #[View]
+    #[GetMapping("index")]
     function index()
     {
         try {

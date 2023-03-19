@@ -20,25 +20,25 @@ use Hyperf\DbConnection\Model\Model;
  */
 class QueueList extends Model
 {
-    protected $primaryKey = 'queue_id';
+    protected string $primaryKey = 'queue_id';
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'queue_list';
+    protected ?string $table = 'queue_list';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['class_name', 'method', 'params', 'params_md5', 'status', 'error_msg', 'error_data', 'process_time', 'process_count'];
+    protected array $fillable = ['class_name', 'method', 'params', 'params_md5', 'status', 'error_msg', 'error_data', 'process_time', 'process_count'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = ['queue_id' => 'integer', 'status' => 'integer', 'process_time' => 'integer', 'process_count' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected  array $casts = ['queue_id' => 'integer', 'status' => 'integer', 'process_time' => 'integer', 'process_count' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
     const STATUS_PENDING = 0;
     const STATUS_SUCCESS = 1;
     const STATUS_FAILED = 2;

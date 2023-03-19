@@ -25,16 +25,12 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/user")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/user")]
 class UserController extends AbstractController
 {
-    /**
-     * @Api()
-     * @DeleteMapping(path="delete/{admin_user_id}")
-     */
+    #[Api]
+    #[DeleteMapping("delete/{admin_user_id}")]
     function delete(int $admin_user_id)
     {
         $admin_user = AdminUser::find($admin_user_id);
@@ -46,10 +42,8 @@ class UserController extends AbstractController
     }
 
 
-    /**
-     * @Api()
-     * @RequestMapping(path="edit",methods={"POST","PUT"})
-     */
+    #[Api]
+    #[RequestMapping("edit", ["POST", "PUT"])]
     function submitEdit()
     {
         $request_param = new UserSubmitRequestParam();
@@ -75,10 +69,8 @@ class UserController extends AbstractController
         return $res ? $this->returnSuccessJson(compact('admin_user')) : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="edit/{admin_user_id}")
-     */
+    #[Api]
+    #[GetMapping("edit/{admin_user_id}")]
     function editInfo(int $admin_user_id)
     {
         //获取下级角色
@@ -99,10 +91,8 @@ class UserController extends AbstractController
         return compact('role_list', 'admin_user');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="edit")
-     */
+    #[View]
+    #[GetMapping("edit")]
     function edit()
     {
         $admin_user_id = (int)$this->request->input('admin_user_id', 0);
@@ -110,10 +100,8 @@ class UserController extends AbstractController
         return ['title' => $admin_user_id > 0 ? '编辑管理员' : '新增管理员'];
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="index/lists")
-     */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $where = [];
@@ -161,9 +149,9 @@ class UserController extends AbstractController
         return compact('lists', 'role_list');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

@@ -21,7 +21,7 @@ class AdminSettingService extends AbstractSettingService
      * @param mixed  $default
      * @return mixed
      */
-    public function getUploadSetting(string $key = '', $default = '')
+    public function getUploadSetting(string $key = '', mixed $default = ''): mixed
     {
         return $this->getSettings('upload', $key, $default);
     }
@@ -44,7 +44,7 @@ class AdminSettingService extends AbstractSettingService
      * @param mixed  $default
      * @return mixed
      */
-    public function getSiteSetting(string $key = '', $default = '')
+    public function getSiteSetting(string $key = '', mixed $default = ''): mixed
     {
         return $this->getSettings('site', $key, $default);
     }

@@ -18,24 +18,16 @@ use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 
 class AbstractController
 {
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ValidatorFactoryInterface $validationFactory;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     protected RequestInterface $request;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     protected ResponseInterface $response;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     protected ApiService $api_service;
 
     /**

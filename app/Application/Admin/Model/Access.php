@@ -26,25 +26,25 @@ class Access extends Model
 {
     use Cacheable;
 
-    protected $primaryKey = 'access_id';
+    protected string $primaryKey = 'access_id';
     /**
      * The table associated with the model.
      *
-     * @var string
+     * @var ?string
      */
-    protected $table = 'access';
+    protected ?string $table = 'access';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['parent_access_id', 'access_name', 'uri', 'params', 'sort', 'is_menu', 'menu_icon'];
+    protected array $fillable = ['parent_access_id', 'access_name', 'uri', 'params', 'sort', 'is_menu', 'menu_icon'];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
+    protected  array $casts = [
         'access_id' => 'integer',
         'parent_access_id' => 'integer',
         'sort' => 'integer',

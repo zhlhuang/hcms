@@ -56,6 +56,14 @@ return [
                 'sort' => 100,
                 'is_menu' => 1,
                 'menu_icon' => '',
+            ],
+            [
+                'access_name' => 'tab操作',
+                'uri' => 'demo/demo/tab',
+                'params' => '',
+                'sort' => 100,
+                'is_menu' => 1,
+                'menu_icon' => '',
             ]
         ]
     ]

@@ -17,18 +17,14 @@ use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Str;
 
-/**
- * @Aspect()
- */
+#[Aspect]
 class RequestParamAspect extends AbstractAspect
 {
-    public $annotations = [
+    public array $annotations = [
         RequestParam::class,
     ];
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     protected RequestInterface $request;
 
     public function process(ProceedingJoinPoint $proceedingJoinPoint)

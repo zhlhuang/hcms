@@ -12,9 +12,7 @@ namespace App\Application\Demo\Task;
 use App\Exception\ErrorException;
 use Hyperf\Crontab\Annotation\Crontab;
 
-/**
- * @Crontab(enable=false,name="demo",rule="*\/5 * * * * *",callback="execute",memo="这是一个定时任务案例")
- */
+#[Crontab(rule: "*\/5 * * * * *", name: "demo", callback: "execute", memo: "这是一个定时任务案例", enable: false)]
 class DemoTask
 {
     public function execute(): bool

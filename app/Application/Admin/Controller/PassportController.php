@@ -17,26 +17,18 @@ use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 use Intervention\Image\ImageManagerStatic as Image;
 
-/**
- * @Controller(prefix="admin/passport")
- */
+#[Controller("admin/passport")]
 class PassportController extends AbstractController
 {
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminSettingService $admin_setting;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected SessionInterface $session;
 
-    /**
-     * @Api()
-     * @RequestMapping(path="logout")
-     */
+    #[Api]
+    #[RequestMapping("logout")]
     function logout()
     {
         $admin_user = (new AdminUser())->getLoginUserInfo();
@@ -45,10 +37,8 @@ class PassportController extends AbstractController
         return [];
     }
 
-    /**
-     * @Api()
-     * @PostMapping(path="login")
-     */
+    #[Api]
+    #[PostMapping("login")]
     function doLogin()
     {
         $username = $this->request->post('username', '');
@@ -89,10 +79,8 @@ class PassportController extends AbstractController
         }
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="login")
-     */
+    #[View]
+    #[GetMapping("login")]
     public function login()
     {
         return [
@@ -103,8 +91,8 @@ class PassportController extends AbstractController
 
     /**
      * 验证码获取
-     * @GetMapping(path="code")
      */
+    #[GetMapping("code")]
     function code()
     {
         $time = $this->request->input('time', 0);

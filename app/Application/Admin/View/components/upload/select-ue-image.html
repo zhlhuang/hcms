@@ -25,21 +25,23 @@
                                                     :class="{'group_active' : now_group == item.group_id }">
                                             <span @click="selectGroup(item.group_id)"
                                                   style="word-break:break-all; white-space:normal; width:75%;line-height: 30px;vertical-align:middle;display:inline-block;">{{item.group_name}}</span>
-                                                    <div style="position: absolute;right: 10px;top: 0;">
+                                                    <div style="position: absolute;right: 10px;top: -8px;">
                                                         <el-dropdown @command="(c)=>handleGroup(c,item)"
                                                                      trigger="click">
                                                             <div class="el-dropdown-link" style="line-height: 30px;">
                                                                 <i style="line-height: 20px;"
-                                                                   class="el-input__icon el-icon-more-outline group_edit_icon"></i>
+                                                                   class="iconfont line-icon-bianji"></i>
                                                             </div>
-                                                            <el-dropdown-menu slot="dropdown">
-                                                                <el-dropdown-item command="edit">
-                                                                    编辑
-                                                                </el-dropdown-item>
-                                                                <el-dropdown-item command="delete">
-                                                                    删除
-                                                                </el-dropdown-item>
-                                                            </el-dropdown-menu>
+                                                            <template #dropdown>
+                                                                <el-dropdown-menu slot="dropdown">
+                                                                    <el-dropdown-item command="edit">
+                                                                        编辑
+                                                                    </el-dropdown-item>
+                                                                    <el-dropdown-item command="delete">
+                                                                        删除
+                                                                    </el-dropdown-item>
+                                                                </el-dropdown-menu>
+                                                            </template>
                                                         </el-dropdown>
                                                     </div>
                                                 </li>

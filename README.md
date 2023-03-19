@@ -4,8 +4,8 @@ Hcms 是一个基于 [Hyperf](https://hyperf.io/) 框架的项目开发管理系
 
 # 依赖
 
-- PHP >= 7.4
-- Swoole PHP extension >= 4.5，and Disabled `Short Name`
+- PHP >= 8.0
+- Swoole PHP extension >= 5.0，and Disabled `Short Name`
 - OpenSSL PHP extension
 - JSON PHP extension
 - PDO PHP extension
@@ -20,6 +20,7 @@ composer create-project zhlhuang/hcms
 ```
 APP_NAME=hcms
 APP_ENV=dev
+SCAN_CACHEABLE=false
 
 DB_DRIVER=mysql
 DB_HOST=localhost
@@ -57,3 +58,6 @@ composer watch
 
 # 文档
 [https://www.yuque.com/huangzhenlian/hcms](https://www.yuque.com/huangzhenlian/hcms)
+
+# 模块扩展
+[https://github.com/hcms-module](https://github.com/hcms-module)

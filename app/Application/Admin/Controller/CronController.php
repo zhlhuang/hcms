@@ -15,17 +15,13 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="/admin/cron")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller(prefix: "/admin/cron")]
 class CronController extends AbstractController
 {
 
-    /**
-     * @Api()
-     * @DeleteMapping("delete")
-     */
+    #[Api]
+    #[DeleteMapping("delete")]
     public function deleteByTime()
     {
         $time = $this->request->input('time', '');
@@ -40,10 +36,8 @@ class CronController extends AbstractController
     }
 
 
-    /**
-     * @Api()
-     * @DeleteMapping("delete/{log_id}")
-     */
+    #[Api]
+    #[DeleteMapping("delete/{log_id}")]
     public function delete(int $log_id)
     {
         $log = CronLog::find($log_id);
@@ -54,10 +48,8 @@ class CronController extends AbstractController
         return $log->delete() ? [] : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping("lists")
-     */
+    #[Api]
+    #[GetMapping("lists")]
     public function getList()
     {
         $where = [];
@@ -69,13 +61,15 @@ class CronController extends AbstractController
             ->orderByDesc('created_at')
             ->paginate();
 
-        return compact('lists');
+        $processes = config('processes');
+        $open_service = in_array(\Hyperf\Crontab\Process\CrontabDispatcherProcess::class, $processes);
+
+
+        return compact('lists', 'open_service');
     }
 
-    /**
-     * @View()
-     * @GetMapping("")
-     */
+    #[View]
+    #[GetMapping("")]
     public function index()
     {
     }

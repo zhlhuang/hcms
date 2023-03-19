@@ -15,6 +15,16 @@ window.__vueCommon = {
                 window.parent.__adminOpenNewFrame({title, url})
             }
         },
+        closeFrame(url) {
+            if (typeof window.parent.__adminCloseFrame === 'function') {
+                window.parent.__adminCloseFrame(url)
+            }
+        },
+        refreshFrame(url) {
+            if (typeof window.parent.__adminRefreshFrame === 'function') {
+                window.parent.__adminRefreshFrame(url)
+            }
+        },
         /**
          * URL 解析
          * @param url

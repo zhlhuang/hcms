@@ -30,25 +30,25 @@ class UploadFile extends Model
 {
     use SoftDeletes;
 
-    protected $primaryKey = 'file_id';
+    protected string $primaryKey = 'file_id';
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'upload_file';
+    protected ?string $table = 'upload_file';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [];
+    protected array $fillable = [];
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
-    protected $casts = [
+    protected  array $casts = [
         'file_id' => 'integer',
         'group_id' => 'integer',
         'file_size' => 'integer',

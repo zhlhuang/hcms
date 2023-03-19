@@ -21,30 +21,20 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
-use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\PutMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/log")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/log")]
 class LogController extends AbstractController
 {
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected AdminSettingService $setting;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ConfigInterface $config;
 
-
-    /**
-     * @Api()
-     * @DeleteMapping(path="delete/{file_name}")
-     */
+    #[Api]
+    #[DeleteMapping("delete/{file_name}")]
     function deleteLog($file_name = '')
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
@@ -60,9 +50,7 @@ class LogController extends AbstractController
         return unlink($file_dir . $file_name) ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
-    /**
-     * @GetMapping(path="detail")
-     */
+    #[GetMapping("detail")]
     function detail()
     {
         $file_name = $this->request->input('file');
@@ -78,10 +66,8 @@ class LogController extends AbstractController
         return $this->response->raw(file_get_contents($file_dir . $file_name));
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="setting")
-     */
+    #[Api]
+    #[GetMapping("setting")]
     function settingInfo()
     {
         $log_type = $this->request->input('log_type', 'request');
@@ -108,10 +94,8 @@ class LogController extends AbstractController
         return compact('setting', 'file_list');
     }
 
-    /**
-     * @Api()
-     * @PutMapping(path="setting")
-     */
+    #[Api]
+    #[PutMapping("setting")]
     function settingSave()
     {
         $setting = $this->request->post('setting', []);
@@ -120,9 +104,9 @@ class LogController extends AbstractController
         return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("")]
+    function index()
+    {
+    }
 }

@@ -11,8 +11,6 @@ use Symfony\Component\Console\Input\InputOption;
 
 /**
  * 创建模块
- *
- * @Command
  */
 #[Command]
 class HcmsCreate extends HyperfCommand

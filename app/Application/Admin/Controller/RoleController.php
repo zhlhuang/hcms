@@ -27,17 +27,12 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/role")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/role")]
 class RoleController extends AbstractController
 {
-
-    /**
-     * @Api()
-     * @DeleteMapping(path="delete/{role_id}")
-     */
+    #[Api]
+    #[DeleteMapping("delete/{role_id}")]
     function delete(int $role_id)
     {
         $role = AdminRole::find($role_id);
@@ -54,11 +49,8 @@ class RoleController extends AbstractController
         return $role->delete() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
-
-    /**
-     * @Api()
-     * @RequestMapping(path="edit",methods={"POST","PUT"})
-     */
+    #[Api]
+    #[RequestMapping("edit", ["POST", "PUT"])]
     function submitEdit()
     {
         $request_param = new RoleSubmitRequestParam();
@@ -79,10 +71,8 @@ class RoleController extends AbstractController
         return $role->role_id > 0 ? $this->returnSuccessJson(compact('role')) : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="edit/{role_id}")
-     */
+    #[Api]
+    #[GetMapping("edit/{role_id}")]
     function editInfo(int $role_id = 0)
     {
         //获取下级角色
@@ -115,10 +105,8 @@ class RoleController extends AbstractController
         return compact('role_list', 'role', 'access_list', 'role_access_ids', 'admin_role_id');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="edit")
-     */
+    #[View]
+    #[GetMapping("edit")]
     function edit()
     {
         $role_id = (int)$this->request->input('role_id', 0);
@@ -128,9 +116,9 @@ class RoleController extends AbstractController
 
     /**
      * 角色列表
-     * @Api()
-     * @GetMapping(path="index/lists")
      */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $lists = AdminRole::where('parent_role_id', AdminUserService::getInstance()
@@ -146,9 +134,9 @@ class RoleController extends AbstractController
         return compact('lists');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

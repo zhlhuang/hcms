@@ -23,9 +23,7 @@ use Throwable;
 class AppExceptionHandler extends ExceptionHandler
 {
     protected LoggerInterface $logger;
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected StdoutLoggerInterface $stdout_loger;
 
     public function __construct(LoggerFactory $loggerFactory)

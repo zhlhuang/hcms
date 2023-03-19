@@ -8,6 +8,9 @@
             </div>
         </template>
         <div>
+            <div v-if="!open_service" style="margin-bottom: 20px">
+                <el-alert title="未开启定时任务服务，请前往 processes.php 配置文件开启服务" type="error"/>
+            </div>
             <el-form :inline="true">
                 <el-form-item>
                     <el-input v-model="where.task_class" clearable placeholder="任务类名称"></el-input>
@@ -122,6 +125,7 @@
     const App = {
         data() {
             return {
+                open_service: true,
                 is_init_list: true,
                 where: {},
                 delete_muti_time: ''
@@ -150,7 +154,8 @@
                     page: this.current_page,
                     ...this.where
                 }).then(res => {
-                    let {lists = {}} = res.data
+                    let {lists = {}, open_service = false} = res.data
+                    this.open_service = open_service
                     this.handRes(lists)
                 })
             },

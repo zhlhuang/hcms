@@ -10,21 +10,23 @@ declare(strict_types=1);
 namespace App\Application\Admin\Service\Upload;
 
 use App\Application\Admin\Model\UploadFile;
+use App\Exception\ErrorException;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\HttpMessage\Upload\UploadedFile;
 
 class LocalUploadDriver extends AbstractUploadDriver
 {
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected RequestInterface $request;
 
     public function save(array $data = []): UploadFile
     {
         //检查上传文件是否合法
         $this->uploadValid();
-
+        if (!($this->file instanceof UploadedFile)) {
+            throw new ErrorException('未找到上传文件');
+        }
         $upload_file_dir = $this->getPathDir();
         $dir_path = BASE_PATH . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR;
         $file_name = md5(time() . rand(1000, 9999)) . '.' . $this->file->getExtension();
@@ -120,8 +122,7 @@ class LocalUploadDriver extends AbstractUploadDriver
      */
     private function getDomain(): string
     {
-        $domain = $this->request->getUri()
-                ->getScheme() . "://" . $this->request->getUri()
+        $domain = getScheme() . "://" . $this->request->getUri()
                 ->getHost();
 
         $port = $this->request->getUri()

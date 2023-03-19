@@ -9,11 +9,9 @@
 namespace App\Annotation;
 
 use Hyperf\Di\Annotation\AbstractAnnotation;
+use \Attribute;
 
-/**
- * @Annotation
- * @Target("ALL")
- */
+#[Attribute(Attribute::TARGET_ALL)]
 class View extends AbstractAnnotation
 {
     public string $template = '';

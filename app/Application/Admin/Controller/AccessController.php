@@ -18,17 +18,13 @@ use App\Application\Admin\Middleware\AdminMiddleware;
 use Hyperf\HttpServer\Annotation\PutMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-/**
- * @Middleware(AdminMiddleware::class)
- * @Controller(prefix="admin/access")
- */
+#[Middleware(AdminMiddleware::class)]
+#[Controller("admin/access")]
 class AccessController extends AbstractController
 {
 
-    /**
-     * @Api()
-     * @DeleteMapping(path="delete/{access_id}")
-     */
+    #[Api]
+    #[DeleteMapping("delete/{access_id}")]
     function delete(int $access_id)
     {
         $access = Access::find($access_id);
@@ -45,10 +41,8 @@ class AccessController extends AbstractController
         return $access->delete() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @RequestMapping(path="edit",methods={"POST","PUT"})
-     */
+    #[Api]
+    #[RequestMapping("edit", ["POST", "PUT"])]
     function submitEdit()
     {
         $request_param = new AccessSubmitRequestParam();
@@ -72,10 +66,8 @@ class AccessController extends AbstractController
         return $access ? $this->returnSuccessJson(compact('access')) : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="edit/{access_id}")
-     */
+    #[Api]
+    #[GetMapping("edit/{access_id}")]
     function editInfo(int $access_id = 0)
     {
         //获取菜单
@@ -90,10 +82,8 @@ class AccessController extends AbstractController
         return compact('access_list', 'access');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="edit")
-     */
+    #[View]
+    #[GetMapping("edit")]
     function edit()
     {
         $access_id = (int)$this->request->input('access_id', 0);
@@ -101,10 +91,8 @@ class AccessController extends AbstractController
         return ['title' => $access_id > 0 ? '编辑菜单与权限' : '新增菜单与权限'];
     }
 
-    /**
-     * @Api()
-     * @PutMapping(path="index/sort/{access_id}")
-     */
+    #[Api]
+    #[PutMapping("index/sort/{access_id}")]
     function sort(int $access_id)
     {
         $access = Access::where('access_id', $access_id)
@@ -117,10 +105,8 @@ class AccessController extends AbstractController
         return $access->save() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
-    /**
-     * @Api()
-     * @GetMapping(path="index/lists")
-     */
+    #[Api]
+    #[GetMapping("index/lists")]
     function lists()
     {
         $lists = AccessService::getInstance()
@@ -129,9 +115,9 @@ class AccessController extends AbstractController
         return compact('lists');
     }
 
-    /**
-     * @View()
-     * @GetMapping(path="index")
-     */
-    function index() { }
+    #[View]
+    #[GetMapping("index")]
+    function index()
+    {
+    }
 }

@@ -22,24 +22,16 @@ class ErrorExceptionHandler extends ExceptionHandler
 {
     protected LoggerInterface $logger;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected ConfigInterface $config;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected RequestInterface $request;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected HttpResponse $http_response;
 
-    /**
-     * @inject()
-     */
+    #[Inject]
     protected RenderInterface $render;
 
     public function __construct(LoggerFactory $loggerFactory)

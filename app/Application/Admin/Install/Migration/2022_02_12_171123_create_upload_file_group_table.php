@@ -21,6 +21,14 @@ class CreateUploadFileGroupTable extends Migration
                 ->nullable(false)
                 ->default('image')
                 ->comment('文件类型，image图片、video视频、doc文档等');
+            $table->integer('upload_user_id',)
+                ->nullable(false)
+                ->default(0)
+                ->comment('上传用户id');
+            $table->string('upload_user_type', 16)
+                ->nullable(false)
+                ->default('')
+                ->comment('上传用户类型、admin管理员、user用户');
             $table->timestamps();
             $table->softDeletes();
         });

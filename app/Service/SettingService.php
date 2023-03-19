@@ -23,9 +23,7 @@ class SettingService
     protected array $setting_list;
     protected array $group_setting;
 
-    /**
-     * @Inject()
-     */
+    #[Inject]
     protected EventDispatcherInterface $dispatcher;
 
     private function __construct()
@@ -74,8 +72,8 @@ class SettingService
 
     /**
      * 根据配置的分组获取配置
-     * @Cacheable(prefix="setting",ttl=86400,listener="setting-update")
      */
+    #[Cacheable(prefix: "setting", ttl: 86400, listener: "setting-update")]
     public function getSettings(string $group = ''): array
     {
         if ($group !== '') {

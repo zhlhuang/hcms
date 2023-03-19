@@ -1,8 +1,7 @@
 # Default Dockerfile
 
-FROM hyperf/hyperf:7.4-alpine-v3.15-swoole
+FROM hyperf/hyperf:8.0-alpine-v3.16-swoole
 LABEL maintainer="Hcms Developers <364626853@qq.com>" version="0.1" license="MIT" app.name="Hcms"
-
 ##
 # ---------- env settings ----------
 ##
@@ -20,7 +19,7 @@ RUN set -ex \
     && php -m \
     && php --ri swoole \
     #  ---------- some config ----------
-    && cd /etc/php7 \
+    && cd /etc/php8 \
     # - config PHP
     && { \
         echo "upload_max_filesize=128M"; \

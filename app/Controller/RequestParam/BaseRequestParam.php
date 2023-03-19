@@ -19,15 +19,10 @@ abstract class BaseRequestParam
     protected array $rules = [];
     protected array $message = [];
 
-    /**
-     * @Inject()
-     * @var ValidatorFactoryInterface
-     */
+    #[Inject]
     protected ValidatorFactoryInterface $validationFactory;
 
-    /**
-     * @Inject
-     */
+    #[Inject]
     protected RequestInterface $request;
 
     /**

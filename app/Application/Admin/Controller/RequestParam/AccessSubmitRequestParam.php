@@ -13,9 +13,7 @@ use App\Annotation\RequestParam;
 use App\Application\Admin\Model\Access;
 use App\Controller\RequestParam\BaseRequestParam;
 
-/**
- * @RequestParam()
- */
+#[RequestParam]
 class AccessSubmitRequestParam extends BaseRequestParam
 {
     protected array $rules = [

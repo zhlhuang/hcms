@@ -9,7 +9,6 @@
 declare(strict_types=1);
 
 use Hyperf\Context\Context;
-use Hyperf\HttpMessage\Server\Request;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\ApplicationContext;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 function url($uri, $params = null, bool $with_domain = false): string
 {
-    if (strpos($uri, "/") === 0) {
+    if (str_starts_with($uri, "/")) {
         $url = $uri;
     } else {
         $url = "/" . $uri;
@@ -42,16 +41,12 @@ function url($uri, $params = null, bool $with_domain = false): string
     }
     if ($with_domain) {
         $request = Context::get(ServerRequestInterface::class);
-        $domain = '';
-        if ($request instanceof Request) {
-            $scheme = $request->getUri()
-                ->getScheme();
-            $host = $request->getUri()
-                ->getHost();
-            $port = $request->getUri()
-                ->getPort();
-            $domain = $scheme . '://' . $host . ($port ? (":" . $port) : '');
-        }
+        $scheme = getScheme();
+        $host = $request->getUri()
+            ->getHost();
+        $port = $request->getUri()
+            ->getPort();
+        $domain = $scheme . '://' . $host . ($port ? (":" . $port) : '');
         $url = $domain . $url;
     }
 
@@ -81,6 +76,30 @@ function getIp(): string
         }
     } catch (\Throwable $exception) {
         return "";
+    }
+}
+
+
+/**
+ * nginx 代理的时候 getUri()->getScheme() 获取有误
+ *
+ * @return mixed|string
+ */
+function getScheme(): mixed
+{
+    try {
+        $request = ApplicationContext::getContainer()
+            ->get(ServerRequestInterface::class);
+        $headers = $request->getHeaders();
+        if (isset($headers['scheme'][0])) {
+            return $headers['scheme'][0];
+        } else {
+            $server_params = $request->getServerParams();
+
+            return !empty($server_params['https']) && $server_params['https'] !== 'off' ? 'https' : 'http';
+        }
+    } catch (\Throwable $exception) {
+        return "http";
     }
 }
 
