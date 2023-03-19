@@ -705,6 +705,28 @@
             //注册事件
             registerEvent: function () {
                 window.addEventListener('adminOpenNewFrame', this.handleEvent_adminOpenNewFrame.bind(this))
+                window.addEventListener('adminCloseFrame', this.handleEvent_adminCloseFrame.bind(this))
+                window.addEventListener('adminRefreshFrame', this.handleEvent_adminRefreshFrame.bind(this))
+
+
+                window.__adminRefreshFrame = function (iframeUrl = "") {
+                    var event = new CustomEvent('adminRefreshFrame', {
+                        detail: {
+                            iframeUrl
+                        }
+                    })
+                    window.parent.dispatchEvent(event)
+                }
+
+                window.__adminCloseFrame = function (iframeUrl = "") {
+                    var event = new CustomEvent('adminCloseFrame', {
+                        detail: {
+                            iframeUrl
+                        }
+                    })
+                    window.parent.dispatchEvent(event)
+                }
+
                 window.__adminOpenNewFrame = function (config) {
                     var title = config.title || ''
                     var url = config.url || ''
@@ -720,8 +742,37 @@
             unregisterEvent: function () {
                 window.__adminOpenNewFrame = null
                 window.removeEventListener('adminOpenNewFrame', this.handleEvent_adminOpenNewFrame.bind(this))
+                window.removeEventListener('adminCloseFrame', this.handleEvent_adminCloseFrame.bind(this))
+                window.removeEventListener('adminRefreshFrame', this.handleEvent_adminRefreshFrame.bind(this))
             },
-
+            handleEvent_adminRefreshFrame: function (event) {
+                let index = this.iframeUrls.findIndex(i => {
+                    return i === this.iframeUrl
+                })
+                if (event.detail && event.detail.iframeUrl !== '') {
+                    index = this.iframeUrls.findIndex(i => {
+                        return i === event.detail.iframeUrl
+                    })
+                }
+                console.log('handleEvent_adminRefreshFrame', this.iframeUrls, event)
+                if (index >= 0) {
+                    this.refreshTag(index, true)
+                }
+            },
+            handleEvent_adminCloseFrame: function (event) {
+                let index = this.iframeUrls.findIndex(i => {
+                    return i === this.iframeUrl
+                })
+                if (event.detail && event.detail.iframeUrl !== '') {
+                    index = this.iframeUrls.findIndex(i => {
+                        return i === event.detail.iframeUrl
+                    })
+                }
+                console.log('handleEvent_adminCloseFrame', this.iframeUrls, event)
+                if (index >= 0) {
+                    this.closeTag(index, true)
+                }
+            },
             // 打开新窗口
             handleEvent_adminOpenNewFrame: function (event) {
                 this.goUrl([event.detail.title], {

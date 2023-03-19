@@ -16,6 +16,7 @@ use App\Application\Admin\Controller\AdminAbstractController;
 use App\Application\Demo\Model\DemoUser;
 use App\Application\Demo\Service\DemoSettingService;
 use App\Application\Demo\Service\QueueService;
+use App\Controller\AbstractController;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -26,7 +27,7 @@ use Qbhy\HyperfAuth\Annotation\Auth;
 
 #[Middleware(AdminMiddleware::class)]
 #[Controller("/demo/demo")]
-class DemoController extends AdminAbstractController
+class DemoController extends AbstractController
 {
 
     #[Inject]
@@ -34,6 +35,12 @@ class DemoController extends AdminAbstractController
 
     #[Inject]
     protected DemoUser $demo_user;
+
+    #[View]
+    #[GetMapping("tab")]
+    function tab()
+    {
+    }
 
     #[Auth("api_auth")]
     #[Api]

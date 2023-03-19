@@ -160,7 +160,8 @@ class UploadController extends AbstractController
     {
         $group_id = $this->request->post('group_id', 0);
         $file_group = UploadFileGroup::firstOrNew([
-            'group_id' => $group_id
+            'group_id' => $group_id,
+            'upload_user_type' => 'admin'
         ]);
         if ($file_group->group_id) {
             return $file_group->delete() ? $this->returnSuccessJson() : $this->returnErrorJson();
@@ -178,7 +179,8 @@ class UploadController extends AbstractController
     {
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
         $where = [
-            ['file_type', '=', $file_type]
+            ['file_type', '=', $file_type],
+            ['upload_user_type', '=', 'admin']
         ];
         $group_list = UploadFileGroup::where($where)
             ->orderByDesc('group_id')
@@ -223,7 +225,8 @@ class UploadController extends AbstractController
         $file_type = $this->request->post('file_type', UploadFile::FILE_TYPE_IMAGE);
         $file_group = UploadFileGroup::firstOrNew([
             'group_id' => $group_id,
-            'file_type' => $file_type
+            'file_type' => $file_type,
+            'upload_user_type' => 'admin'
         ]);
         $file_group->group_name = $group_name;
         $file_group->file_type = $file_type;

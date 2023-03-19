@@ -1,0 +1,40 @@
+<div class="page-container" v-cloak>
+    <el-card>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>tab操作</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
+        <div>
+            <el-button @click="openEvent" type="primary">打开新tab</el-button>
+            <el-button @click="closeEvent" type="primary">关闭当前tab</el-button>
+            <el-button @click="closeMainEvent" type="primary">关闭概况tab</el-button>
+            <el-button @click="refreshEvent" type="primary">刷新当前tab</el-button>
+            <el-button @click="refreshMainEvent" type="primary">刷新概况tab</el-button>
+        </div>
+    </el-card>
+</div>
+
+<script>
+    const App = {
+        methods: {
+            openEvent() {
+                this.openNewFrame('新窗口Demo-tab', "{:url('demo/demo/tab')}?time=" + new Date().getTime())
+            },
+            closeEvent() {
+                this.closeFrame()
+            },
+            closeMainEvent() {
+                this.closeFrame('{:url("admin/main/index")}')
+            },
+            refreshEvent() {
+                this.refreshFrame()
+            },
+            refreshMainEvent() {
+                this.refreshFrame('{:url("admin/main/index")}')
+            },
+        }
+    }
+</script>
