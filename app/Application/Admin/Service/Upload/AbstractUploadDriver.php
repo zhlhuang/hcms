@@ -82,8 +82,10 @@ abstract class AbstractUploadDriver
         $upload_file_size = $this->config['upload_file_size'] ?? '';
         //设置为空不做校验
         if ($upload_allow_ext !== '') {
-            $upload_allow_ext_array = explode('|', $upload_allow_ext);
-            if (!in_array($this->upload_file->file_ext, $upload_allow_ext_array)) {
+            //都转成小写，不区分大小写
+            $upload_allow_ext_array = explode('|', strtolower($upload_allow_ext));
+            //将文件格式转化成小写
+            if (!in_array(strtolower($this->upload_file->file_ext), $upload_allow_ext_array)) {
                 throw new ErrorException('不支持上传该文件');
             }
         }

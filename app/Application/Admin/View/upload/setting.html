@@ -10,20 +10,23 @@
         <div>
             <el-form :model="setting" label-width="120px">
                 <el-form-item required prop="upload_drive"
-                              :rules="[{ required: true, message: '请选择上传驱动', trigger: 'blur' }]" label="上传驱动">
-                  <div>
-                      <el-select v-model="setting.upload_drive" placeholder="请选择上传驱动">
-                          <el-option v-for="(item,index) in driver_list" :value="item.value"
-                                     :label="item.name"></el-option>
-                      </el-select>
-                      <div v-if="setting.upload_drive=='qcloud'" class="form-small">
-                          <small>腾讯云COS上传驱动，可以直接上传到COS无需在经过服务器，使用需要安装 <code>composer require
-                              qcloud/cos-sdk-v5 ^2.5</code></small>
-                      </div>
-                  </div>
+                              :rules="[{ required: true, message: '请选择上传驱动', trigger: 'blur' }]"
+                              label="上传驱动">
+                    <div>
+                        <el-select v-model="setting.upload_drive" placeholder="请选择上传驱动">
+                            <el-option v-for="(item,index) in driver_list" :value="item.value"
+                                       :label="item.name"></el-option>
+                        </el-select>
+                        <div v-if="setting.upload_drive=='qcloud'" class="form-small">
+                            <small>腾讯云COS上传驱动，可以直接上传到COS无需在经过服务器，使用需要安装 <code>composer
+                                require
+                                qcloud/cos-sdk-v5 ^2.5</code></small>
+                        </div>
+                    </div>
                 </el-form-item>
                 <el-form-item required prop="upload_allow_ext"
-                              :rules="[{ required: true, message: '请输入上传格式', trigger: 'blur' }]" label="上传格式">
+                              :rules="[{ required: true, message: '请输入上传格式', trigger: 'blur' }]"
+                              label="上传格式">
                     <el-input v-model="setting.upload_allow_ext" placeholder="请输入允许上传格式"
                               style="width: 600px"></el-input>
                 </el-form-item>
@@ -42,11 +45,18 @@
                                   placeholder="请填写腾讯云的 secretKey"></el-input>
                     </el-form-item>
                     <el-form-item label="存储桶区域">
-                        <el-input v-model="setting.qcloud_region" placeholder="请填写腾讯云的存储桶区域"></el-input>
-                        <div class="form-small">
-                            <small>
-                                已创建存储桶归属的region可以在控制台查看，例如 ap-guangzhou
-                            </small>
+                        <div>
+                            <el-input v-model="setting.qcloud_region" placeholder="请填写腾讯云的存储桶区域"></el-input>
+                            <div class="form-small">
+                                <small>
+                                    已创建存储桶归属的region可以在控制台查看，例如 ap-guangzhou
+                                </small>
+                            </div>
+                            <div class="form-small">
+                                <small>
+                                    需要在腾讯云存储桶设置 "安全管理"-"跨域访问CORS设置"，中设置跨域，域名和请求方法
+                                </small>
+                            </div>
                         </div>
                     </el-form-item>
                     <el-form-item label="存储桶名称">
@@ -59,16 +69,19 @@
                 </template>
                 <template v-if="setting.upload_drive=='local'">
                     <el-form-item label="本地上传目录">
-                        <el-input v-model="setting.upload_file_dir" placeholder="本地上传文件存储的目录"></el-input>
-                        <div class="form-small">
-                            <small> 为了方便访问文件都是放在public目录，填写upload会存放在public/upload目录下</small>
+                        <div>
+                            <el-input v-model="setting.upload_file_dir" placeholder="本地上传文件存储的目录"></el-input>
+                            <div class="form-small">
+                                <small> 为了方便访问文件都是放在public目录，填写upload会存放在public/upload目录下</small>
+                            </div>
                         </div>
                     </el-form-item>
                     <el-form-item label="文件访问域名">
                         <div>
                             <el-input v-model="setting.upload_domain" placeholder="本地上传文件存储的目录"></el-input>
                             <div class="form-small">
-                                <small>文件访问的域名，注意需要以 / 结尾，本地上传驱动可以使用 /，如果使用对象存储的镜像回源，直接填写对象存储的访问域名</small>
+                                <small>文件访问的域名，注意需要以 / 结尾，本地上传驱动可以使用
+                                    / ，如果使用对象存储的镜像回源，直接填写对象存储的访问域名</small>
                             </div>
                         </div>
                     </el-form-item>

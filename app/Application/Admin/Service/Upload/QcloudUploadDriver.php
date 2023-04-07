@@ -52,7 +52,7 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
     {
         //保存文件信息
         $this->upload_file->file_name = $data['file_name'] ?? '';
-        $this->upload_file->file_ext = $data['file_ext'] ?? '';
+        $this->upload_file->file_ext = strtolower($data['file_ext'] ?? '');
         $this->upload_file->file_size = $data['file_size'] ?? 0;
         $this->upload_file->file_url = $data['file_url'] ?? '';
         $this->upload_file->acl = $data['acl'] ?? 'default';
@@ -100,8 +100,8 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
      */
     public function getUploadForm(string $acl = 'default'): array
     {
-        //获取签名保护
-        $this->putBucketCors(md5($this->secret_id . $this->secret_key . $this->region . $this->bucket));
+        //获取签名保护，不再主动设置跨域，需要到腾讯控制台配置
+//        $this->putBucketCors(md5($this->secret_id . $this->secret_key . $this->region . $this->bucket));
 
         $expire_time = time() + 1800;
         $q_sign_time = time() . ";" . $expire_time;
@@ -132,10 +132,11 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
     }
 
     /**
+     * @deprecated
      * 设置存储桶的跨域请求，设置缓存防止每次都调用
      */
     #[Cacheable(prefix: "qcloud", ttl: 864000, listener: "qcloud-bucket-cors")]
-    private function putBucketCors($cache_key = ''): bool
+    private function putBucketCors(string $cache_key = ''): bool
     {
         $cos = $this->getCosClient();
         try {

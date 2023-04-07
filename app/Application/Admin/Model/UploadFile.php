@@ -48,7 +48,7 @@ class UploadFile extends Model
      *
      * @var array
      */
-    protected  array $casts = [
+    protected array $casts = [
         'file_id' => 'integer',
         'group_id' => 'integer',
         'file_size' => 'integer',
@@ -69,7 +69,7 @@ class UploadFile extends Model
 
     const USER_TYPE_ADMIN = 'admin';
 
-    static function getDriverList()
+    static function getDriverList(): array
     {
         return [
             ['value' => self::UPLOAD_DRIVE_LOCAL, 'name' => '本地上传'],
@@ -77,6 +77,12 @@ class UploadFile extends Model
             //            ['value' => self::UPLOAD_DRIVE_TENCENT_MIRROR, 'name' => '腾讯云COS镜像'],
             ['value' => self::UPLOAD_DRIVE_QCLOUD, 'name' => '腾讯云COS'],
         ];
+    }
+
+    public function setFileNameAttribute($value): void
+    {
+        //文件名称不超过128
+        $this->attributes['file_name'] = substr($value, 0, 120);
     }
 
     public function getFileUrlAttribute($value): string
@@ -104,11 +110,11 @@ class UploadFile extends Model
     /**
      * 获取未被修改过的值
      *
-     * @param $key
-     * @param $default
-     * @return mixed|string
+     * @param       $key
+     * @param mixed $default
+     * @return mixed
      */
-    public function getOriginalValue($key, $default = '')
+    public function getOriginalValue($key, mixed $default = ''): mixed
     {
         return $this->attributes[$key] ?? $default;
     }

@@ -280,7 +280,7 @@
                 const formData = new FormData();
                 if (this.upload_drive === 'qcloud') {
                     //如果是腾讯云上传，构建key
-                    let ext = option.file.name.split('.').pop()
+                    let ext = option.file.name.split('.').pop().toLowerCase()
                     let rand = Math.ceil(Math.random() * 1000000)
                     formData.append('key', new Date().getTime() + '' + rand + "." + ext)
                 }
@@ -336,7 +336,7 @@
                             file_drive: this.upload_drive,
                             file_name: file.name,
                             file_size: file.size,
-                            file_ext: file.name.split('.').pop()
+                            file_ext: file.name.split('.').pop().toLowerCase()
                         }
                         this.httpPost("{:url('component/upload/save')}", request_data).then(res => {
                             if (!res.status) {
@@ -372,12 +372,13 @@
                 }
             },
             beforeUploadEvent(file) {
-                //上传之前校验格式和大小
-                let ext = file.name.split('.').pop()
+                //上传之前校验格式和大小， 文件格式匹配不区分大小写
+                let ext = file.name.split('.').pop().toLowerCase()
                 let size = file.size
                 let {upload_allow_ext = [], upload_file_size = 2048} = this.upload_setting
                 if (upload_allow_ext && upload_allow_ext.length > 0) {
-                    let find = upload_allow_ext.findIndex(i => i === ext)
+                    // 不区分大小写
+                    let find = upload_allow_ext.findIndex(i => i.toLowerCase() === ext)
                     if (find === -1) {
                         this.$message.error('不允许上传文件格式 ' + ext)
                         return false
