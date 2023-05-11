@@ -99,7 +99,9 @@
                             location.href = '/admin/index/index'
                         }, 1000)
                     }
+                    this.changeValidEvent()
                 }).catch(err => {
+                    this.changeValidEvent()
                 })
             }
         }

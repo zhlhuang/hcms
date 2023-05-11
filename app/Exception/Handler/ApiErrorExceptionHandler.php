@@ -50,8 +50,10 @@ class ApiErrorExceptionHandler extends ExceptionHandler
         } else {
             $data = [];
         }
-        //记录错误日志
-        $this->logger->error($error_detail, $throwable->getTrace());
+        if (!in_array($throwable->getCode(), $this->config->get('exceptions.ignore_log_code'))) {
+            //记录错误日志
+            $this->logger->error($error_detail, $throwable->getTrace());
+        }
         $this->stopPropagation();
         //返回json 错误
         $result = Json::encode($this->api_service->encryptData([

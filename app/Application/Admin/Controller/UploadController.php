@@ -80,7 +80,10 @@ class UploadController extends AbstractController
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
         $group_id = (int)$this->request->input('group_id', -1);
         $acl = $this->request->input('acl', UploadFile::ACL_DEFAULT);
+        $admin_user_id = AdminUserService::getInstance()
+            ->getAdminUserId();
         $where = [
+            ['upload_user_id', '=', $admin_user_id],//默认只显示管理后台上传
             ['upload_user_type', '=', UploadFile::USER_TYPE_ADMIN],//默认只显示管理后台上传
             ['acl', '=', $acl],
             ['file_type', '=', $file_type]
@@ -178,9 +181,12 @@ class UploadController extends AbstractController
     function groupList()
     {
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
+        $admin_user_id = AdminUserService::getInstance()
+            ->getAdminUserId();
         $where = [
             ['file_type', '=', $file_type],
-            ['upload_user_type', '=', 'admin']
+            ['upload_user_type', '=', UploadFile::USER_TYPE_ADMIN],
+            ['upload_user_id', '=', $admin_user_id],
         ];
         $group_list = UploadFileGroup::where($where)
             ->orderByDesc('group_id')
@@ -223,10 +229,13 @@ class UploadController extends AbstractController
         $group_id = $this->request->post('group_id', 0);
         $group_name = $this->request->post('group_name', '');
         $file_type = $this->request->post('file_type', UploadFile::FILE_TYPE_IMAGE);
+        $admin_user_id = AdminUserService::getInstance()
+            ->getAdminUserId();
         $file_group = UploadFileGroup::firstOrNew([
             'group_id' => $group_id,
             'file_type' => $file_type,
-            'upload_user_type' => 'admin'
+            'upload_user_type' => UploadFile::USER_TYPE_ADMIN,
+            'upload_user_id' => $admin_user_id,
         ]);
         $file_group->group_name = $group_name;
         $file_group->file_type = $file_type;

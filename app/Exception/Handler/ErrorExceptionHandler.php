@@ -8,11 +8,9 @@ use App\Exception\ErrorException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\ExceptionHandler\ExceptionHandler;
-use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface as HttpResponse;
 use Hyperf\Logger\LoggerFactory;
-use Hyperf\Utils\Codec\Json;
 use Hyperf\View\RenderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -53,12 +51,12 @@ class ErrorExceptionHandler extends ExceptionHandler
             $location = '';
             $content = '';
         }
-        //记录错误日志
-        $this->logger->error($error_detail, $throwable->getTrace());
-
+        if (!in_array($throwable->getCode(), $this->config->get('exceptions.ignore_log_code'))) {
+            //记录错误日志
+            $this->logger->error($error_detail, $throwable->getTrace());
+        }
         $this->stopPropagation();
-
-        if ($throwable->getCode() === 501) {
+        if ($throwable->getCode() === 401) {
             return $this->http_response->redirect('/admin/passport/login');
         }
 

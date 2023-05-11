@@ -33,7 +33,7 @@ return [
         ],
         'pool' => [
             'min_connections' => 1,
-            'max_connections' => 10,
+            'max_connections' => 300,
             'connect_timeout' => 10.0,
             'wait_timeout' => 3.0,
             'heartbeat' => -1,

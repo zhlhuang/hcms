@@ -99,7 +99,7 @@ window.__vueCommon = {
                     if (!res.status) {
                         this.$message.error(res.msg)
                     }
-                    if (res.code === 501) {
+                    if (res.code === 401) {
                         setTimeout(function () {
                             location.href = "/admin/index/index"
                         }, 1500)

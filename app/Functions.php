@@ -9,8 +9,6 @@
 declare(strict_types=1);
 
 use Hyperf\Context\Context;
-use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\Utils\ApplicationContext;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -62,8 +60,7 @@ function url($uri, $params = null, bool $with_domain = false): string
 function getIp(): string
 {
     try {
-        $request = ApplicationContext::getContainer()
-            ->get(RequestInterface::class);
+        $request = Context::get(ServerRequestInterface::class);
         $headers = $request->getHeaders();
         if (isset($headers['x-forwarded-for'][0])) {
             return $headers['x-forwarded-for'][0];
@@ -88,8 +85,7 @@ function getIp(): string
 function getScheme(): mixed
 {
     try {
-        $request = ApplicationContext::getContainer()
-            ->get(ServerRequestInterface::class);
+        $request = Context::get(ServerRequestInterface::class);
         $headers = $request->getHeaders();
         if (isset($headers['scheme'][0])) {
             return $headers['scheme'][0];

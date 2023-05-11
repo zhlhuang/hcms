@@ -37,7 +37,7 @@ class CrontabAspect extends AbstractAspect
             $time = time();
             try {
                 $res = $proceedingJoinPoint->process();
-                var_dump($cron->toArray());
+                // var_dump($cron->toArray());
                 $cron->result = CronLog::RESULT_SUCCESS;
                 $cron->result_msg = 'ok';
                 $cron->execute_time = time() - $time;

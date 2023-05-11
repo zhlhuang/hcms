@@ -11,6 +11,8 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
+    //忽略错误日志的异常代码
+    'ignore_log_code' => [401],
     'handler' => [
         'http' => [
             //处理路由解析问题

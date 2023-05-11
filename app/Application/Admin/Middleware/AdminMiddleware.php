@@ -52,9 +52,9 @@ class AdminMiddleware implements MiddlewareInterface
             $xmlhttprequest = strtolower($xmlhttprequest_header[0] ?? '');
             if ($xmlhttprequest === 'xmlhttprequest') {
                 //ajax 可以返回json格式
-                throw new ApiErrorException('未登录', 501);
+                throw new ApiErrorException('未登录', 401);
             }
-            throw new ErrorException('未登录', 501);
+            throw new ErrorException('未登录', 401);
         }
         /**
          * 获取当前访问的 path
