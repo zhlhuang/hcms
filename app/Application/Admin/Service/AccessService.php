@@ -16,8 +16,8 @@ use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Context\Context;
 use Hyperf\Database\Model\Relations\Relation;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\Utils\Str;
 use Hyperf\Cache\Listener\DeleteListenerEvent;
+use Hyperf\Stringable\Str;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 
@@ -215,6 +215,10 @@ class AccessService
      */
     public function checkAccess(string $path): bool
     {
+        if ($path === '/' || $path === '') {
+            //根权限目录，默认授权
+            return true;
+        }
         $role_id = AdminUserService::getInstance()
             ->getAdminUserRoleId();
         if ($role_id === 0) {

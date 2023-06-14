@@ -158,7 +158,13 @@
             },
             confirmEvent() {
                 if (this.selected_file_list.length === 0) {
-                    this.$message.error('请选择你需要的图片')
+                    if (this.file_type === 'image') {
+                        this.$message.error('请选择你需要的图片')
+                    } else if (this.file_type === 'image') {
+                        this.$message.error('请选择你需要的视频')
+                    } else {
+                        this.$message.error('请选择你需要的文件')
+                    }
                     return
                 }
                 this.$emit('confirm', this.selected_file_list)

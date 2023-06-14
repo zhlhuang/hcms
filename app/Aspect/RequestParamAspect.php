@@ -15,7 +15,7 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\Utils\Str;
+use Hyperf\Stringable\Str;
 
 #[Aspect]
 class RequestParamAspect extends AbstractAspect
