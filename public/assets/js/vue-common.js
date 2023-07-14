@@ -140,7 +140,8 @@ window.__vueCommon = {
                 $.ajax({
                     url: url,
                     type: 'POST',
-                    data: data,
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
                     dataType: 'json',
                     ...this.handleRes(loadingInstance, resolve, reject)
                 });
@@ -154,7 +155,8 @@ window.__vueCommon = {
                 $.ajax({
                     url: url,
                     type: 'PUT',
-                    data: data,
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
                     dataType: 'json',
                     ...this.handleRes(loadingInstance, resolve, reject)
                 });
@@ -168,7 +170,8 @@ window.__vueCommon = {
                 $.ajax({
                     url: url,
                     type: 'DELETE',
-                    data: data,
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
                     dataType: 'json',
                     ...this.handleRes(loadingInstance, resolve, reject)
                 });

@@ -79,6 +79,11 @@
                         </span>
                         <template #dropdown>
                             <el-dropdown-menu>
+                                <el-dropdown-item v-if="admin_user.role_id==0">
+                                    <div @click="flushCache">
+                                        清除缓存
+                                    </div>
+                                </el-dropdown-item>
                                 <el-dropdown-item>
                             <span @click="clickLogout">
                                 退出登录
@@ -531,6 +536,13 @@
             }
         },
         methods: {
+            flushCache() {
+                this.httpPost("/admin/cache/flush", {}).then(res => {
+                    if (res.status) {
+                        this.$message.success('清除成功')
+                    }
+                })
+            },
             // url点击事件
             goUrl: function (breadcrumb, data) {
                 var that = this

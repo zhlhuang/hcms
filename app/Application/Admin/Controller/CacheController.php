@@ -20,6 +20,7 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Redis\Redis;
 use Hyperf\Utils\Codec\Json;
 
@@ -34,6 +35,15 @@ class CacheController extends AbstractController
     protected ConfigInterface $config;
     #[Inject]
     protected Redis $redis;
+
+    #[Api]
+    #[PostMapping("flush")]
+    public function flushCache()
+    {
+        $res = $this->redis->flushDB();
+
+        return $res ? [] : $this->returnErrorJson();
+    }
 
 
     /**
