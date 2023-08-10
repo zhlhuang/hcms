@@ -40,7 +40,7 @@ class RoleController extends AbstractController
             return $this->returnErrorJson('找不到该记录');
         }
 
-        //如果有下级菜单，不能删除
+        //如果有下级，不能删除
         if (AdminRole::where('role_id', $role->role_id)
                 ->count() > 0) {
             return $this->returnErrorJson('该角色有下级角色，不能删除');

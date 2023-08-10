@@ -43,7 +43,7 @@ class AdminRole extends Model
      *
      * @var array
      */
-    protected  array $casts = [
+    protected array $casts = [
         'role_id' => 'integer',
         'parent_role_id' => 'integer',
         'created_at' => 'datetime',

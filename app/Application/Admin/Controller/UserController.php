@@ -38,6 +38,12 @@ class UserController extends AbstractController
             return $this->returnErrorJson('找不到该记录');
         }
 
+        $role_ids = AdminRole::getChildRoleIds(AdminUserService::getInstance()
+            ->getAdminUserRoleId());
+        if (!in_array($admin_user->role_id, $role_ids)) {
+            return $this->returnErrorJson("没有权限操作");
+        }
+
         return $admin_user->delete() ? $this->returnSuccessJson() : $this->returnErrorJson();
     }
 
