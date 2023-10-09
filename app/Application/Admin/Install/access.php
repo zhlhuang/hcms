@@ -180,6 +180,12 @@ return [
                 'uri' => 'admin/cron',
                 'sort' => 100,
                 'is_menu' => 1,
+            ],
+            [
+                'access_name' => '登录日志',
+                'uri' => 'admin/user/record',
+                'sort' => 100,
+                'is_menu' => 1,
             ]
         ],
     ],

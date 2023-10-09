@@ -1,0 +1,133 @@
+<div class="page-container" v-cloak>
+    <el-card>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>登录日志</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
+        <div>
+            <el-form :inline="true">
+                <el-form-item>
+                    <el-input v-model="where.username" clearable placeholder="请输入用户名"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="where.ip" clearable placeholder="请输入ip"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="searchEvent">查询</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+        <div>
+            <el-table
+                    :data="data_list"
+                    style="width: 100%">
+                <el-table-column
+                        fixed
+                        prop="id"
+                        label="ID"
+                        min-width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="username"
+                        label="用户名"
+                        min-width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="ip"
+                        label="登录IP"
+                        min-width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="user_agent"
+                        min-width="280"
+                        label="浏览器信息">
+                </el-table-column>
+                <el-table-column
+                        align="center"
+                        prop="login_result"
+                        label="登录结果"
+                        min-width="180">
+                    <template #default="{row}">
+                        <div>
+                            <div>
+                                <el-tag v-if="row.login_result===1" type="success">成功</el-tag>
+                                <el-tag v-else type="danger">失败</el-tag>
+                            </div>
+                            <div style="padding-top: 10px;" v-if="row.login_result!==1">
+                                {{row.result_msg}}
+                            </div>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="created_at"
+                        min-width="160"
+                        label="创建时间">
+                </el-table-column>
+                <el-table-column
+                        fixed="right"
+                        align="center"
+                        min-width="100"
+                        label="操作">
+                    <template #default="{row}">
+                        <el-link @click="deleteEvent(row)">
+                            <el-button type="danger">删除</el-button>
+                        </el-link>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        background
+                        layout="prev, pager, next, total"
+                        :total="total_num"
+                        :current-page="current_page"
+                        :page-size="per_page"
+                        @current-change="currentChangeEvent"
+                >
+                </el-pagination>
+            </div>
+        </div>
+    </el-card>
+    <dialog-lists v-model:show="show_dialog" @close="show_dialog=false"></dialog-lists>
+</div>
+{hcmstag:include file="demo@/components/dialog-lists"}
+<script>
+    const App = {
+        data() {
+            return {
+                show_dialog: false,
+                is_init_list: true,
+                where: {},
+            }
+        },
+        methods: {
+            GetList() {
+                this.httpGet('{:url("admin/user/record/lists")}', {
+                    page: this.current_page,
+                    ...this.where
+                }).then(res => {
+                    let {lists = {}} = res.data
+                    this.handRes(lists)
+                })
+            },
+            deleteEvent({id}) {
+                this.$confirm("是否确认删除该记录？", '提示').then(() => {
+                    this.httpDelete("{:url('admin/user/record/delete')}/" + id).then(res => {
+                        if (res.status) {
+                            this.$message.success(res.msg)
+                            this.GetList()
+                        }
+                    })
+                }).catch(err => {
+                })
+            },
+            searchEvent() {
+                this.refreshList()
+            }
+        }
+    }
+</script>

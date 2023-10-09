@@ -6,6 +6,7 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
+use App\Application\Admin\Model\AdminLoginRecord;
 use App\Application\Admin\Model\AdminUser;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Controller\AbstractController;
@@ -46,36 +47,60 @@ class PassportController extends AbstractController
         $password = AdminUser::makePassword($username, $this->request->post('password', ''));
         $valid_code = $this->request->post('valid_code', '');
         $time = $this->request->post('time', 0);
+        $login_record = new AdminLoginRecord();
+        $login_record->username = $username;
+        $login_record->login_result = AdminLoginRecord::LOGIN_RESULT_FAIL;
+        $login_record->ip = getIp();
+        $login_record->user_agent = substr($this->request->input('user_agent', ''), 0, 1000);
 
-        $validator = $this->validationFactory->make($this->request->all(), [
-            'username' => 'required',
-            'password' => 'required',
-            'valid_code' => 'required',
-        ], [
-            'username.required' => '请输入用户名',
-            'password.required' => '请输入登录密码',
-            'valid_code.required' => '请输入验证码',
-        ]);
+        try {
+            $validator = $this->validationFactory->make($this->request->all(), [
+                'username' => 'required',
+                'password' => 'required',
+                'valid_code' => 'required',
+            ], [
+                'username.required' => '请输入用户名',
+                'password.required' => '请输入登录密码',
+                'valid_code.required' => '请输入验证码',
+            ]);
 
-        if ($validator->fails()) {
-            return $this->returnErrorJson($validator->errors()
-                ->first());
-        }
-        $cache_code = $this->session->get('valid_' . $time);
-        if ($valid_code != $cache_code) {
-            return $this->returnErrorJson('验证码错误');
-        }
+            if ($validator->fails()) {
+                $login_record->result_msg = $validator->errors()
+                    ->first();
+                $login_record->save();
 
-        /** @var ?AdminUser $admin_user */
-        $admin_user = AdminUser::where(compact('username', 'password'))
-            ->first();
+                return $this->returnErrorJson($validator->errors()
+                    ->first());
+            }
+            $cache_code = $this->session->get('valid_' . $time);
+            if ($valid_code != $cache_code) {
+                $login_record->result_msg = '验证码错误';
+                $login_record->save();
 
-        if (!empty($admin_user->admin_user_id)) {
-            return $this->returnSuccessJson([
-                'status' => $admin_user->login(),
-            ], '登录成功');
-        } else {
-            return $this->returnErrorJson('账号或密码错误');
+                return $this->returnErrorJson('验证码错误');
+            }
+
+            /** @var ?AdminUser $admin_user */
+            $admin_user = AdminUser::where(compact('username', 'password'))
+                ->first();
+
+            if (!empty($admin_user->admin_user_id)) {
+                $login_record->login_result = AdminLoginRecord::LOGIN_RESULT_SUCCESS;
+                $login_record->save();
+
+                return $this->returnSuccessJson([
+                    'status' => $admin_user->login(),
+                ], '登录成功');
+            } else {
+                $login_record->result_msg = '账号或密码错误';
+                $login_record->save();
+
+                return $this->returnErrorJson('账号或密码错误');
+            }
+        } catch (\Throwable $exception) {
+            $login_record->result_msg = $exception->getMessage();
+            $login_record->save();
+            throw $exception;
         }
     }
 

@@ -18,10 +18,10 @@ class ApiService
 
     public function __construct()
     {
-        $this->encode_data = boolval(config('api.encode_data'));
-        $api_key = config('api.key', '');
+        $this->encode_data = boolval(\Hyperf\Config\config('api.encode_data'));
+        $api_key = \Hyperf\Config\config('api.key', '');
         //如果配置中没有key，则默认使用version的md5
-        $this->api_key = $api_key ?: substr(md5(config('version.version')), 8, 16);
+        $this->api_key = $api_key ?: substr(md5(\Hyperf\Config\config('version.version')), 8, 16);
     }
 
     /**

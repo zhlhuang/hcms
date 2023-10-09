@@ -13,6 +13,7 @@ use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Controller\RequestParam\UserSubmitRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use App\Application\Admin\Model\AdminLoginRecord;
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminUser;
 use App\Application\Admin\Service\AdminUserService;
@@ -29,6 +30,46 @@ use Hyperf\HttpServer\Annotation\RequestMapping;
 #[Controller("admin/user")]
 class UserController extends AbstractController
 {
+
+
+    #[Api]
+    #[DeleteMapping("record/delete/{id}")]
+    public function recordDelete(int $id)
+    {
+        $record = AdminLoginRecord::find($id);
+        if (!$record) {
+            return $this->returnErrorJson('找不到该记录');
+        }
+
+        return $record->delete() ? [] : $this->returnErrorJson();
+    }
+
+    #[Api]
+    #[GetMapping("record/lists")]
+    public function recordLists()
+    {
+        $where = [];
+        $username = trim($this->request->input('username', ''));
+        $ip = trim($this->request->input('ip', ''));
+        if ($username != '') {
+            $where[] = ['username', '=', $username];
+        }
+        if ($ip != '') {
+            $where[] = ['ip', '=', $ip];
+        }
+        $lists = AdminLoginRecord::where($where)
+            ->orderByDesc('id')
+            ->paginate();
+
+        return compact('lists');
+    }
+
+    #[View]
+    #[GetMapping]
+    public function record()
+    {
+    }
+
     #[Api]
     #[DeleteMapping("delete/{admin_user_id}")]
     function delete(int $admin_user_id)

@@ -92,7 +92,8 @@
             },
             doLogin() {
                 console.log('doLogin')
-                this.httpPost(`/admin/passport/login`, {time: this.time, ...this.form}).then(res => {
+                let user_agent = navigator.userAgent
+                this.httpPost(`/admin/passport/login`, {time: this.time, ...this.form, user_agent}).then(res => {
                     if (res.status) {
                         this.$message.success(res.msg)
                         setTimeout(() => {
