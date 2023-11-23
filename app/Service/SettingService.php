@@ -96,12 +96,14 @@ class SettingService
     {
         Db::beginTransaction();
         foreach ($setting_data as $key => $value) {
+            if (!$group) {
+                $group = explode('_', $key)[0] ?? "";
+            }
+            //有可能不同的group有相同的key
             $setting = Setting::where('setting_key', $key)
+                ->where('setting_group', $group)
                 ->first();
             if (!$setting) {
-                if (!$group) {
-                    $group = explode('_', $key)[0] ?? "";
-                }
                 $setting = Setting::create([
                     'setting_key' => $key,
                     'setting_value' => $value,
