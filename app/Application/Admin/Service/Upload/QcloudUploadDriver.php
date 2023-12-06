@@ -13,7 +13,7 @@ use App\Application\Admin\Model\UploadFile;
 use App\Exception\ErrorException;
 use Hyperf\HttpMessage\Upload\UploadedFile;
 use Hyperf\Cache\Annotation\Cacheable;
-use Hyperf\Utils\Codec\Json;
+use \Hyperf\Codec\Json;
 use Qcloud\Cos\Client;
 
 class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadDriver

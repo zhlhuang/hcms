@@ -22,6 +22,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\Redis\RedisFactory;
 use Psr\Container\ContainerInterface;
+use function Hyperf\Config\config;
 
 #[Middleware(AdminMiddleware::class)]
 #[Controller("admin/queue")]

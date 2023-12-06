@@ -11,6 +11,7 @@ namespace App\Application\Admin\View;
 use think\Template;
 use think\template\TagLib;
 use App\Application\Admin\View\Template as MyTemplate;
+use function Hyperf\Config\config;
 
 class HcmsTag extends TagLib
 {

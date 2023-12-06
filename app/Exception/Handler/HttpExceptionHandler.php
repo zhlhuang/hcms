@@ -19,7 +19,7 @@ use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Exception\HttpException;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\Utils\Codec\Json;
+use \Hyperf\Codec\Json;
 use Hyperf\View\Exception\RenderException;
 use Hyperf\View\RenderInterface;
 use Psr\Http\Message\ResponseInterface;

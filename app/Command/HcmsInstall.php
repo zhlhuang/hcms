@@ -9,6 +9,7 @@ use App\Application\Admin\Model\Setting;
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Command\Annotation\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use function Hyperf\Config\config;
 
 #[Command]
 class HcmsInstall extends HyperfCommand
