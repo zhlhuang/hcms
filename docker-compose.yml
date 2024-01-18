@@ -1,29 +1,19 @@
 version: "3.9"
-networks:
-  mynetwork:
-    ipam:
-      config:
-        - subnet: 172.18.0.0/24 # 注意子网冲突
-          gateway: 172.18.0.1
 services:
   web:
     build:
       context: ./
-    #      dockerfile: Dockerfile-php8 # 默认是 Dockerfile 如果需要php8可以只指定
     image: zhlhuang/hcms-31:3.1.0  # 根据自己项目名称定义镜像名和版本
     container_name: hcms-31-web # 容器名称根据自己项目名称定义
-    networks:
-      mynetwork:
-        ipv4_address: 172.18.0.2
     volumes:
       - ./public:/opt/www/public/
     #    ports:
-    #      - "9501:9501" # 默认不做映射 直接通过 172.18.0.2:9501 可以访问
+    #      - "9501:9501" # 默认不做映射，根据具体业务情况做映射
     links:
       - redis
     environment:
       - DB_DRIVER=mysql
-      - DB_HOST=172.18.0.1
+      - DB_HOST=172.18.0.1 #根据宿主网卡确定ip
       - DB_PORT=3306
       - DB_DATABASE=hcms-dev
       - DB_USERNAME=root
