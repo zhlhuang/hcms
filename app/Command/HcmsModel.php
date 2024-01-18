@@ -6,9 +6,8 @@ namespace App\Command;
 
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Command\Annotation\Command;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
+use function Hyperf\Config\config;
 
 #[Command]
 class HcmsModel extends HyperfCommand

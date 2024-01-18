@@ -12,7 +12,7 @@ use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Logger\LoggerFactory;
-use Hyperf\Utils\Codec\Json;
+use \Hyperf\Codec\Json;
 use Hyperf\View\RenderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;

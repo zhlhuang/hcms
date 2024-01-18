@@ -22,7 +22,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Redis\Redis;
-use Hyperf\Utils\Codec\Json;
+use \Hyperf\Codec\Json;
 
 #[Middleware(AdminMiddleware::class)]
 #[Controller("admin/cache")]

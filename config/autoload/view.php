@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 use App\Application\Admin\Lib\ThinkEngine;
 use Hyperf\View\Mode;
-
+use function Hyperf\Support\env;
 return [
     'engine' => ThinkEngine::class,
     'mode' => Mode::SYNC,

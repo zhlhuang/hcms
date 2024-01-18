@@ -6,7 +6,7 @@ namespace App\Application\Admin\Model;
 
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\ModelCache\Cacheable;
-use Hyperf\Utils\Codec\Json;
+use \Hyperf\Codec\Json;
 
 /**
  * @property int                           $setting_id

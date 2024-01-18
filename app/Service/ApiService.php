@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Hyperf\Utils\Codec\Json;
+use \Hyperf\Codec\Json;
 
 class ApiService
 {

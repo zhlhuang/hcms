@@ -13,6 +13,8 @@ namespace App\Application\Admin\Lib;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Service\ApiService;
 use Hyperf\Di\Annotation\Inject;
+use function Hyperf\Config\config;
+use function Hyperf\Support\env;
 
 class RenderParam
 {

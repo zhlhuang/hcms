@@ -19,6 +19,7 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\Cache\Listener\DeleteListenerEvent;
 use Hyperf\Stringable\Str;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use function Hyperf\Config\config;
 
 
 class AccessService

@@ -11,36 +11,42 @@
   ],
   "description": "Hcms is a project development management system based on Hyperf framework. Under the support of Hyperf's hyperspeed and flexibility characteristics, it builds a project development management system with rapid development and module reuse.",
   "license": "Apache-2.0",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/tombenner/wp-mvc.git"
+    }
+  ],
   "require": {
-    "php": ">=8.0",
-    "96qbhy/hyperf-auth": "^3.0",
-    "hyperf/async-queue": "~3.0.0",
-    "hyperf/cache": "~3.0.0",
-    "hyperf/command": "~3.0.0",
-    "hyperf/config": "~3.0.0",
+    "php": ">=8.1",
+    "96qbhy/hyperf-auth": "~3.1.0",
+    "hyperf/async-queue": "~3.1.0",
+    "hyperf/cache": "~3.1.0",
+    "hyperf/command": "~3.1.0",
+    "hyperf/config": "~3.1.0",
     "hyperf/crontab": "^3.0",
-    "hyperf/database": "~3.0.0",
-    "hyperf/db-connection": "~3.0.0",
-    "hyperf/framework": "~3.0.0",
-    "hyperf/guzzle": "~3.0.0",
-    "hyperf/http-server": "~3.0.0",
-    "hyperf/logger": "~3.0.0",
-    "hyperf/memory": "~3.0.0",
-    "hyperf/model-cache": "~3.0.0",
-    "hyperf/paginator": "~3.0",
-    "hyperf/process": "~3.0.0",
-    "hyperf/redis": "~3.0.0",
-    "hyperf/session": "~3.0",
-    "hyperf/validation": "~3.0",
-    "hyperf/view": "~3.0",
+    "hyperf/database": "~3.1.0",
+    "hyperf/db-connection": "~3.1.0",
+    "hyperf/framework": "~3.1.0",
+    "hyperf/guzzle": "~3.1.0",
+    "hyperf/http-server": "~3.1.0",
+    "hyperf/logger": "~3.1.0",
+    "hyperf/memory": "~3.1.0",
+    "hyperf/model-cache": "~3.1.0",
+    "hyperf/paginator": "~3.1",
+    "hyperf/process": "~3.1.0",
+    "hyperf/redis": "~3.1.0",
+    "hyperf/session": "~3.1",
+    "hyperf/validation": "~3.1",
+    "hyperf/view": "~3.1",
     "intervention/image": "^2.7",
     "sy-records/think-template": "^2.0.10"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.0",
-    "hyperf/devtool": "~3.0.0",
-    "hyperf/testing": "~3.0.0",
-    "hyperf/watcher": "~3.0",
+    "hyperf/devtool": "~3.1.0",
+    "hyperf/testing": "~3.1.0",
+    "hyperf/watcher": "~3.1",
     "hyperf/code-generator": "~0.3.3",
     "mockery/mockery": "^1.0",
     "phpstan/phpstan": "^1.0",
@@ -91,11 +97,5 @@
       "Composer\\Config::disableProcessTimeout",
       "php bin/hyperf.php server:watch\n"
     ]
-  },
-  "repositories": {
-    "packagist": {
-      "type": "composer",
-      "url": "https://mirrors.cloud.tencent.com/composer/"
-    }
   }
 }
