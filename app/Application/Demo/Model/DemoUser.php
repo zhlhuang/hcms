@@ -5,7 +5,7 @@ declare (strict_types=1);
 namespace App\Application\Demo\Model;
 
 use App\Model\AbstractAuthModel;
-use Hyperf\Utils\Network;
+use Hyperf\Support\Network;
 use Qbhy\HyperfAuth\Authenticatable;
 
 /**

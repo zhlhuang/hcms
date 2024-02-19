@@ -44,7 +44,7 @@ class PassportController extends AbstractController
     {
         $username = $this->request->post('username', '');
         //生成密码
-        $password = AdminUser::makePassword($username, $this->request->post('password', ''));
+        $password = $this->request->post('password', '');
         $valid_code = $this->request->post('valid_code', '');
         $time = $this->request->post('time', 0);
         $login_record = new AdminLoginRecord();
@@ -80,11 +80,9 @@ class PassportController extends AbstractController
                 return $this->returnErrorJson('验证码错误');
             }
 
-            /** @var ?AdminUser $admin_user */
-            $admin_user = AdminUser::where(compact('username', 'password'))
+            $admin_user = AdminUser::where('username', $username)
                 ->first();
-
-            if (!empty($admin_user->admin_user_id)) {
+            if ($admin_user instanceof AdminUser && $admin_user->passwordVerify($password)) {
                 $login_record->login_result = AdminLoginRecord::LOGIN_RESULT_SUCCESS;
                 $login_record->save();
 
