@@ -46,7 +46,7 @@ class AdminUser extends AbstractAuthModel
      *
      * @var array
      */
-    protected  array $casts = [
+    protected array $casts = [
         'admin_user_id' => 'integer',
         'role_id' => 'integer',
         'created_at' => 'datetime',
@@ -112,7 +112,12 @@ class AdminUser extends AbstractAuthModel
      */
     static function makePassword(string $username, string $password): string
     {
-        return md5($password . $username);
+        return password_hash($username . $password, PASSWORD_BCRYPT);
+    }
+
+    function passwordVerify(string $password): bool
+    {
+        return password_verify($this->username . $password, $this->password);
     }
 
     /**
@@ -126,7 +131,7 @@ class AdminUser extends AbstractAuthModel
             return "系统管理员";
         }
 
-        return $this->role && $this->role->role_name ? $this->role->role_name : '';
+        return !empty($this->role) && $this->role->role_name ? $this->role->role_name : '';
     }
 
     public function role(): HasOne

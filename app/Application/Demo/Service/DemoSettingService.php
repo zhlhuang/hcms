@@ -13,6 +13,17 @@ use App\Service\AbstractSettingService;
 
 class DemoSettingService extends AbstractSettingService
 {
+
+    /**
+     * 自定义获取配置方法
+     *
+     * @return string
+     */
+    public function getString(): string
+    {
+        return $this->getDemoSetting('demo_string', '') . "";
+    }
+
     public function getDemoSetting(string $key = '', $default = '')
     {
         return $this->getSettings('demo', $key, $default);
