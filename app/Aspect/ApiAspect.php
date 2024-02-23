@@ -19,6 +19,7 @@ use Hyperf\Di\Aop\ProceedingJoinPoint;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use \PDOException;
+use function Hyperf\Support\env;
 
 #[Aspect]
 class ApiAspect extends AbstractAspect
