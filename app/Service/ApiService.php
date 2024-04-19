@@ -62,4 +62,11 @@ class ApiService
             return $data;
         }
     }
+
+    public function decryptData(string $data_str = ''): array
+    {
+        $key = $this->getApiKey();
+
+        return Json::decode(openssl_decrypt($data_str, "AES-128-ECB", $key));
+    }
 }

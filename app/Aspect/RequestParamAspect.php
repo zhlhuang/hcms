@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace App\Aspect;
 
 use App\Annotation\RequestParam;
+use App\Service\ApiService;
 use Hyperf\Di\Annotation\Aspect;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Aop\AbstractAspect;
@@ -27,6 +28,9 @@ class RequestParamAspect extends AbstractAspect
     #[Inject]
     protected RequestInterface $request;
 
+    #[Inject]
+    protected ApiService $apiService;
+
     public function process(ProceedingJoinPoint $proceedingJoinPoint)
     {
         $method = $proceedingJoinPoint->getReflectMethod()
@@ -34,19 +38,23 @@ class RequestParamAspect extends AbstractAspect
         if (Str::startsWith($method, 'get')) {
             $get_key = substr_replace(Str::snake($method), '', 0, 4);
             $default = $proceedingJoinPoint->process();
+            //获取对象中输入数据 input_data
+            $input_data = $proceedingJoinPoint->getInstance()
+                ->returnInputData();
 
-            return $this->castAttribute(gettype($default), $this->request->input($get_key, $default));
+            //根据格式，返回参数
+            return $this->castAttribute(gettype($default), $input_data[$get_key] ?? $default);
         } else {
             return $proceedingJoinPoint->process();
         }
     }
 
     /**
-     * @param       $type
-     * @param mixed $value
+     * @param string $type
+     * @param mixed  $value
      * @return mixed
      */
-    private function castAttribute($type, $value)
+    private function castAttribute(string $type, mixed $value): mixed
     {
         switch ($type) {
             case 'int':

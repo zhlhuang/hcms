@@ -167,7 +167,7 @@
                     ...this.form,
                     parent_role_id: this.parent_role_id,
                     access_list: this.getCheckedKeys()
-                }).then(res => {
+                }, true).then(res => {
                     if (res.status) {
                         this.$message.success(res.msg)
                         location.href = "{:url('admin/role/index')}"

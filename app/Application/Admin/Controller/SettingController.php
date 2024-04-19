@@ -11,6 +11,7 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
+use App\Application\Admin\Controller\RequestParam\SettingSiteRequestParam;
 use App\Application\Admin\Controller\RequestParam\SettingSubmitRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Setting;
@@ -45,7 +46,9 @@ class SettingController extends AbstractController
     #[PutMapping("site")]
     function siteSave()
     {
-        $setting = $this->request->post('setting', []);
+        $req = new SettingSiteRequestParam();
+        $req->validatedThrowMessage();
+        $setting = $req->getSetting();
         $res = $this->setting->setSiteSetting($setting);
 
         return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();

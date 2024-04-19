@@ -76,7 +76,7 @@
             submitEvent() {
                 this.httpPut("{:url('admin/setting/edit')}", {
                     ...this.form,
-                }).then(res => {
+                }, true).then(res => {
                     if (res.status) {
                         this.$message.success(res.msg)
                         location.href = "{:url('admin/setting/index')}"

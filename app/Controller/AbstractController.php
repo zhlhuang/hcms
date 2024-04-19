@@ -56,4 +56,24 @@ class AbstractController
     ): PsrResponseInterface {
         return $this->response->json($this->api_service->encryptData(compact('data', 'msg', 'status', 'code')));
     }
+
+    protected function returnSuccessJsonWithoutEncrypt(
+        array $data = [],
+        string $msg = '',
+        int $code = 200,
+        bool $status = true
+    ): PsrResponseInterface {
+        !$msg && $msg = $this->request->isMethod('GET') ? '请求成功' : '操作成功';
+
+        return $this->response->json(compact('data', 'msg', 'status', 'code'));
+    }
+
+    protected function returnErrorJsonWithoutEncrypt(
+        string $msg = '操作失败',
+        int $code = 500,
+        array $data = [],
+        bool $status = false
+    ): PsrResponseInterface {
+        return $this->response->json(compact('data', 'msg', 'status', 'code'));
+    }
 }

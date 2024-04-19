@@ -72,6 +72,20 @@ window.__vueCommon = {
             }
             return urlObj && urlObj.search && urlObj.search[variable] ? urlObj.search[variable] : default_value;
         },
+        encryptData: function (data) {
+            if (API_ENCODE) {
+                //开启了api 参数加密
+                let key = CryptoJS.enc.Utf8.parse(KEY);
+                console.log('data', JSON.stringify(data))
+                let encrypted_data = CryptoJS.AES.encrypt(JSON.stringify(data), key, {
+                    mode: CryptoJS.mode.ECB,
+                    padding: CryptoJS.pad.Pkcs7
+                }).toString()
+                console.log('encrypted_data', encrypted_data)
+                return {data: encrypted_data, is_encrypt: true}
+            }
+            return data
+        },
         decryptRes: function (res) {
             if (API_ENCODE) {
                 //开启了api加密，就需要解密处理
@@ -132,7 +146,10 @@ window.__vueCommon = {
                 })
             })
         },
-        httpPost: function (url, data, loading = true, loadingTarget = '.loading') {
+        httpPost: function (url, data, is_encrypt = false, loading = true, loadingTarget = '.loading') {
+            if (is_encrypt) {
+                data = this.encryptData(data)
+            }
             return new Promise((resolve, reject) => {
                 let loadingInstance = loading ? this.$loading({
                     target: loadingTarget
@@ -147,7 +164,11 @@ window.__vueCommon = {
                 });
             })
         },
-        httpPut: function (url, data, loading = true, loadingTarget = '.loading') {
+        httpPut: function (url, data, is_encrypt = false, loading = true, loadingTarget = '.loading') {
+            if (is_encrypt) {
+                data = this.encryptData(data)
+            }
+            console.log("is_encrypt", is_encrypt, data)
             return new Promise((resolve, reject) => {
                 let loadingInstance = loading ? this.$loading({
                     target: loadingTarget
