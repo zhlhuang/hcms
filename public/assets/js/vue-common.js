@@ -76,12 +76,12 @@ window.__vueCommon = {
             if (API_ENCODE) {
                 //开启了api 参数加密
                 let key = CryptoJS.enc.Utf8.parse(KEY);
-                console.log('data', JSON.stringify(data))
+                // console.log('data', JSON.stringify(data))
                 let encrypted_data = CryptoJS.AES.encrypt(JSON.stringify(data), key, {
                     mode: CryptoJS.mode.ECB,
                     padding: CryptoJS.pad.Pkcs7
                 }).toString()
-                console.log('encrypted_data', encrypted_data)
+                // console.log('encrypted_data', encrypted_data)
                 return {data: encrypted_data, is_encrypt: true}
             }
             return data
@@ -168,7 +168,7 @@ window.__vueCommon = {
             if (is_encrypt) {
                 data = this.encryptData(data)
             }
-            console.log("is_encrypt", is_encrypt, data)
+            // console.log("is_encrypt", is_encrypt, data)
             return new Promise((resolve, reject) => {
                 let loadingInstance = loading ? this.$loading({
                     target: loadingTarget

@@ -41,7 +41,7 @@ class AppExceptionHandler extends ExceptionHandler
             $throwable->getMessage(), $throwable->getLine(), $throwable->getTraceAsString()));
         $this->stdout_loger->error($throwable->getTraceAsString());
 
-        return $response->withHeader('Server', 'Hyperf')
+        return $response->withHeader('Server', 'nginx')
             ->withStatus(500)
             ->withBody(new SwooleStream('Internal Server Error.'));
     }

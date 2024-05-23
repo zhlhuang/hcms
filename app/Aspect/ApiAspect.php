@@ -54,13 +54,8 @@ class ApiAspect extends AbstractAspect
                 'msg' => $this->request->isMethod('GET') ? '请求成功' : '操作成功'
             ])) : $res;
         } catch (PDOException $pdoException) {
-            //数据库的错误，正式环境不能直接返回sql语句
-            if (env('APP_ENV') === 'dev') {
-                throw new ApiErrorException($pdoException->getMessage(), (int)$pdoException->getCode(),
-                    $pdoException->getPrevious());
-            } else {
-                throw new ApiErrorException("系统错误", (int)$pdoException->getCode(), $pdoException->getPrevious());
-            }
+            //如果是sql报错，直接抛出
+            throw $pdoException;
         } catch (\Throwable $exception) {
             throw new ApiErrorException($exception->getMessage(), (int)$exception->getCode(),
                 $exception->getPrevious());

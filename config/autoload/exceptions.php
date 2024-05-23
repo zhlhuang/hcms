@@ -19,6 +19,7 @@ return [
             App\Exception\Handler\HttpExceptionHandler::class,
             App\Exception\Handler\ErrorExceptionHandler::class,
             App\Exception\Handler\ApiErrorExceptionHandler::class,
+            App\Exception\Handler\SqlExceptionHandler::class,
             App\Exception\Handler\AppExceptionHandler::class,
         ],
     ],

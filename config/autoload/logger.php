@@ -10,13 +10,16 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
+
+use Monolog\Level;
+
 return [
     'default' => [
         'handler' => [
             'class' => Monolog\Handler\StreamHandler::class,
             'constructor' => [
                 'stream' => BASE_PATH . '/runtime/logs/hyperf.log',
-                'level' => Monolog\Logger::DEBUG,
+                'level' => Level::Debug
             ],
         ],
         'formatter' => [
@@ -33,7 +36,7 @@ return [
             'class' => Monolog\Handler\RotatingFileHandler::class,
             'constructor' => [
                 'filename' => BASE_PATH . '/runtime/logs/request/request.log',
-                'level' => Monolog\Logger::DEBUG,
+                'level' => Level::Debug,
             ],
         ],
         'formatter' => [
@@ -49,7 +52,7 @@ return [
             'class' => Monolog\Handler\RotatingFileHandler::class,
             'constructor' => [
                 'filename' => BASE_PATH . '/runtime/logs/error/error.log',
-                'level' => Monolog\Logger::DEBUG,
+                'level' => Level::Debug,
             ],
         ],
         'formatter' => [
