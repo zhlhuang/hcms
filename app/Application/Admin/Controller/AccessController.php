@@ -6,15 +6,15 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
-use App\Application\Admin\Controller\RequestParam\AccessSubmitRequestParam;
+use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Access;
+use App\Application\Admin\RequestParam\AccessSubmitRequestParam;
 use App\Application\Admin\Service\AccessService;
 use App\Controller\AbstractController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
-use App\Application\Admin\Middleware\AdminMiddleware;
 use Hyperf\HttpServer\Annotation\PutMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 

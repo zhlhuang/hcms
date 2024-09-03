@@ -12,11 +12,11 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
-use App\Application\Admin\Controller\RequestParam\RoleSubmitRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Access;
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminRoleAccess;
+use App\Application\Admin\RequestParam\RoleSubmitRequestParam;
 use App\Application\Admin\Service\AccessService;
 use App\Application\Admin\Service\AdminUserService;
 use App\Controller\AbstractController;

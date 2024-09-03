@@ -11,11 +11,11 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
-use App\Application\Admin\Controller\RequestParam\UserSubmitRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\AdminLoginRecord;
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminUser;
+use App\Application\Admin\RequestParam\UserSubmitRequestParam;
 use App\Application\Admin\Service\AdminUserService;
 use App\Controller\AbstractController;
 use Hyperf\Database\Model\Relations\Relation;

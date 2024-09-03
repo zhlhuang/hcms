@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Admin\Controller\RequestParam;
+namespace App\Application\Admin\RequestParam;
 
 use App\Annotation\RequestParam;
 use App\Controller\RequestParam\BaseRequestParam;

@@ -11,10 +11,10 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
-use App\Application\Admin\Controller\RequestParam\SettingSiteRequestParam;
-use App\Application\Admin\Controller\RequestParam\SettingSubmitRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\Setting;
+use App\Application\Admin\RequestParam\SettingSiteRequestParam;
+use App\Application\Admin\RequestParam\SettingSubmitRequestParam;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Controller\AbstractController;
 use App\Service\SettingService;
