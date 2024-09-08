@@ -1,0 +1,22 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Application\{Module}\RequestParam;
+
+use App\Annotation\RequestParam;
+use App\Controller\RequestParam\BaseRequestParam;
+
+#[RequestParam]
+class {RequestParam}RequestParam extends BaseRequestParam
+{
+    protected array $rules = [
+        'access_name' => 'required',
+    ];
+
+    protected array $message = [
+        'access_name.required' => '请输入菜单/权限名称',
+    ];
+
+    private string $access_name = '';
+}
