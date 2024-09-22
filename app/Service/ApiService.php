@@ -47,11 +47,13 @@ class ApiService
      * @param array $data
      * @return array
      */
-    public function encryptData(array $data = []): array
+    public function encryptData(array $data = [], string $key = ''): array
     {
         if ($this->getEncodeData()) {
             $data_str = Json::encode($data);
-            $key = $this->getApiKey();
+            if ($key === '') {
+                $key = $this->getApiKey();
+            }
             $encode = base64_encode(openssl_encrypt($data_str, "AES-128-ECB", $key, 1));
 
             return [
@@ -63,9 +65,11 @@ class ApiService
         }
     }
 
-    public function decryptData(string $data_str = ''): array
+    public function decryptData(string $data_str = '', string $key = ''): array
     {
-        $key = $this->getApiKey();
+        if ($key === '') {
+            $key = $this->getApiKey();
+        }
 
         return Json::decode(openssl_decrypt($data_str, "AES-128-ECB", $key));
     }

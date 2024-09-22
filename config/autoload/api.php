@@ -11,5 +11,5 @@ use function Hyperf\Support\env;
 
 return [
     'encode_data' => env('APP_ENV') !== 'dev',
-    'key' => '2c1dc1975775ee38',
+    'key' => '',
 ];

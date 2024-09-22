@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace App\Controller\RequestParam;
 
 use App\Exception\ErrorException;
-use App\Service\ApiService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Validation\Contract\ValidatorFactoryInterface;
@@ -26,9 +25,6 @@ abstract class BaseRequestParam
     #[Inject]
     protected RequestInterface $request;
 
-    #[Inject]
-    protected ApiService $apiService;
-
     protected array $input_data = [];
 
 
@@ -39,14 +35,7 @@ abstract class BaseRequestParam
 
     public function __construct()
     {
-        $is_encrypt = $this->request->input("is_encrypt", false);
-        if ($is_encrypt) {
-            $encrypt_data = $this->request->input("data", '');
-
-            $this->input_data = $this->apiService->decryptData($encrypt_data);
-        } else {
-            $this->input_data = $this->request->all();
-        }
+        $this->input_data = $this->request->all();
     }
 
     /**

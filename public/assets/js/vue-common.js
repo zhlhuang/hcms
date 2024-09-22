@@ -146,7 +146,7 @@ window.__vueCommon = {
                 })
             })
         },
-        httpPost: function (url, data, is_encrypt = false, loading = true, loadingTarget = '.loading') {
+        httpPost: function (url, data, is_encrypt = true, loading = true, loadingTarget = '.loading') {
             if (is_encrypt) {
                 data = this.encryptData(data)
             }
@@ -164,7 +164,7 @@ window.__vueCommon = {
                 });
             })
         },
-        httpPut: function (url, data, is_encrypt = false, loading = true, loadingTarget = '.loading') {
+        httpPut: function (url, data, is_encrypt = true, loading = true, loadingTarget = '.loading') {
             if (is_encrypt) {
                 data = this.encryptData(data)
             }

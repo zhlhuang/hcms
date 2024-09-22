@@ -121,7 +121,7 @@
                 this.httpPost("{:url('admin/user/edit')}", {
                     ...this.form,
                     role_id: this.role_id
-                }, true).then(res => {
+                }).then(res => {
                     if (res.status) {
                         this.$message.success(res.msg)
                         location.href = "{:url('admin/user/index')}"

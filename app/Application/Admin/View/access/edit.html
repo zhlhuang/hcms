@@ -170,7 +170,7 @@
                 this.httpPut("{:url('admin/access/edit')}", {
                     ...this.form,
                     parent_access_id: this.parent_access_id
-                }, true).then(res => {
+                }).then(res => {
                     if (res.status) {
                         this.$message.success(res.msg)
                         location.href = "{:url('admin/access/index')}"
