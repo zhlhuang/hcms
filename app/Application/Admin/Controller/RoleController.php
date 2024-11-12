@@ -41,7 +41,7 @@ class RoleController extends AbstractController
         }
 
         //如果有下级，不能删除
-        if (AdminRole::where('role_id', $role->role_id)
+        if (AdminRole::where('parent_role_id', $role->role_id)
                 ->count() > 0) {
             return $this->returnErrorJson('该角色有下级角色，不能删除');
         }
