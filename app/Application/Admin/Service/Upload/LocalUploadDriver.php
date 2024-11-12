@@ -34,7 +34,7 @@ class LocalUploadDriver extends AbstractUploadDriver
             mkdir($dir_path, 0755, true);
         }
         $file_path = $dir_path . $file_name;
-        $file_url = ($this->config['upload_domain'] ?? "/") . $upload_file_dir . DIRECTORY_SEPARATOR . $file_name;
+        $file_url = DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR . $file_name;
         $this->file->moveTo($file_path);
 
         $this->upload_file->file_url = $file_url;
@@ -52,7 +52,7 @@ class LocalUploadDriver extends AbstractUploadDriver
         $file_type = $this->upload_file->file_type;
         if ($file_type === UploadFile::FILE_TYPE_IMAGE) {
             //图片缩略图
-            return $this->upload_file->file_url;
+            return $this->upload_file->getOriginalValue('file_url');
         }
         if ($file_type === UploadFile::FILE_TYPE_VIDEO) {
             //视频文件缩略图
@@ -122,6 +122,11 @@ class LocalUploadDriver extends AbstractUploadDriver
      */
     private function getDomain(): string
     {
+        $upload_domain = $this->setting->getUploadSetting('upload_domain');
+        if ($upload_domain != '/') {
+            //如果不是默认 / 直接返回设置的域名，方便对象存储镜像图片
+            return $upload_domain;
+        }
         $domain = getScheme() . "://" . $this->request->getUri()
                 ->getHost();
 
