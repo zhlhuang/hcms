@@ -1,0 +1,87 @@
+<div class="page-container" v-cloak>
+    <el-card>
+        <template #header>
+            <div class="breadcrumb">
+                <el-breadcrumb separator="/">
+                    <el-breadcrumb-item>修改密码</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+        </template>
+        <div>
+            <el-form label-width="100px">
+                <el-form-item label="管理员姓名">
+                    <el-input :disabled="true" v-model="form.real_name"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名">
+                    <div>
+                        <el-input :disabled="true" v-model="form.username"></el-input>
+                    </div>
+                </el-form-item>
+                <el-form-item label="原密码">
+                    <el-input type="password" v-model="form.password" placeholder="请输入原密码"></el-input>
+                </el-form-item>
+                <el-form-item label="新密码">
+                    <el-input type="password" v-model="form.new_password" placeholder="请输入原密码"></el-input>
+                </el-form-item>
+                <el-form-item label="确认新密码">
+                    <el-input type="password" v-model="form.new_confirm_password" placeholder="请输入原密码"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click="submitEvent" type="primary">
+                        提交
+                    </el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </el-card>
+</div>
+
+<script>
+    const App = {
+        data() {
+            return {
+                form: {}
+            }
+        },
+        mounted() {
+            this.getInfo()
+        },
+        computed: {},
+        methods: {
+            /**
+             * 获取编辑所需信息
+             */
+            getInfo() {
+                let admin_user_id = this.getUrlQuery('admin_user_id', 0)
+                this.httpGet("{:url('admin/user/reset/info')}", {}).then(res => {
+                    if (res.status) {
+                        let {admin_user = {}, brand = {}} = res.data
+                        if (admin_user.admin_user_id) {
+                            this.form = {
+                                ...admin_user,
+                            }
+                        }
+
+                    }
+                })
+            },
+            /**
+             * 提交信息
+             */
+            submitEvent() {
+                this.httpPost("{:url('admin/user/reset')}", {
+                    ...this.form,
+                    role_id: this.role_id,
+                    brand: this.brand,
+                }).then(res => {
+                    if (res.status) {
+                        this.$message.success(res.msg)
+                    }
+                })
+            },
+        }
+    }
+</script>
+
+<style>
+</style>

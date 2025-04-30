@@ -11,6 +11,7 @@ namespace App\Application\Admin\Controller;
 
 use App\Annotation\Api;
 use App\Annotation\View;
+use App\Application\Admin\RequestParam\UserResetRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
 use App\Application\Admin\Model\AdminLoginRecord;
 use App\Application\Admin\Model\AdminRole;
@@ -24,13 +25,52 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
 #[Middleware(AdminMiddleware::class)]
 #[Controller("admin/user")]
 class UserController extends AbstractController
 {
+    #[Api]
+    #[PostMapping('reset')]
+    public function resetSubmit()
+    {
+        $user_reset_request = new UserResetRequestParam();
+        $user_reset_request->validatedThrowMessage();
 
+        if ($user_reset_request->getNewPassword() != $user_reset_request->getNewConfirmPassword()) {
+            return $this->returnErrorJson('两次新密码输入不一致');
+        }
+        $username = AdminUserService::getInstance()
+            ->getAdminUser()->username;
+        $admin_user = AdminUser::where(['username' => $username])
+            ->first();
+        if ($admin_user instanceof AdminUser && $admin_user->passwordVerify($user_reset_request->getPassword())) {
+            $admin_user->password = AdminUser::makePassword($username, $user_reset_request->getNewPassword());
+
+            return $admin_user->save() ? [] : $this->returnErrorJson();
+        } else {
+            return $this->returnErrorJson('账号或密码错误');
+        }
+    }
+
+    #[Api]
+    #[GetMapping('reset/info')]
+    public function resetInfo()
+    {
+        $admin_user = AdminUserService::getInstance()
+            ->getAdminUser();
+
+        return compact('admin_user');
+    }
+
+    #[View]
+    #[GetMapping]
+    public function reset()
+    {
+
+    }
 
     #[Api]
     #[DeleteMapping("record/delete/{id}")]

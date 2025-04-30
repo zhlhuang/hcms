@@ -85,6 +85,11 @@
                                     </div>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
+                                    <span @click="resetEvent">
+                                        修改密码
+                                    </span>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
                             <span @click="clickLogout">
                                 退出登录
                             </span>
@@ -536,6 +541,12 @@
             }
         },
         methods: {
+            resetEvent() {
+                this.goUrl(['修改密码'], {
+                    access_name: "修改密码",
+                    url: "{:url('admin/user/reset')}",
+                })
+            },
             flushCache() {
                 this.httpPost("/admin/cache/flush", {}).then(res => {
                     if (res.status) {

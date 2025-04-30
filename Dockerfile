@@ -1,6 +1,6 @@
 # Default Dockerfile
 
-FROM hyperf-cloud-docker.pkg.coding.net/hyperf/hyperf/hyperf:8.1-alpine-v3.16-swoole
+FROM hyperf-cloud-docker.pkg.coding.net/hyperf/hyperf/hyperf:8.1-alpine-v3.18-swoole
 LABEL maintainer="Hcms Developers <364626853@qq.com>" version="1.0" license="MIT" app.name="Hcms"
 ##
 # ---------- env settings ----------
@@ -8,7 +8,7 @@ LABEL maintainer="Hcms Developers <364626853@qq.com>" version="1.0" license="MIT
 # --build-arg timezone=Asia/Shanghai
 ARG timezone
 
-ENV TIMEZONE=${timezone:-"Asia/Shanghai"} \
+ENV TIMEZONE=${timewzone:-"Asia/Shanghai"} \
     APP_ENV=prod \
     SCAN_CACHEABLE=(true)
 
