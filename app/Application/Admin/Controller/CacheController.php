@@ -12,6 +12,7 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use Hyperf\Session\Middleware\SessionMiddleware;
 use App\Controller\AbstractController;
 use Hyperf\Cache\Collector\FileStorage;
 use Hyperf\Contract\ConfigInterface;
@@ -19,12 +20,12 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\Redis\Redis;
 use \Hyperf\Codec\Json;
 
-#[Middleware(AdminMiddleware::class)]
+#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
 #[Controller("admin/cache")]
 class CacheController extends AbstractController
 {

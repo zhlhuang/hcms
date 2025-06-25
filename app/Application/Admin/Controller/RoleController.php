@@ -13,6 +13,7 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use Hyperf\Session\Middleware\SessionMiddleware;
 use App\Application\Admin\Model\Access;
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminRoleAccess;
@@ -24,10 +25,10 @@ use Hyperf\Database\Model\Relations\Relation;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-#[Middleware(AdminMiddleware::class)]
+#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
 #[Controller("admin/role")]
 class RoleController extends AbstractController
 {

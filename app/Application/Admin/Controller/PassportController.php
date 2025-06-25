@@ -14,10 +14,13 @@ use Hyperf\Contract\SessionInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
+use Hyperf\Session\Middleware\SessionMiddleware;
 use Intervention\Image\ImageManagerStatic as Image;
 
+#[Middlewares([SessionMiddleware::class])]
 #[Controller("admin/passport")]
 class PassportController extends AbstractController
 {

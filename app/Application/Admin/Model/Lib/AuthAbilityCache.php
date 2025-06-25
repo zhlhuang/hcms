@@ -23,6 +23,6 @@ trait AuthAbilityCache
 
     public static function retrieveById($key): ?Authenticatable
     {
-        return self::findFromCache($key);
+        return static::findFromCache($key);
     }
 }

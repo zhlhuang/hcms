@@ -22,9 +22,11 @@ use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middleware;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use Hyperf\Session\Middleware\SessionMiddleware;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Qbhy\HyperfAuth\Annotation\Auth;
 
+#[Middleware(SessionMiddleware::class)]
 #[Middleware(AdminMiddleware::class)]
 #[Controller("/demo/demo")]
 class DemoController extends AbstractController

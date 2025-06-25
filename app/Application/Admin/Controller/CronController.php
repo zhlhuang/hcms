@@ -7,16 +7,17 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use Hyperf\Session\Middleware\SessionMiddleware;
 use App\Application\Admin\Model\CronLog;
 use App\Controller\AbstractController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use function Hyperf\Config\config;
 
 
-#[Middleware(AdminMiddleware::class)]
+#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
 #[Controller(prefix: "/admin/cron")]
 class CronController extends AbstractController
 {

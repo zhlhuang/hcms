@@ -13,6 +13,7 @@ use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\RequestParam\UserResetRequestParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use Hyperf\Session\Middleware\SessionMiddleware;
 use App\Application\Admin\Model\AdminLoginRecord;
 use App\Application\Admin\Model\AdminRole;
 use App\Application\Admin\Model\AdminUser;
@@ -24,11 +25,11 @@ use Hyperf\DbConnection\Model\Model;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-#[Middleware(AdminMiddleware::class)]
+#[Middlewares([SessionMiddleware::class, AdminMiddleware::class])]
 #[Controller("admin/user")]
 class UserController extends AbstractController
 {

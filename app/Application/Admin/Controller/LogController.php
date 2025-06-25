@@ -12,6 +12,7 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use Hyperf\Session\Middleware\SessionMiddleware;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Controller\AbstractController;
 use App\Exception\ErrorException;
@@ -20,10 +21,10 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PutMapping;
 
-#[Middleware(AdminMiddleware::class)]
+#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
 #[Controller("admin/log")]
 class LogController extends AbstractController
 {

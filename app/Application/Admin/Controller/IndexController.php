@@ -11,11 +11,12 @@ use App\Application\Admin\Service\AdminUserService;
 use App\Controller\AbstractController;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use Hyperf\Session\Middleware\SessionMiddleware;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-#[Middleware(AdminMiddleware::class)]
+#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
 #[Controller("/admin/index")]
 class IndexController extends AbstractController
 {

@@ -13,18 +13,19 @@ use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Lib\QueueMessageParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use Hyperf\Session\Middleware\SessionMiddleware;
 use App\Application\Admin\Model\QueueList;
 use App\Controller\AbstractController;
 use Hyperf\AsyncQueue\Message;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Annotation\Middleware;
+use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\Redis\RedisFactory;
 use Psr\Container\ContainerInterface;
 use function Hyperf\Config\config;
 
-#[Middleware(AdminMiddleware::class)]
+#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
 #[Controller("admin/queue")]
 class QueueController extends AbstractController
 {
