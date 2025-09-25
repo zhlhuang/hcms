@@ -60,6 +60,18 @@ return [
             'setting_description' => '站点描述',
             'setting_value' => 'Hcms 是基于Hyperf 框架开发的模块化管理系统，致力于定制化项目模块化开发规范。',
             'type' => 'string',
+        ],
+        [
+            'setting_key' => 'site_safe_login',
+            'setting_description' => '站点安全登录',
+            'setting_value' => 0,
+            'type' => 'number',
+        ],
+        [
+            'setting_key' => 'site_safe_login_login',
+            'setting_description' => '站点登录安全码',
+            'setting_value' => "",
+            'type' => 'string',
         ]
     ]
 ];

@@ -18,12 +18,12 @@
 <body>
 <div id="app" v-cloak>
     <div class="loading">
-        <el-empty description="{$description}"></el-empty>
+        <el-empty :description="description"></el-empty>
         <div>
-            {$location}
+            {{location}}
         </div>
         <div>
-            {$content}
+            {{content}}
         </div>
     </div>
 </div>
@@ -33,9 +33,18 @@
         const App = {
             el: "#app",
             data() {
-                return {}
+                return {
+                    description: '{$description}',
+                    location: '{$location}',
+                    content: `{$content}`,
+                }
             },
             mounted() {
+                if (this.content === "") {
+                    //正式环境没有content，控制台打印日志 description，然后不显示具体 description
+                    console.log('description', this.description)
+                    this.description = "页面错误";
+                }
             },
             methods: {}
         }

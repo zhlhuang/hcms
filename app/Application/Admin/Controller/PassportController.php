@@ -10,6 +10,7 @@ use App\Application\Admin\Model\AdminLoginRecord;
 use App\Application\Admin\Model\AdminUser;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Controller\AbstractController;
+use App\Exception\ErrorException;
 use Hyperf\Contract\SessionInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -30,6 +31,19 @@ class PassportController extends AbstractController
 
     #[Inject]
     protected SessionInterface $session;
+
+
+    #[View('login')]
+    #[GetMapping("/admin/login/{sale_code}")]
+    public function saleLogin(string $sale_code)
+    {
+        if ($this->admin_setting->getSafeLogin()) {
+            if ($sale_code != $this->admin_setting->getSafeLoginCode()) {
+                throw new ErrorException("安全登录码错误");
+            }
+        }
+        $this->session->set('sale_code', $sale_code);
+    }
 
     #[Api]
     #[RequestMapping("logout")]
@@ -109,6 +123,13 @@ class PassportController extends AbstractController
     #[GetMapping("login")]
     public function login()
     {
+        if ($this->admin_setting->getSafeLogin()) {
+            $sale_code = $this->session->get('sale_code', '');
+            if (empty($sale_code) || $sale_code != $this->admin_setting->getSafeLoginCode()) {
+                throw new ErrorException("安全登录码错误");
+            }
+        }
+
         return [
             'site_name' => $this->admin_setting->getSiteSetting('site_name', 'Hcms')
         ];

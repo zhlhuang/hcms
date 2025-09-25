@@ -14,6 +14,17 @@ use App\Service\AbstractSettingService;
 
 class AdminSettingService extends AbstractSettingService
 {
+
+    public function getSafeLoginCode()
+    {
+        return $this->getSettings('site', 'site_safe_login_code', '');
+    }
+
+    public function getSafeLogin(): bool
+    {
+        return intval($this->getSettings('site', 'site_safe_login', 0)) === 1;
+    }
+
     /**
      * 获取上传配置
      *

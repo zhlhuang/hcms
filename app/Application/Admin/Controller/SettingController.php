@@ -26,7 +26,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PutMapping;
 
-#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
+#[Middlewares([SessionMiddleware::class, AdminMiddleware::class])]
 #[Controller("admin/setting")]
 class SettingController extends AbstractController
 {

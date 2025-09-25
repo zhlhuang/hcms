@@ -16,7 +16,7 @@ use App\Application\Admin\Middleware\AdminMiddleware;
 use Hyperf\Session\Middleware\SessionMiddleware;
 use Hyperf\HttpServer\Annotation\RequestMapping;
 
-#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
+#[Middlewares([SessionMiddleware::class, AdminMiddleware::class])]
 #[Controller("/admin/index")]
 class IndexController extends AbstractController
 {

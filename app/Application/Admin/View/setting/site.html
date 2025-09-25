@@ -3,7 +3,7 @@
         <template #header>
             <div class="breadcrumb">
                 <el-breadcrumb separator="/">
-                    <el-breadcrumb-item><a href="{:url('admin/setting/index')}">配置列表</a></el-breadcrumb-item>
+                    <el-breadcrumb-item><a href="{:url('admin/setting/index')}">配置管理</a></el-breadcrumb-item>
                     <el-breadcrumb-item>站点配置</el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
@@ -17,6 +17,31 @@
                     <el-input v-model="setting.site_description" placeholder="请输入关于站点的介绍" style="width: 400px"
                               :rows="5"
                               type="textarea"></el-input>
+                </el-form-item>
+                <el-form-item label="安全登录">
+                    <div>
+                        <el-switch v-model="setting.site_safe_login" :active-value="1" :inactive-value="0"
+                                   active-text="开启" inactive-text="关闭" @change="randomEvent"></el-switch>
+                    </div>
+                </el-form-item>
+                <el-form-item v-if="setting.site_safe_login===1" label="安全登录码">
+                    <div>
+                        <div>
+                            <el-input v-model="setting.site_safe_login_code" placeholder="请输入安全登录码"></el-input>
+                            <el-link style="padding-left: 10px;" :underline="false" type="primary"
+                                     @click="randomEvent">
+                                随机
+                            </el-link>
+                        </div>
+                        <div class="form-small">
+                            <small>
+                                开安全登录，首次登录需要访问 <a
+                                    target="_blank"
+                                    :href="'{:url('admin/login',[],true)}/'+setting.site_safe_login_code">{:url('admin/login',[],true)}/{{setting.site_safe_login_code}}</a>
+                                否则不能进入登录页面
+                            </small>
+                        </div>
+                    </div>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="submitEvent" type="primary">保存</el-button>
@@ -40,11 +65,17 @@
             this.getInfo()
         },
         methods: {
+            randomEvent() {
+                this.setting.site_safe_login_code = Math.random().toString(36).substring(2, 8)
+            },
             getInfo() {
                 this.httpGet("{:url('admin/setting/site/info')}", {}).then(res => {
                     if (res.status) {
                         let {setting = {}} = res.data
-                        this.setting = setting
+                        this.setting = {
+                            ...setting,
+                            site_safe_login: parseInt(setting.site_safe_login),
+                        }
                     }
                 })
             },
