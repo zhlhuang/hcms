@@ -8,6 +8,14 @@
 declare(strict_types=1);
 
 return [
+    'cron' => [
+        [
+            'setting_key' => 'cron_log_is_open',
+            'setting_description' => '计划任务日志记录是否开启',
+            'setting_value' => 0,
+            'type' => 'number',
+        ]
+    ],
     'log' => [
         [
             'setting_key' => 'log_is_open',

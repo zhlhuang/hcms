@@ -13,6 +13,8 @@ use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Lib\QueueMessageParam;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use App\Application\Admin\Model\CronLog;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\Session\Middleware\SessionMiddleware;
 use App\Application\Admin\Model\QueueList;
 use App\Controller\AbstractController;
@@ -25,10 +27,26 @@ use Hyperf\Redis\RedisFactory;
 use Psr\Container\ContainerInterface;
 use function Hyperf\Config\config;
 
-#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
+#[Middlewares([SessionMiddleware::class, AdminMiddleware::class])]
 #[Controller("admin/queue")]
 class QueueController extends AbstractController
 {
+
+    #[Api]
+    #[DeleteMapping("delete")]
+    public function deleteByTime()
+    {
+        $time = $this->request->input('time', '');
+
+        if (!$time) {
+            return $this->returnErrorJson('请选择时间');
+        }
+        $res = QueueList::where('created_at', '<', $time)
+            ->delete();
+
+        return $res ? [] : $this->returnErrorJson();
+    }
+
 
     #[Api]
     #[GetMapping("status/lists")]

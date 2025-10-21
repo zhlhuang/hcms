@@ -24,7 +24,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PutMapping;
 
-#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
+#[Middlewares([SessionMiddleware::class, AdminMiddleware::class])]
 #[Controller("admin/log")]
 class LogController extends AbstractController
 {
@@ -35,20 +35,45 @@ class LogController extends AbstractController
     protected ConfigInterface $config;
 
     #[Api]
+    #[DeleteMapping("delete/batch")]
+    public function deleteBatch()
+    {
+        $file_names = $this->request->post('file_names');
+        if (empty($file_names)) {
+            return $this->returnErrorJson('选择需要删除的文件');
+        }
+        foreach ($file_names as $file_name) {
+            $file_path = $this->deleteLogFileByName($file_name);
+            unlink($file_path);
+        }
+
+        return [];
+    }
+
+    #[Api]
     #[DeleteMapping("delete/{file_name}")]
     function deleteLog($file_name = '')
     {
+        $file_path = $this->deleteLogFileByName($file_name);
+
+        return unlink($file_path) ? $this->returnSuccessJson() : $this->returnErrorJson();
+    }
+
+    public function deleteLogFileByName($file_name = '')
+    {
+        $file_name = str_replace('..', '', trim($file_name));
         //为了安全起见，会把文件名含有/的符号替换掉。
         $file_name = str_replace('/', '', trim($file_name));
+
         $file_type = explode('-', $file_name)[0] ?? 'request';
         $request_log_config = $this->config->get("logger.{$file_type}", []);
         $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
         $file_dir = str_replace("{$file_type}.log", '', $log_filename);
         if (!file_exists($file_dir . $file_name)) {
-            throw new ErrorException('抱歉，找不到该文件');
+            throw new ErrorException('抱歉，找不到该文件：' . $file_name);
         }
 
-        return unlink($file_dir . $file_name) ? $this->returnSuccessJson() : $this->returnErrorJson();
+        return $file_dir . $file_name;
     }
 
     #[GetMapping("detail")]
@@ -85,7 +110,8 @@ class LogController extends AbstractController
                 $file_path = $file_dir . $file;
                 $file_list[] = [
                     'file_name' => $file,
-                    'file_path' => $file_path,
+//                    'file_path' => $file_path,
+                    'show_path' => str_replace(BASE_PATH, '', $file_path),
                     'file_size' => sprintf('%0.2fKB', filesize($file_path) / 1024)
                 ];
             }

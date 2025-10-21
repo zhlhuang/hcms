@@ -35,12 +35,16 @@
                     </el-switch>
                 </el-form-item>
             </el-form>
+            <div v-if="select_files.length>0" style="padding-bottom: 20px">
+                <el-button type="danger" @click="batchDeleteEvent">删除选中</el-button>
+            </div>
         </div>
         <div>
             <el-table
-
+                    @selection-change="handleSelectionChange"
                     :data="file_list"
                     style="width: 100%">
+                <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column
                         fixed
                         prop="file_name"
@@ -53,7 +57,7 @@
                         width="100">
                 </el-table-column>
                 <el-table-column
-                        prop="file_path"
+                        prop="show_path"
                         min-width="380"
                         label="文件路径">
                 </el-table-column>
@@ -78,6 +82,7 @@
             return {
                 log_type: 'request',
                 file_list: [],
+                select_files: [],
                 setting: {
                     log_is_open: 1,
                     is_open: 1,
@@ -88,6 +93,26 @@
             this.getInfo()
         },
         methods: {
+            batchDeleteEvent() {
+                this.$confirm('是否批量选中删除?', '提示').then(() => {
+                    let file_names = []
+                    this.select_files.forEach(file => {
+                        file_names.push(file.file_name)
+                    })
+                    console.log('file_names', file_names)
+                    this.httpDelete("{:url('admin/log/delete/batch')}", {file_names}).then(res => {
+                        if (res.status) {
+                            this.$message.success(res.msg)
+                            this.getInfo()
+                        }
+                    })
+                }).catch(err => {
+                })
+            },
+            handleSelectionChange(e) {
+                console.log('handleSelectionChange', e)
+                this.select_files = e
+            },
             detailEvent({file_name}) {
                 let url = "{:url('admin/log/detail',['file'=>''])}" + file_name
                 this.openNewFrame('日志 ' + file_name, url)

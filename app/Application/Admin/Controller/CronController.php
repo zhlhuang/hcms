@@ -7,6 +7,9 @@ namespace App\Application\Admin\Controller;
 use App\Annotation\Api;
 use App\Annotation\View;
 use App\Application\Admin\Middleware\AdminMiddleware;
+use App\Application\Admin\Service\AdminSettingService;
+use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Annotation\PutMapping;
 use Hyperf\Session\Middleware\SessionMiddleware;
 use App\Application\Admin\Model\CronLog;
 use App\Controller\AbstractController;
@@ -17,10 +20,23 @@ use Hyperf\HttpServer\Annotation\Middlewares;
 use function Hyperf\Config\config;
 
 
-#[Middlewares([SessionMiddleware::class,AdminMiddleware::class])]
+#[Middlewares([SessionMiddleware::class, AdminMiddleware::class])]
 #[Controller(prefix: "/admin/cron")]
 class CronController extends AbstractController
 {
+
+    #[Inject]
+    protected AdminSettingService $setting;
+
+    #[Api]
+    #[PutMapping("setting")]
+    function settingSave()
+    {
+        $setting = $this->request->post('setting', []);
+        $res = $this->setting->setCronSetting($setting);
+
+        return $res ? $this->returnSuccessJson(compact('setting')) : $this->returnErrorJson();
+    }
 
     #[Api]
     #[DeleteMapping("delete")]
@@ -66,8 +82,9 @@ class CronController extends AbstractController
         $processes = config('processes');
         $open_service = in_array(\Hyperf\Crontab\Process\CrontabDispatcherProcess::class, $processes);
 
+        $setting = $this->setting->getCronSetting();
 
-        return compact('lists', 'open_service');
+        return compact('lists', 'open_service', 'setting');
     }
 
     #[View]

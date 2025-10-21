@@ -18,10 +18,28 @@
                 <el-form-item>
                     <el-button type="primary" @click="searchEvent">查询</el-button>
                 </el-form-item>
-                <el-form-item>
+            </el-form>
+
+
+            <el-form :inline="true">
+                <el-form-item label="日志记录">
+                    <div>
+                        <el-switch
+                                @change="submitEvent"
+                                v-model="setting.cron_log_is_open"
+                                :active-value="1"
+                                :inactive-value="0"
+                                inactive-color="#C0CCDA"
+                                active-text="开启"
+                                inactive-text="关闭"
+                        ></el-switch>
+                    </div>
+                </el-form-item>
+            </el-form>
+            <el-form :inline="true">
+                <el-form-item label="删除时间为">
                     <div style="display: flex;align-items: center">
                         <div style="margin-right: 10px">
-                            删除时间为
                             <el-date-picker
                                     style="width: 200px;"
                                     v-model="delete_muti_time"
@@ -39,6 +57,7 @@
                     </div>
                 </el-form-item>
             </el-form>
+
         </div>
         <div>
             <el-table
@@ -125,6 +144,9 @@
     const App = {
         data() {
             return {
+                setting: {
+                    cron_log_is_open: 0
+                },
                 open_service: true,
                 is_init_list: true,
                 where: {},
@@ -132,6 +154,13 @@
             }
         },
         methods: {
+            submitEvent() {
+                this.httpPut("{:url('admin/cron/setting')}", {setting: this.setting}).then(res => {
+                    if (res.status) {
+                        this.$message.success(res.msg)
+                    }
+                })
+            },
             deleteMutiEvent() {
                 console.log('deleteMutiEvent', this.delete_muti_time)
                 if (!this.delete_muti_time) {
@@ -154,8 +183,9 @@
                     page: this.current_page,
                     ...this.where
                 }).then(res => {
-                    let {lists = {}, open_service = false} = res.data
+                    let {lists = {}, open_service = false, setting = {}} = res.data
                     this.open_service = open_service
+                    this.setting = setting
                     this.handRes(lists)
                 })
             },

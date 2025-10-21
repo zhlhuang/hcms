@@ -4,6 +4,27 @@ window.__vueCommon = {
             return parseFloat(value).toFixed(2)
         }
     }, methods: {
+        objectToQueryParams(data) {
+            const params = new URLSearchParams();
+
+            // 遍历对象的每个属性
+            for (const key in data) {
+                // 确保只处理对象自身的属性
+                if (data.hasOwnProperty(key)) {
+                    const value = data[key];
+
+                    // 处理数组类型的值（会转换为 key=value1&key=value2 形式）
+                    if (Array.isArray(value)) {
+                        value.forEach(item => params.append(key, item));
+                    } else {
+                        params.append(key, value);
+                    }
+                }
+            }
+
+            // 转换为 query 字符串（例如 "name=John&age=30"）
+            return params.toString();
+        },
         /**
          * 打开新的子窗口
          * @param title
@@ -142,6 +163,10 @@ window.__vueCommon = {
             let loadingInstance = loading ? this.$loading({
                 target: loadingTarget
             }) : false
+            let query = this.objectToQueryParams(data)
+            if (query) {
+                url = url + "?" + query
+            }
             return fetch(url, {
                 headers: {
                     // 'Authorization': 'Bearer ' + token, // 示例：添加token

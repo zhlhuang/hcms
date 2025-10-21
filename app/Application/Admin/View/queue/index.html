@@ -22,6 +22,27 @@
                     <el-button type="primary" @click="searchEvent">查询</el-button>
                 </el-form-item>
             </el-form>
+            <el-form :inline="true">
+                <el-form-item label="删除时间为">
+                    <div style="display: flex;align-items: center">
+                        <div style="margin-right: 10px">
+                            <el-date-picker
+                                    style="width: 200px;"
+                                    v-model="delete_muti_time"
+                                    type="datetime"
+                                    value-format="YYYY-MM-DD HH:mm:ss"
+                                    placeholder="选择日期和时间"
+                            ></el-date-picker>
+                        </div>
+                        <div style="margin-right: 10px">
+                            之前的记录
+                        </div>
+                        <div>
+                            <el-button type="danger" @click="deleteMutiEvent">删除</el-button>
+                        </div>
+                    </div>
+                </el-form-item>
+            </el-form>
             <div>
                 <el-radio-group v-model="where.status" @change="refreshList" style="margin-bottom: 30px;">
                     <el-radio-button :label="-1">全部</el-radio-button>
@@ -110,6 +131,11 @@
                         label="创建时间"
                         width="160">
                 </el-table-column>
+                <el-table-column
+                        prop="updated_at"
+                        label="更新时间"
+                        width="160">
+                </el-table-column>
             </el-table>
             <div class="pagination-container">
                 <el-pagination
@@ -132,12 +158,30 @@
             return {
                 is_init_list: true,
                 open_service: true,
+                delete_muti_time: "",
                 where: {
                     status: -1
                 },
             }
         },
         methods: {
+            deleteMutiEvent() {
+                console.log('deleteMutiEvent', this.delete_muti_time)
+                if (!this.delete_muti_time) {
+                    this.$message.error('请选择时间')
+                    return
+                }
+
+                this.$confirm("是否确认删除" + this.delete_muti_time + "之前的记录？", '提示').then(() => {
+                    this.httpDelete("{:url('admin/queue/delete')}", {time: this.delete_muti_time}).then(res => {
+                        if (res.status) {
+                            this.$message.success(res.msg)
+                            this.GetList()
+                        }
+                    })
+                }).catch(err => {
+                })
+            },
             GetList() {
                 this.httpGet("{:url('admin/queue/index/lists')}", {
                     page: this.current_page,

@@ -93,4 +93,20 @@ class AdminSettingService extends AbstractSettingService
     {
         return $this->saveSetting($setting, 'log');
     }
+
+
+    public function getCronSetting(string $key = '', mixed $default = ''): mixed
+    {
+        return $this->getSettings('cron', $key, $default);
+    }
+
+    public function setCronSetting(array $setting): bool
+    {
+        return $this->saveSetting($setting, 'cron');
+    }
+
+    public function getCronLogOpen(): bool
+    {
+        return intval($this->getCronSetting('cron_log_is_open', 0)) === 1;
+    }
 }

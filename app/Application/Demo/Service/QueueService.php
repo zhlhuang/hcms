@@ -29,7 +29,7 @@ class QueueService
         var_dump("执行 LongMessage 完成");
     }
 
-    #[AsyncQueueMessage(maxAttempts: 3)]
+    #[AsyncQueueMessage(maxAttempts: 1)]
     function setErrorMessage($data)
     {
         var_dump("开始执行 ErrorMessage " . $data['id']);

@@ -10,9 +10,11 @@ declare(strict_types=1);
 namespace App\Aspect;
 
 use App\Application\Admin\Model\CronLog;
+use App\Application\Admin\Service\AdminSettingService;
 use App\Exception\ErrorException;
 use Hyperf\Crontab\Annotation\Crontab;
 use Hyperf\Di\Annotation\Aspect;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\Di\Aop\AbstractAspect;
 use Hyperf\Di\Aop\ProceedingJoinPoint;
 
@@ -20,6 +22,10 @@ use Hyperf\Di\Aop\ProceedingJoinPoint;
 #[Aspect]
 class CrontabAspect extends AbstractAspect
 {
+
+    #[Inject]
+    protected AdminSettingService $setting;
+
     public array $annotations = [
         Crontab::class
     ];
@@ -33,7 +39,7 @@ class CrontabAspect extends AbstractAspect
             $cron_rule = $annotation->rule;
             $cron_memo = $annotation->memo;
             $task_class = get_class($proceedingJoinPoint->getInstance());
-            $cron = CronLog::create(compact('cron_memo', 'cron_name', 'cron_rule', 'task_class'));
+            $cron = CronLog::newModelInstance(compact('cron_memo', 'cron_name', 'cron_rule', 'task_class'));
             $time = time();
             try {
                 $res = $proceedingJoinPoint->process();
@@ -41,14 +47,14 @@ class CrontabAspect extends AbstractAspect
                 $cron->result = CronLog::RESULT_SUCCESS;
                 $cron->result_msg = 'ok';
                 $cron->execute_time = time() - $time;
-                $cron->save();
+                $this->setting->getCronLogOpen() && $cron->save();
 
                 return $res;
             } catch (\Throwable $exception) {
                 $cron->result = CronLog::RESULT_FAILED;
                 $cron->result_msg = substr($exception->getMessage(), 0, 500);
                 $cron->execute_time = time() - $time;
-                $cron->save();
+                $this->setting->getCronLogOpen() && $cron->save();
                 throw new ErrorException($exception->getMessage());
             }
         } else {
