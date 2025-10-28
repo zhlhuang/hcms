@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 use Hyperf\Context\Context;
 use Psr\Http\Message\ServerRequestInterface;
+use function Hyperf\Support\env;
 
 /**
  * @param      $uri
@@ -85,6 +86,10 @@ function getIp(): string
 function getScheme(): mixed
 {
     try {
+        //非开发环境默认是https，nginx 代理的时候 getUri()->getScheme() 获取有误
+        if (env('APP_ENV') !== 'dev') {
+            return "https";
+        }
         $request = Context::get(ServerRequestInterface::class);
         $headers = $request->getHeaders();
         if (isset($headers['scheme'][0])) {
