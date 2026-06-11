@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by: zhlhuang (364626853@qq.com)
  * Time: 2022/7/2 17:24
@@ -72,5 +73,21 @@ class ApiService
         }
 
         return Json::decode(openssl_decrypt($data_str, "AES-128-ECB", $key));
+    }
+
+    /**
+     * 解密请求体
+     *
+     * @param array $body
+     * @return array
+     */
+    public function decryptBody(array $body = []): array
+    {
+        $is_encrypt = $body['is_encrypt'] ?? false;
+        if (!$is_encrypt) {
+            return $body;
+        }
+        $body['data'] = $this->decryptData($body['data']);
+        return $body;
     }
 }

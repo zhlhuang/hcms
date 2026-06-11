@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by: zhlhuang (364626853@qq.com)
  * Time: 2023/1/3 16:56
@@ -62,7 +63,9 @@ class RequestParamAspect extends AbstractAspect
                 return (int)$value;
             case 'float':
             case 'double':
-                return (double)$value;
+                return (float)$value;
+            case 'string':
+                return (string)trim($value) ?? '';
             default:
                 return $value;
         }
