@@ -15,6 +15,7 @@ use App\Application\Admin\Service\AccessService;
 use App\Application\Admin\Service\AdminSettingService;
 use App\Exception\ApiErrorException;
 use App\Exception\ErrorException;
+use App\Service\ApiService;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpMessage\Exception\NotFoundHttpException;
 use Hyperf\Logger\LoggerFactory;
@@ -37,6 +38,9 @@ class AdminMiddleware implements MiddlewareInterface
 
     #[Inject]
     protected AdminSettingService $setting;
+
+    #[Inject]
+    protected ApiService $api_service;
 
     public function __construct(LoggerFactory $loggerFactory)
     {
@@ -76,14 +80,14 @@ class AdminMiddleware implements MiddlewareInterface
     }
 
     /**
-     * 记录post请求日志
+     * 记录所有请求日志
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface      $response
      */
     private function log(ServerRequestInterface $request, ResponseInterface $response)
     {
-        if ($request->getMethod() === 'POST') {
+        if ($request->getMethod() !== 'GET') {
             //只对ost请求进行记录
             $log_is_open = (int)$this->setting->getLogSetting('log_is_open', 1);
             if ($log_is_open === 1) {
@@ -93,11 +97,12 @@ class AdminMiddleware implements MiddlewareInterface
                     $response_body = $response->getBody()
                         ->getContents();
                 }
+                //使用 $this->api_service->decryptBody 记录未加密的日志
                 $this->logger->info('request ' . $request->getMethod() . ' ' . $request->getUri(), [
                     'query' => $request->getQueryParams(),
-                    'body' => $request->getParsedBody(),
+                    'body' => $this->api_service->decryptBody($request->getParsedBody()),
                     'response_code' => $response->getStatusCode(),
-                    'response_body' => $response_body
+                    'response_body' => $this->api_service->decryptBody($response_body)
                 ]);
             }
         }

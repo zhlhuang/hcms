@@ -131,6 +131,17 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
         return compact('post_url', 'form_data', 'acl');
     }
 
+    public function puObject(string $file_path)
+    {
+        $cos = $this->getCosClient();
+
+        return $cos->putObject([
+            'Bucket' => $this->bucket,
+            'Key' => md5($file_path),
+            'Body' => fopen($file_path, 'rb'),
+        ]);
+    }
+
     /**
      * @deprecated
      * 设置存储桶的跨域请求，设置缓存防止每次都调用
