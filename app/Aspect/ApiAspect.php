@@ -53,9 +53,6 @@ class ApiAspect extends AbstractAspect
                 'status' => true,
                 'msg' => $this->request->isMethod('GET') ? '请求成功' : '操作成功'
             ])) : $res;
-        } catch (PDOException $pdoException) {
-            //如果是sql报错，直接抛出
-            throw $pdoException;
         } catch (\Throwable $exception) {
             throw new ApiErrorException($exception->getMessage(), (int)$exception->getCode(),
                 $exception->getPrevious());

@@ -41,13 +41,19 @@ class ApiErrorExceptionHandler extends ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response): ResponseInterface
     {
+        $error_id = uniqid("API_");
         $app_env = $this->config->get('app_env', 'dev');
-        $error_detail = sprintf('%s[%s] in %s', $throwable->getMessage(), $throwable->getLine(), $throwable->getFile());
+        $error_detail = sprintf('%s %s[%s] in %s', $error_id, $throwable->getMessage(), $throwable->getLine(), $throwable->getFile());
         $content = $throwable->getTrace();
+        $message = $throwable->getMessage();
         if ($app_env === 'dev') {
             $location = $error_detail;
-            $data = compact('location', 'content');
+            $data = compact('error_id', 'location', 'content');
         } else {
+            //如果是原来是PDOException
+            if ($throwable->getPrevious() instanceof \PDOException) {
+                $message = "系统数据错误:" . $error_id;
+            }
             $data = [];
         }
         if (!in_array($throwable->getCode(), $this->config->get('exceptions.ignore_log_code'))) {
@@ -60,7 +66,7 @@ class ApiErrorExceptionHandler extends ExceptionHandler
             'status' => false,
             'code' => $throwable->getCode(),
             'data' => $data,
-            'msg' => $throwable->getMessage()
+            'msg' => $message
         ]));
 
         return $response->withAddedHeader('content-type', 'application/json; charset=utf-8')
