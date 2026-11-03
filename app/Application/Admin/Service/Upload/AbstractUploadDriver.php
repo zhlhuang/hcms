@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by: zhlhuang (364626853@qq.com)
  * Time: 2022/2/15 16:54
@@ -30,6 +31,7 @@ abstract class AbstractUploadDriver
         $this->upload_file = new UploadFile();
         $this->upload_file->file_drive = $this->config['upload_drive'] ?? '';
         $this->upload_file->file_type = $file_type;
+        $this->upload_file->is_protect = 0;
         if ($this->file instanceof UploadedFile) {
             $this->upload_file->file_name = $this->file->getClientFilename();
             $this->upload_file->file_ext = $this->file->getExtension();
@@ -125,6 +127,17 @@ abstract class AbstractUploadDriver
     public function setGroupId(int $group_id): self
     {
         $this->upload_file->group_id = $group_id;
+
+        return $this;
+    }
+
+    /**
+     * @param int $is_protect
+     * @return $this
+     */
+    public function setIsProtect(int $is_protect): self
+    {
+        $this->upload_file->is_protect = $is_protect ? 1 : 0;
 
         return $this;
     }

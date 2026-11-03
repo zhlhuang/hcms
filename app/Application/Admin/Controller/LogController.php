@@ -66,7 +66,7 @@ class LogController extends AbstractController
         $file_name = str_replace('/', '', trim($file_name));
 
         $file_type = explode('-', $file_name)[0] ?? 'request';
-        $request_log_config = $this->config->get("logger.{$file_type}", []);
+        $request_log_config = $this->config->get("logger.channels.{$file_type}", []);
         $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
         $file_dir = str_replace("{$file_type}.log", '', $log_filename);
         if (!file_exists($file_dir . $file_name)) {
@@ -82,7 +82,7 @@ class LogController extends AbstractController
         $file_name = $this->request->input('file');
         $file_name = str_replace('/', '', trim($file_name));
         $file_type = explode('-', $file_name)[0] ?? 'request';
-        $request_log_config = $this->config->get("logger.{$file_type}", []);
+        $request_log_config = $this->config->get("logger.channels.{$file_type}", []);
         $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
         $file_dir = str_replace("{$file_type}.log", '', $log_filename);
         if (!file_exists($file_dir . $file_name)) {
@@ -97,7 +97,7 @@ class LogController extends AbstractController
     function settingInfo()
     {
         $log_type = $this->request->input('log_type', 'request');
-        $request_log_config = $this->config->get('logger.' . $log_type, []);
+        $request_log_config = $this->config->get('logger.channels.' . $log_type, []);
         $log_filename = $request_log_config['handler']['constructor']['filename'] ?? '';
         $file_dir = str_replace($log_type . '.log', '', $log_filename);
         if (!is_dir($file_dir)) {

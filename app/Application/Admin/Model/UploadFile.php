@@ -20,6 +20,7 @@ use Hyperf\DbConnection\Model\Model;
  * @property int            $upload_user_id
  * @property string         $upload_user_type
  * @property string         $acl
+ * @property int            $is_protect
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string         $deleted_at

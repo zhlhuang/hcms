@@ -4,7 +4,7 @@
 <script type="text/x-template" id="select-doc">
     <div class="select-file">
         <div style="max-height: 400px;">
-            <el-dialog title="选择文档" @close="$emit('close')" width="668px"
+            <el-dialog :title="is_protect ? '选择文档（非公开访问）' : '选择文档'" @close="$emit('close')" width="668px"
                        :model-value="show">
                 <div>
                     <el-row>
@@ -155,9 +155,11 @@
             c: {
                 template: `#select-doc`,
                 mixins: [window.__vue_upload_mixin],
+                props: {
+                    file_accept: {type: String, default: ".xls,.doc,.ppt,.xlsx,.docx,.pptx,.pdf,.txt"}
+                },
                 data() {
                     return {
-                        file_accept: ".xls,.doc,.ppt,.xlsx,.docx,.pptx,.pdf",
                         max_upload: 99,
                         file_type: 'doc'
                     }

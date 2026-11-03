@@ -3,7 +3,7 @@
 <script type="text/x-template" id="select-ue-image">
     <div class="select-file">
         <div style="max-height: 400px;">
-            <el-dialog title="选择图片" @close="$emit('close')" width="668px" :model-value="show">
+            <el-dialog :title="is_protect ? '选择图片（非公开访问）' : '选择图片'" @close="$emit('close')" width="668px" :model-value="show">
                 <div>
                     <el-row>
                         <el-col :span="6">
@@ -89,9 +89,12 @@
                                     <template v-for="(item,index) in data_list" :key="index">
                                         <div
                                                 class="img-list-item">
-                                            <img :src="item.file_thumb"
-                                                 style="width:80px;height: 80px;"
-                                                 @click="selectFileEvent(index)">
+                                            <el-tooltip class="item" effect="dark" :content="item.file_name"
+                                                        placement="top">
+                                                <img :src="item.file_thumb"
+                                                     style="width:80px;height: 80px;"
+                                                     @click="selectFileEvent(index)">
+                                            </el-tooltip>
                                             <div v-if="item.is_select" class="is_check" @click="selectFileEvent(index)">
                                                 <i style="line-height: 80px;font-size: 30px;"
                                                    class="iconfont line-icon-dui"></i>

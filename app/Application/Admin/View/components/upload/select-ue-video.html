@@ -3,7 +3,7 @@
 <script type="text/x-template" id="select-ue-video">
     <div class="select-file">
         <div style="max-height: 400px;">
-            <el-dialog title="选择视频" @close="$emit('close')" width="668px" :model-value="show">
+            <el-dialog :title="is_protect ? '选择视频（非公开访问）' : '选择视频'" @close="$emit('close')" width="668px" :model-value="show">
                 <div>
                     <el-row>
                         <el-col :span="6">

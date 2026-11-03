@@ -28,13 +28,21 @@ class LocalUploadDriver extends AbstractUploadDriver
             throw new ErrorException('未找到上传文件');
         }
         $upload_file_dir = $this->getPathDir();
-        $dir_path = BASE_PATH . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR;
+        $is_protect = (int)$this->upload_file->is_protect === 1;
+        if ($is_protect) {
+            //受保护文件存到根目录 storage 下，禁止外部直接访问
+            $dir_path = BASE_PATH . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR;
+        } else {
+            $dir_path = BASE_PATH . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR;
+        }
         $file_name = md5(time() . rand(1000, 9999)) . '.' . strtolower($this->file->getExtension());
         if (!is_dir($dir_path)) {
             mkdir($dir_path, 0755, true);
         }
         $file_path = $dir_path . $file_name;
-        $file_url = DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR . $file_name;
+        $file_url = $is_protect
+            ? ''
+            : DIRECTORY_SEPARATOR . $upload_file_dir . DIRECTORY_SEPARATOR . $file_name;
         $this->file->moveTo($file_path);
 
         $this->upload_file->file_url = $file_url;
@@ -49,6 +57,10 @@ class LocalUploadDriver extends AbstractUploadDriver
 
     protected function getFileThumb(): string
     {
+        if ((int)$this->upload_file->is_protect === 1) {
+            //受保护文件统一使用默认文件图标
+            return '/assets/img/upload/file.png';
+        }
         $file_type = $this->upload_file->file_type;
         if ($file_type === UploadFile::FILE_TYPE_IMAGE) {
             //图片缩略图
@@ -97,6 +109,10 @@ class LocalUploadDriver extends AbstractUploadDriver
 
     function getObjectUrl($file_url): string
     {
+        if ($file_url === '') {
+            //受保护文件没有外部访问地址
+            return '';
+        }
         if (strpos($file_url, 'http') === 0) {
             return $file_url;
         } else {

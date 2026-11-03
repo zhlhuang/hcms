@@ -104,6 +104,7 @@
         props: {
             show: Boolean,
             public_read: Boolean,
+            is_protect: {type: Boolean, default: false},
         },
         watch: {
             show(value) {
@@ -138,6 +139,7 @@
                     group_id: this.now_group > 0 ? this.now_group : 0,
                     file_type: this.file_type,
                     acl: this.acl,
+                    is_protect: this.is_protect ? 1 : 0,
                     ...this.form_data
                 }
             }
@@ -149,6 +151,7 @@
                     file_type: this.file_type,
                     group_id: this.now_group,
                     acl: this.acl,
+                    is_protect: this.is_protect ? 1 : 0,
                 }, true, '.el-dialog__body').then(res => {
                     if (res.status) {
                         let {lists = []} = res.data

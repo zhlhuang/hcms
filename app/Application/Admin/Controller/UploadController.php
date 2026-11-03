@@ -81,13 +81,15 @@ class UploadController extends AbstractController
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
         $group_id = (int)$this->request->input('group_id', -1);
         $acl = $this->request->input('acl', UploadFile::ACL_DEFAULT);
+        $is_protect = (int)$this->request->input('is_protect', 0);
         $admin_user_id = AdminUserService::getInstance()
             ->getAdminUserId();
         $where = [
             ['upload_user_id', '=', $admin_user_id],//默认只显示管理后台上传
             ['upload_user_type', '=', UploadFile::USER_TYPE_ADMIN],//默认只显示管理后台上传
             ['acl', '=', $acl],
-            ['file_type', '=', $file_type]
+            ['file_type', '=', $file_type],
+            ['is_protect', '=', $is_protect]
         ];
         if ($group_id !== -1) {
             $where[] = ['group_id', '=', $group_id];
@@ -106,7 +108,8 @@ class UploadController extends AbstractController
                 'file_thumb',
                 'group_id',
                 'file_ext',
-                'acl'
+                'acl',
+                'is_protect'
             ])
             ->paginate();
 
@@ -123,12 +126,14 @@ class UploadController extends AbstractController
         $post_data = $this->request->post();
         $group_id = (int)$this->request->input('group_id', 0);
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
+        $is_protect = (int)$this->request->input('is_protect', 0);
         $upload_service = new UploadService(null, $file_type);
         $admin_user_id = AdminUserService::getInstance()
             ->getAdminUserId();
         $upload_file = $upload_service->setUserId($admin_user_id)
             ->setUserType('admin')
             ->setGroupId($group_id)
+            ->setIsProtect($is_protect)
             ->save($post_data);
 
         return compact('upload_file');
@@ -144,12 +149,14 @@ class UploadController extends AbstractController
         $file = $this->request->file('file');
         $group_id = (int)$this->request->input('group_id', 0);
         $file_type = $this->request->input('file_type', UploadFile::FILE_TYPE_IMAGE);
+        $is_protect = (int)$this->request->input('is_protect', 0);
         $upload_service = new UploadService($file, $file_type);
         $admin_user_id = AdminUserService::getInstance()
             ->getAdminUserId();
         $upload_file = $upload_service->setUserId($admin_user_id)
             ->setUserType('admin')
             ->setGroupId($group_id)
+            ->setIsProtect($is_protect)
             ->save();
 
         return compact('upload_file');

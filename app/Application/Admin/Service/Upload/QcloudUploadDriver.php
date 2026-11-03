@@ -56,6 +56,7 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
         $this->upload_file->file_size = $data['file_size'] ?? 0;
         $this->upload_file->file_url = $data['file_url'] ?? '';
         $this->upload_file->acl = $data['acl'] ?? 'default';
+        $this->upload_file->is_protect = (int)($data['is_protect'] ?? 0) ? 1 : 0;
         $this->upload_file->file_thumb = $this->getFileThumb();
         $this->uploadValid();
         if (!$this->upload_file->save()) {
@@ -176,6 +177,10 @@ class QcloudUploadDriver extends AbstractUploadDriver implements NonLocalUploadD
      */
     protected function getFileThumb(): string
     {
+        if ((int)$this->upload_file->is_protect === 1) {
+            //受保护文件统一使用默认文件图标
+            return '/assets/img/upload/file.png';
+        }
         $file_type = $this->upload_file->file_type;
         if ($file_type === UploadFile::FILE_TYPE_IMAGE) {
             //腾讯云图片处理成缩略图

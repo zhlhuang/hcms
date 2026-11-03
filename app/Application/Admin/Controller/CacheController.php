@@ -56,7 +56,7 @@ class CacheController extends AbstractController
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
         $cache_key = str_replace(['../', './'], '', trim(urldecode($cache_key)));
-        $cache_config = $this->config->get('cache.default');
+        $cache_config = $this->config->get('cache.stores.default');
         $is_redis_drive = $cache_config['driver'] == 'Hyperf\Cache\Driver\RedisDriver';
         if ($is_redis_drive) {
             if (!$this->redis->keys($cache_key)) {
@@ -100,7 +100,7 @@ class CacheController extends AbstractController
     {
         //为了安全起见，会把文件名含有/的符号替换掉。
         $cache_key = str_replace(['../', './'], '', trim(urldecode($cache_key)));
-        $cache_config = $this->config->get('cache.default');
+        $cache_config = $this->config->get('cache.stores.default');
         $is_redis_drive = $cache_config['driver'] == 'Hyperf\Cache\Driver\RedisDriver';
         if ($is_redis_drive) {
             if (!$this->redis->keys($cache_key)) {
@@ -126,7 +126,7 @@ class CacheController extends AbstractController
     #[GetMapping("info")]
     function info()
     {
-        $cache_config = $this->config->get('cache.default');
+        $cache_config = $this->config->get('cache.stores.default');
         $is_redis_drive = $cache_config['driver'] == 'Hyperf\Cache\Driver\RedisDriver';
         try {
             $redis_info = $this->redis->info();
