@@ -86,20 +86,44 @@
                             </div>
                             <div class="grid-content bg-purple-light" style="margin-top: 10px;">
                                 <div>
-                                    <template v-for="(item,index) in data_list" :key="index">
-                                        <div
-                                                class="img-list-item">
-                                            <el-tooltip class="item" effect="dark" :content="item.file_name"
-                                                        placement="top">
-                                                <img :src="item.file_thumb"
-                                                     style="width:80px;height: 80px;"
-                                                     @click="selectFileEvent(index)">
-                                            </el-tooltip>
-                                            <div v-if="item.is_select" class="is_check" @click="selectFileEvent(index)">
-                                                <i style="line-height: 80px;font-size: 30px;"
-                                                   class="iconfont line-icon-dui"></i>
+                                    <div style="margin-bottom: 10px;text-align: right;">
+                                        <el-radio-group v-model="view_type" size="small">
+                                            <el-radio-button label="thumb">缩略图</el-radio-button>
+                                            <el-radio-button label="table">列表</el-radio-button>
+                                        </el-radio-group>
+                                    </div>
+                                    <el-table v-if="view_type === 'table'" :data="data_list" size="small" style="width: 100%;" max-height="320">
+                                        <el-table-column prop="file_name" label="文件名称" min-width="150"
+                                                         show-overflow-tooltip></el-table-column>
+                                        <el-table-column prop="created_at" label="上传时间" width="150"></el-table-column>
+                                        <el-table-column label="大小" width="90">
+                                            <template #default="{row}">{{ formatFileSize(row.file_size) }}</template>
+                                        </el-table-column>
+                                        <el-table-column label="操作" width="80" align="center">
+                                            <template #default="{row, $index}">
+                                                <el-button size="small"
+                                                           :type="row.is_select ? 'success' : 'primary'"
+                                                           @click="selectFileEvent($index)">
+                                                    {{ row.is_select ? '已选' : '选择' }}
+                                                </el-button>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+                                    <template v-else>
+                                        <template v-for="(item,index) in data_list" :key="index">
+                                            <div class="img-list-item">
+                                                <el-tooltip class="item" effect="dark" :content="item.file_name"
+                                                            placement="top">
+                                                    <img :src="item.file_thumb"
+                                                         style="width:80px;height: 80px;"
+                                                         @click="selectFileEvent(index)">
+                                                </el-tooltip>
+                                                <div v-if="item.is_select" class="is_check" @click="selectFileEvent(index)">
+                                                    <i style="line-height: 80px;font-size: 30px;"
+                                                       class="iconfont line-icon-dui"></i>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </template>
                                     </template>
                                     <div>
                                         <el-button v-show="selected_file_list.length > 0" type="danger"

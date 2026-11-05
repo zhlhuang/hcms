@@ -11,10 +11,13 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 return [
-    'default' => [
-        'driver' => Hyperf\Cache\Driver\RedisDriver::class,
-//        'driver' => Hyperf\Cache\Driver\FileSystemDriver::class,
-        'packer' => \Hyperf\Codec\Packer\PhpSerializerPacker::class,
-        'prefix' => 'c:',
+    'default' => 'default',
+    'stores' => [
+        'default' => [
+            'driver' => Hyperf\Cache\Driver\RedisDriver::class,
+            //        'driver' => Hyperf\Cache\Driver\FileSystemDriver::class,
+            'packer' => \Hyperf\Codec\Packer\PhpSerializerPacker::class,
+            'prefix' => 'c:',
+        ],
     ],
 ];

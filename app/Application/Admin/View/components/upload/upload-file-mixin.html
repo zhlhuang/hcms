@@ -99,12 +99,17 @@
                 upload_setting: {},
                 acl: 'default',
                 is_init: false,
+                //视图类型，table表格、thumb缩略图，受保护文件默认表格
+                view_type: 'thumb',
             }
         },
         props: {
             show: Boolean,
             public_read: Boolean,
             is_protect: {type: Boolean, default: false},
+        },
+        created() {
+            this.view_type = this.is_protect ? 'table' : 'thumb'
         },
         watch: {
             show(value) {
@@ -211,6 +216,17 @@
                 let data_list = this.data_list
                 data_list[index]['is_select'] = !this.data_list[index].is_select
                 this.data_list = [...data_list]
+            },
+            formatFileSize(size) {
+                size = Number(size) || 0
+                if (size < 1024) {
+                    return size + ' B'
+                } else if (size < 1024 * 1024) {
+                    return (size / 1024).toFixed(2) + ' KB'
+                } else if (size < 1024 * 1024 * 1024) {
+                    return (size / (1024 * 1024)).toFixed(2) + ' MB'
+                }
+                return (size / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
             },
             handleExceed() {
             },

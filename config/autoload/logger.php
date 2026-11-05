@@ -14,52 +14,55 @@ declare(strict_types=1);
 use Monolog\Level;
 
 return [
-    'default' => [
-        'handler' => [
-            'class' => Monolog\Handler\StreamHandler::class,
-            'constructor' => [
-                'stream' => BASE_PATH . '/runtime/logs/hyperf.log',
-                'level' => Level::Debug
+    'default' => 'default',
+    'channels' => [
+        'default' => [
+            'handler' => [
+                'class' => Monolog\Handler\StreamHandler::class,
+                'constructor' => [
+                    'stream' => BASE_PATH . '/runtime/logs/hyperf.log',
+                    'level' => Level::Debug
+                ],
+            ],
+            'formatter' => [
+                'class' => Monolog\Formatter\LineFormatter::class,
+                'constructor' => [
+                    'format' => null,
+                    'dateFormat' => 'Y-m-d H:i:s',
+                    'allowInlineLineBreaks' => true,
+                ],
             ],
         ],
-        'formatter' => [
-            'class' => Monolog\Formatter\LineFormatter::class,
-            'constructor' => [
-                'format' => null,
-                'dateFormat' => 'Y-m-d H:i:s',
-                'allowInlineLineBreaks' => true,
+        'request' => [
+            'handler' => [
+                'class' => Monolog\Handler\RotatingFileHandler::class,
+                'constructor' => [
+                    'filename' => BASE_PATH . '/runtime/logs/request/request.log',
+                    'level' => Level::Debug,
+                ],
+            ],
+            'formatter' => [
+                'class' => Monolog\Formatter\JsonFormatter::class,
+                'constructor' => [
+                    'batchMode' => Monolog\Formatter\JsonFormatter::BATCH_MODE_NEWLINES,
+                    'appendNewline' => true,
+                ],
             ],
         ],
-    ],
-    'request' => [
-        'handler' => [
-            'class' => Monolog\Handler\RotatingFileHandler::class,
-            'constructor' => [
-                'filename' => BASE_PATH . '/runtime/logs/request/request.log',
-                'level' => Level::Debug,
+        'error' => [
+            'handler' => [
+                'class' => Monolog\Handler\RotatingFileHandler::class,
+                'constructor' => [
+                    'filename' => BASE_PATH . '/runtime/logs/error/error.log',
+                    'level' => Level::Debug,
+                ],
             ],
-        ],
-        'formatter' => [
-            'class' => Monolog\Formatter\JsonFormatter::class,
-            'constructor' => [
-                'batchMode' => Monolog\Formatter\JsonFormatter::BATCH_MODE_NEWLINES,
-                'appendNewline' => true,
-            ],
-        ],
-    ],
-    'error' => [
-        'handler' => [
-            'class' => Monolog\Handler\RotatingFileHandler::class,
-            'constructor' => [
-                'filename' => BASE_PATH . '/runtime/logs/error/error.log',
-                'level' => Level::Debug,
-            ],
-        ],
-        'formatter' => [
-            'class' => Monolog\Formatter\LineFormatter::class,
-            'constructor' => [
-                'batchMode' => Monolog\Formatter\JsonFormatter::BATCH_MODE_NEWLINES,
-                'appendNewline' => true,
+            'formatter' => [
+                'class' => Monolog\Formatter\LineFormatter::class,
+                'constructor' => [
+                    'batchMode' => Monolog\Formatter\JsonFormatter::BATCH_MODE_NEWLINES,
+                    'appendNewline' => true,
+                ],
             ],
         ],
     ],
