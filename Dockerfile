@@ -1,6 +1,6 @@
 # Default Dockerfile
 
-FROM hyperf-cloud-docker.pkg.coding.net/hyperf/hyperf/hyperf:8.1-alpine-v3.18-swoole
+FROM hyperf-cloud-docker.pkg.coding.net/hyperf/hyperf/hyperf:8.3-alpine-v3.18-swoole
 LABEL maintainer="Hcms Developers <364626853@qq.com>" version="1.0" license="MIT" app.name="Hcms"
 ##
 # ---------- env settings ----------
